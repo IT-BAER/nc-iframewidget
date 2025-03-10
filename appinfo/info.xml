@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<info xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
+    <id>iframewidget</id>
+    <name>iFrame Widget</name>
+    <summary>Display external Websites in a Dashboard Widget</summary>
+    <description>Dashboard Widget that allows displaying external Websites in an iFrame</description>
+    <version>0.5.0</version>
+    <licence>agpl</licence>
+    <author>Bruno Miglar</author>
+    <namespace>IframeWidget</namespace>
+    <category>dashboard</category>
+    <dependencies>
+        <nextcloud min-version="30" max-version="30" />
+    </dependencies>
+    <settings>
+        <admin>OCA\IframeWidget\Settings\Admin</admin>
+        <admin-section>OCA\IframeWidget\Settings\Section</admin-section>
+    </settings>
+</info>

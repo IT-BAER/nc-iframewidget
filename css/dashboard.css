@@ -1,0 +1,84 @@
+/* Main iFrame widget icon */
+.icon-iframewidget {
+    background-image: url('../img/iframewidget-dark.svg');
+    filter: var(--background-invert-if-dark);
+}
+
+body.theme--dark .icon-iframewidget {
+    background-image: url('../img/iframewidget.svg');
+}
+
+/* Widget panel sizing and layout */
+.panel.ifw-widget-extra-wide[data-widget-id="iframewidget"] {
+    width: 640px;
+}
+
+.panel.ifw-title-empty[data-widget-id="iframewidget"] .panel--header {
+    height: 16px;
+    padding: 0;
+}
+
+.panel.ifw-title-empty[data-widget-id="iframewidget"] span.icon-iframewidget {
+    display: none;
+}
+
+.panel.ifw-title-empty[data-widget-id="iframewidget"] .panel--content {
+    height: calc(424px + 78px);
+}
+
+/* iFrame itself */
+.iframewidget-frame {
+    width: 100%;
+    border: none;
+    overflow: hidden;
+}
+
+.iframewidget-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.iframewidget-frame[style*="height: 100%"] {
+    flex: 1;
+    min-height: 100px;
+}
+
+/* Transition effects */
+.panel[data-widget-id="iframewidget"] {
+    transition: width 0.3s ease-in-out;
+    will-change: width;
+    transform: translateZ(0); /* Forces hardware acceleration */
+}
+
+.iframewidget-container {
+    transition: opacity 0.3s ease-in;
+}
+
+/* Custom Icon styling */
+.panel--header h2 .widget-icon {
+    float: left !important;
+    display: inline-block !important;
+    margin-right: 16px !important;
+    margin-left: 0 !important;
+    position: relative !important;
+    width: 32px !important;
+    height: 32px !important;
+}
+
+.panel--header h2 .widget-icon + .icon-iframewidget,
+.panel--header h2 .icon-iframewidget.hidden {
+    display: none !important;
+}
+
+.panel--header h2 .widget-icon img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    vertical-align: middle;
+}
+
+.panel--header h2 {
+    display: flex !important;
+    align-items: center !important;
+}

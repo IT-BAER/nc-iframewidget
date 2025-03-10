@@ -1,0 +1,30 @@
+{
+    "name": "@types/toastify-js",
+    "version": "1.12.3",
+    "description": "TypeScript definitions for toastify-js",
+    "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/toastify-js",
+    "license": "MIT",
+    "contributors": [
+        {
+            "name": "adblanc",
+            "githubUsername": "adblanc",
+            "url": "https://github.com/adblanc"
+        },
+        {
+            "name": "Piotr Błażejewicz",
+            "githubUsername": "peterblazejewicz",
+            "url": "https://github.com/peterblazejewicz"
+        }
+    ],
+    "main": "",
+    "types": "index.d.ts",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
+        "directory": "types/toastify-js"
+    },
+    "scripts": {},
+    "dependencies": {},
+    "typesPublisherContentHash": "eca577a53dc8251b330a35768f0fad4172fa614ef6ce46f5ee69e3c32bc5d7ea",
+    "typeScriptVersion": "4.5"
+}
