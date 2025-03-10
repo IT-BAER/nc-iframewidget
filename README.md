@@ -4,7 +4,7 @@ Display external websites directly in your Nextcloud dashboard with this customi
 
 iFrame Widget Demo
 <video autoplay loop src="nc-iframewidget-demo.mp4"/>
-*In this Example i added my Glance Dashboard as an iFrame*
+<p align="center">In this Example i added my Glance Dashboard as an iFrame</p>
 
 ## Features
 
