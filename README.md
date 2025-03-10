@@ -1,9 +1,8 @@
 # iFrame Widget for Nextcloud
 
-Display external websites directly in your Nextcloud dashboard with this customizable widget.
+Display external websites directly in your Nextcloud dashboard with this customizable widget.<br><br><br>
 
-iFrame Widget Demo
-<video autoplay loop src="nc-iframewidget-demo.mp4"/>
+<p align="center"><img src="https://github.com/user-attachments/assets/86405272-4543-4f3d-b861-30c49ea0d414"/></p>
 <p align="center">In this Example i added my Glance Dashboard as an iFrame</p>
 
 ## Features
@@ -167,5 +166,4 @@ This project is licensed under the [AGPL-3.0-or-later](LICENSE) license.
 ## Credits
 
 - [Simple Icons](https://simpleicons.org/) - Used for widget icons
-
 
