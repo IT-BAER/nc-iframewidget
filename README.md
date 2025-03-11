@@ -16,10 +16,12 @@ Display external websites directly in your Nextcloud dashboard with this customi
 - Clean, responsive design that integrates with Nextcloud themes
 
 
-### WIP
+### TODO
 
 - Multiuser Support
 - User-specific Settings
+- 3-Column Size
+- Refresh Button
 
 
 ## Screenshots
