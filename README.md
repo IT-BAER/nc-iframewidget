@@ -30,60 +30,6 @@ Display external websites directly in your Nextcloud dashboard with this customi
 | :--: | :--: |
 | <img src="nc-iframewidget-dashboard.png"/> | <img src="nc-iframewidget-settings.png"/> |
 
-## Installation
-
-1. Clone Repository to the "iframewidget" directory
-
-```sh
-git clone https://github.com/IT-BAER/nc-iframewidget.git iframewidget
-```
-
-2. Change file permissions
-
-```sh
-sudo chown -R www-data:www-data iframewidget
-```
-
-3. Move/Copy directory to your Nextcloud Apps Folder (default: /var/www/Nextcloud/apps/)
-
-```sh
-sudo mv iframewidget /var/www/nextcloud/apps/
-```
-
-4. (Optional) Clear Nextcloud Cache
-
-```sh
-sudo -u www-data php /var/www/nextcloud/occ maintenance:repair
-```
-
-5. Enable the App in your Nextcloud App Dashboard
-
-## Updating
-
-1. Clone Repository to the "iframewidget" directory
-
-```sh
-git clone https://github.com/IT-BAER/nc-iframewidget.git iframewidget
-```
-
-2. Change file permissions
-
-```sh
-sudo chown -R www-data:www-data iframewidget
-```
-
-3. Copy directory to your Nextcloud Apps Folder (default: /var/www/Nextcloud/apps/)
-
-```sh
-sudo cp -rf iframewidget/* /var/www/nextcloud/apps/iframewidget/
-```
-
-4. Remove cloned Repo after updating
-
-```sh
-sudo rm -r iframewidget
-```
-
 
 ## Configuration
 
@@ -115,7 +61,6 @@ Browse available icons at [SimpleIcons.org](https://simpleicons.org/).
 ## Requirements
 
 - Nextcloud 30+
-- Git
 - Website to be embedded must allow iframe embedding (not all sites do)
 - Content Security Policy (CSP) configuration to allow external domains in iframes
 
