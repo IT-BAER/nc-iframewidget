@@ -1,7 +1,12 @@
+<!--
+  - SPDX-FileCopyrightText: 2019 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+# Webpack vue base config
+
+[![REUSE status](https://api.reuse.software/badge/github.com/nextcloud-libraries/webpack-vue-config)](https://api.reuse.software/info/github.com/nextcloud-libraries/webpack-vue-config)
 [![npm last version](https://img.shields.io/npm/v/@nextcloud/webpack-vue-config.svg?style=flat-square)](https://www.npmjs.com/package/@nextcloud/webpack-vue-config)
 [![Dependabot status](https://img.shields.io/badge/Dependabot-enabled-brightgreen.svg?longCache=true&style=flat-square&logo=dependabot)](https://dependabot.com)
-
-# Webpack vue base config
 
 Use this base config package to cleanup all your complicated setups and rely on automated dependencies updates.
 

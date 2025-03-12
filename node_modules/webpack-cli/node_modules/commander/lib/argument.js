@@ -1,7 +1,5 @@
 const { InvalidArgumentError } = require('./error.js');
 
-// @ts-check
-
 class Argument {
   /**
    * Initialize a new command argument with the given name and description.
@@ -52,7 +50,7 @@ class Argument {
   }
 
   /**
-   * @api private
+   * @package
    */
 
   _concatValue(value, previous) {
@@ -66,7 +64,7 @@ class Argument {
   /**
    * Set the default value, and optionally supply the description to be displayed in the help.
    *
-   * @param {any} value
+   * @param {*} value
    * @param {string} [description]
    * @return {Argument}
    */
@@ -100,7 +98,9 @@ class Argument {
     this.argChoices = values.slice();
     this.parseArg = (arg, previous) => {
       if (!this.argChoices.includes(arg)) {
-        throw new InvalidArgumentError(`Allowed choices are ${this.argChoices.join(', ')}.`);
+        throw new InvalidArgumentError(
+          `Allowed choices are ${this.argChoices.join(', ')}.`,
+        );
       }
       if (this.variadic) {
         return this._concatValue(arg, previous);
@@ -112,6 +112,8 @@ class Argument {
 
   /**
    * Make argument required.
+   *
+   * @returns {Argument}
    */
   argRequired() {
     this.required = true;
@@ -120,6 +122,8 @@ class Argument {
 
   /**
    * Make argument optional.
+   *
+   * @returns {Argument}
    */
   argOptional() {
     this.required = false;
@@ -132,15 +136,13 @@ class Argument {
  *
  * @param {Argument} arg
  * @return {string}
- * @api private
+ * @private
  */
 
 function humanReadableArgName(arg) {
   const nameOutput = arg.name() + (arg.variadic === true ? '...' : '');
 
-  return arg.required
-    ? '<' + nameOutput + '>'
-    : '[' + nameOutput + ']';
+  return arg.required ? '<' + nameOutput + '>' : '[' + nameOutput + ']';
 }
 
 exports.Argument = Argument;

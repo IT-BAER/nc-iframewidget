@@ -23,15 +23,29 @@
     		</div>
 		</div>
 
-        <!-- Iframe content -->
-        <iframe v-else
-                :src="config.iframeUrl"
-                :style="{ height: iframeHeight }"
-                class="iframewidget-frame"
-                referrerpolicy="no-referrer"
-                allow="fullscreen"
-                sandbox="allow-same-origin allow-scripts allow-popups allow-forms">
-        </iframe>
+		<!-- Iframe content -->
+		<iframe v-else-if="config.iframeUrl && !iframeError"
+				:src="config.iframeUrl"
+				:style="{ height: iframeHeight }"
+				class="iframewidget-frame"
+				referrerpolicy="no-referrer"
+				allow="fullscreen"
+				@error="handleIframeError"
+				@load="iframeError = false"
+				sandbox="allow-same-origin allow-scripts allow-popups allow-forms">
+		</iframe>
+
+		<!-- CSP Error state -->
+		<div v-else-if="iframeError && config.iframeUrl" class="widget-error csp-error">
+			<div class="error-title">{{ t('iframewidget', 'Failed to load content') }}</div>
+			<p>{{ t('iframewidget', 'This might be caused by Content Security Policy (CSP) restrictions.') }}</p>
+			<div class="error-actions">
+				<a href="https://github.com/IT-BAER/nc-iframewidget#csp-configuration" target="_blank" class="button primary">
+					{{ t('iframewidget', 'View CSP Configuration Guide') }}
+				</a>
+			</div>
+		</div>
+    
     </div>
 </template>
 
@@ -47,6 +61,7 @@ export default {
             loading: true,
             configLoaded: false,
             error: false,
+        	iframeError: false,
             config: loadState('iframewidget', 'widget-config') || {
                 extraWide: false,
                 widgetTitle: 'iFrame Widget',
@@ -120,6 +135,13 @@ export default {
                 });
             }
         }, 500);
+    
+    	// Check if iframe loads correctly after a timeout
+    	if (this.config.iframeUrl) {
+        	setTimeout(() => {
+            	this.checkIframeLoaded();
+        	}, 1500);
+    	} 
     },
     beforeDestroy() {
         if (this.observer) {
@@ -279,7 +301,27 @@ export default {
 				img.src = `https://cdn.simpleicons.org/${simpleIconName}`;
 			});
 		},
-
+    
+		/**
+		 * Checks if iframe content can be accessed
+		 * Detects Content Security Policy (CSP) violations by trying to access iframe DOM
+		 * Sets iframeError flag if access is blocked by browser security
+		 */
+		checkIframeLoaded() {
+			const iframe = this.$el.querySelector('iframe');
+			if (iframe) {
+				try {
+					// Try to access iframe content - will throw error if blocked by CSP
+					const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+					// If we can access it, it's not a CSP error
+					this.iframeError = false;
+				} catch (e) {
+					console.warn('Possible CSP error:', e);
+					this.iframeError = true;
+				}
+			}
+		},
+    
         /**
          * Handle errors loading icons
          * @param {Event} event - Error event
@@ -297,6 +339,15 @@ export default {
     
    			// Replace with fallback
     		event.target.src = fallbackIcon;
+		},
+
+		/**
+		 * Handle errors loading iframe content
+		 * @param {Event} event - Error event from iframe
+		 */
+    	handleIframeError(event) {
+    		console.warn('Failed to load iframe content: ', event);
+    		this.iframeError = true;
 		},
         
         /**
@@ -350,4 +401,46 @@ export default {
 	text-align: center;
     flex-direction: column;
 }
+
+/* CSP error display styling */
+.widget-error.csp-error {
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    text-align: center;
+}
+
+/* Error title styling */
+.widget-error .error-title {
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: var(--color-text-maxcontrast);
+}
+
+/* Error message paragraph styling */
+.widget-error p {
+    margin: 8px 0;
+    color: var(--color-text-maxcontrast);
+}
+
+/* Container for action buttons in error state */
+.error-actions {
+    margin-top: 16px;
+}
+
+/* Button styling for error actions */
+.error-actions .button {
+    display: inline-block;
+    padding: 8px 16px;
+    text-decoration: none;
+    border-radius: var(--border-radius);
+    background-color: var(--color-primary);
+    color: var(--color-primary-text);
+}
+
+/* Hover state for action buttons */
+.error-actions .button:hover {
+    background-color: var(--color-primary-element-hover);
+}
+
 </style>
