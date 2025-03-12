@@ -6,7 +6,7 @@
     <description>Dashboard Widget that allows displaying external Websites in an iFrame</description>
     <version>0.5.0</version>
     <licence>agpl</licence>
-    <author>Bruno Miglar</author>
+    <author mail="admin@it-baer.net" homepage="https://it-baer.net">Bruno Miglar</author>
     <namespace>IframeWidget</namespace>
     <category>dashboard</category>
     <dependencies>
