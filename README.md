@@ -21,7 +21,7 @@ Display external websites directly in your Nextcloud dashboard with this customi
 - Multiuser Support
 - User-specific Settings
 - 3-Column Size
-- Refresh Button
+- Refresh Button (or Refresh Timer Option)
 
 
 ## Screenshots
