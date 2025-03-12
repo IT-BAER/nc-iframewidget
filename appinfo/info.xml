@@ -9,6 +9,8 @@
     <author mail="admin@it-baer.net" homepage="https://it-baer.net">Bruno Miglar</author>
     <namespace>IframeWidget</namespace>
     <category>dashboard</category>
+    <bugs>https://github.com/IT-BAER/nc-iframewidget/issues</bugs>
+	<screenshot>https://raw.githubusercontent.com/IT-BAER/nc-iframewidget/refs/heads/main/nc-iframewidget-dashboard.png</screenshot>
     <dependencies>
         <nextcloud min-version="30" max-version="30" />
     </dependencies>

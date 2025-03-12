@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.1.19](https://github.com/inspect-js/which-typed-array/compare/v1.1.18...v1.1.19) - 2025-03-08
+
+### Commits
+
+- [Refactor] use `get-proto`, improve types [`e05d535`](https://github.com/inspect-js/which-typed-array/commit/e05d535fe4e4c4e674937718fe1cae90abff3606)
+- [Dev Deps] update `@arethetypeswrong/cli`, `@ljharb/tsconfig`, `@types/tape` [`0dade9c`](https://github.com/inspect-js/which-typed-array/commit/0dade9c4c334f37ed14083a35724eea56a496991)
+- [Deps] update `call-bound`, `for-each` [`490791a`](https://github.com/inspect-js/which-typed-array/commit/490791af49605390f9805660492976f86c64feb1)
+- [Tests] skip `npm ls` in older nodes [`f83aaca`](https://github.com/inspect-js/which-typed-array/commit/f83aaca6b6634ce795f8caf9a1e14ab15d35161c)
+- [Dev Deps] update `@ljharb/tsconfig` [`63c4795`](https://github.com/inspect-js/which-typed-array/commit/63c479564e5f3cb022c784ffe505673597341aab)
+
 ## [v1.1.18](https://github.com/inspect-js/which-typed-array/compare/v1.1.17...v1.1.18) - 2024-12-18
 
 ### Commits
