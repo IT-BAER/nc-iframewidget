@@ -268,10 +268,6 @@ export default {
 
     // Add a watcher for typedUrl directly
     watch: {
-        'typedUrl': function(newUrl) {
-            // Reset error state when user starts typing a new URL
-            this.iframeError = false;
-        },
         'state.iframeUrl': function(newUrl, oldUrl) {
             if (newUrl !== oldUrl) {
                 this.iframeError = false;
@@ -312,9 +308,10 @@ export default {
             
             // Set a new timer
             this.urlUpdateTimer = setTimeout(() => {
+                // Only after the full 500ms, update state and UI
+                this.iframeError = false; // Move error reset inside timeout
                 this.state.iframeUrl = this.typedUrl;
-                this.$forceUpdate(); // Force Vue to update the UI
-            }, 500); // 500ms = 0.5 seconds
+            }, 500);
         },
 
         handleCSPViolation(e) {
