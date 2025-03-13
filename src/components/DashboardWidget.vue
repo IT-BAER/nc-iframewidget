@@ -182,8 +182,11 @@ export default {
         },
 
         /**
-         * Apply custom classes to the panel to control appearance
-         */
+        * Apply custom classes to the parent panel element
+        * 
+        * Finds the parent panel element and applies CSS classes based on the widget configuration.
+        * Handles extra-wide mode, title visibility, and custom icon integration.
+        */
         applyPanelClasses() {
             if (!this.$el || typeof this.$el.closest !== 'function') return;
             

@@ -1,3 +1,4 @@
+// This script initializes the iFrame Widget Dashboard interface
 import Vue from 'vue'
 import DashboardWidget from './components/DashboardWidget.vue'
 import { generateFilePath } from '@nextcloud/router'

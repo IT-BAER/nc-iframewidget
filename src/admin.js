@@ -1,3 +1,4 @@
+// This script initializes the iFrame Widget admin settings interface
 import Vue from 'vue'
 import AdminSettings from './components/AdminSettings.vue'
 import { generateFilePath } from '@nextcloud/router'

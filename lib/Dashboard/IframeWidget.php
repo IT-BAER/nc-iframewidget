@@ -10,6 +10,13 @@ use OCP\IConfig;
 use OCP\IL10N;
 use OCP\AppFramework\Services\IInitialState;
 
+/**
+ * IframeWidget implements the dashboard widget functionality
+ * 
+ * This class registers and configures the iFrame widget for the
+ * Nextcloud dashboard, handling configuration, icon display, and
+ * content security policy adjustments.
+ */
 class IframeWidget implements IWidget
 {
     /** @var IL10N */

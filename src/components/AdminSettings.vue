@@ -278,10 +278,15 @@ export default {
     },
 
     methods: {
+    
         /**
-         * Handle color picker changes
-         * @param {Event} event - Change event
-         */
+        * Handle color picker changes
+        * 
+        * Updates the icon color when the color picker value changes and
+        * triggers a debounced update to prevent excessive reloads.
+        * 
+        * @param {Event} event - Color input change event
+        */
     	updateColor(event) {
         	this.state.widgetIconColor = event.target.value;
         	this.debounceIconUpdate();

@@ -11,6 +11,12 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use OCA\IframeWidget\AppInfo\Application;
 
+/**
+ * ConfigController handles configuration management for the iFrame Widget
+ * 
+ * This controller handles saving and retrieving configuration values,
+ * as well as proxying requests to SimpleIcons to avoid CORS issues.
+ */
 class ConfigController extends Controller
 {
     /** @var IConfig */

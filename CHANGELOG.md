@@ -1,3 +1,15 @@
+## 0.6.3 - 2025-03-13
+
+### Documentation
+
+- Optimized Nextcloud App Store Description
+
+
+### Bug Fixes 
+
+- Fixed a bug which throws false-positive CSP errors
+
+
 ## 0.6.2 - 2025-03-13
 
 ### Bug Fixes
