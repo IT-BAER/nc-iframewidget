@@ -63,12 +63,12 @@
                     </div>
 
                     <!-- URL to Display section -->
-                    <div class="url-label-container">
-                        <label for="iframeUrl">{{ t('iframewidget', 'URL to Display') }}</label>
-                        <span v-if="isLoading && !iframeError" class="inline-loading">
-                            {{ t('iframewidget', 'Loading content...') }}
-                            <span class="icon-loading-small"></span>
-                        </span>
+                    <div class="url-label-wrapper">
+                    <label for="iframeUrl">{{ t('iframewidget', 'URL to Display') }}</label>
+                    <div v-if="isLoading && !iframeError" class="inline-loading">
+                        {{ t('iframewidget', 'Loading content...') }}
+                        <span class="icon-loading-small"></span>
+                    </div>
                     </div>
                     <input type="text" 
                         :value="typedUrl"
@@ -941,29 +941,28 @@ input[type="color"]::-moz-color-swatch {
 }
 
 /* Inline loading indicator styling */
-.url-label-container {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 8px;
+.url-label-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
 }
 
 .inline-loading {
-    display: flex;
-    align-items: center;
-    font-size: 0.85em;
-    color: var(--color-text-maxcontrast);
-    font-weight: normal;
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.85em;
+  color: var(--color-text-maxcontrast);
 }
 
 .inline-loading .icon-loading-small {
-    display: inline-block;
-    width: 16px;
-    height: 16px;
-    background-size: 16px;
-    margin-left: 4px;
-    vertical-align: middle;
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background-size: 16px;
+  margin-left: 4px;
 }
+
 
 
 </style>
