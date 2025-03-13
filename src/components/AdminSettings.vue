@@ -5,7 +5,7 @@
             <h2>{{ t('iframewidget', 'iFrame Widget Settings') }}</h2>
             <div class="iframewidget-logo">
                 <img src="../../img/baer4-100x100.png" alt="Logo" class="iframewidget-logo-image">
-                <span class="iframewidget-version">v0.5.0</span>
+                <span class="iframewidget-version">v0.6.0</span>
             </div>
         </div>
         
