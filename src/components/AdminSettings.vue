@@ -5,7 +5,7 @@
             <h2>{{ t('iframewidget', 'iFrame Widget Settings') }}</h2>
             <div class="iframewidget-logo">
                 <img src="../../img/baer4-100x100.png" alt="Logo" class="iframewidget-logo-image">
-                <span class="iframewidget-version">v0.6.1</span>
+                <span class="iframewidget-version">v0.6.2</span>
             </div>
         </div>
         
@@ -60,6 +60,11 @@
                                 </button>
                             </transition>
                         </div>
+                    </div>
+
+                    <div v-if="isLoading && !iframeError" class="iframe-loading">
+                        <div class="icon icon-loading"></div>
+                        <span>{{ t('iframewidget', 'Loading content...') }}</span>
                     </div>
 
                     <!-- iFrame URL -->
@@ -237,12 +242,16 @@ export default {
                 container.style.width = '640px';
             }
         });
-    
+
+        // Listen for actual CSP errors in the console
+        window.addEventListener('securitypolicyviolation', this.handleCSPViolation);
+        },
+
 		// Check if iframe loads correctly after a timeout
 		if (this.state.iframeUrl) {
 			setTimeout(() => {
 				this.checkIframeLoaded();
-			}, 1500);
+			}, 3000);
 		}
     },
 	beforeDestroy() {
@@ -252,7 +261,25 @@ export default {
 		if (this.iconUpdateTimer) {
 			clearTimeout(this.iconUpdateTimer);
 		}
+        window.removeEventListener('securitypolicyviolation', this.handleCSPViolation);
 	},
+    watch: {
+    'state.iframeUrl': function(newUrl, oldUrl) {
+        if (newUrl !== oldUrl) {
+            this.iframeError = false;
+
+            // Attempt to reload iframe with new URL
+            this.$nextTick(() => {
+                const iframe = this.$el.querySelector('iframe');
+                if (iframe) {
+
+                    // Force reload by updating src
+                    iframe.src = newUrl;
+                    }
+                });
+            }
+        }
+    },
     methods: {
         /**
          * Handle color picker changes
@@ -278,7 +305,13 @@ export default {
                 this.$forceUpdate(); // Force Vue to update the UI
             }, 500); // 500ms = 0.5 seconds
         },
-    
+
+        handleCSPViolation(e) {
+            if (e.blockedURI && e.blockedURI === this.config.iframeUrl) {
+                this.iframeError = true;
+            }
+        },
+
 		/**
 		 * Debounce icon updates to prevent excessive API requests
 		 */
@@ -378,20 +411,40 @@ export default {
 		 * Checks if iframe content can be accessed
 		 * Detects Content Security Policy (CSP) violations by trying to access iframe DOM
 		 */
-		checkIframeLoaded() {
-			const iframe = this.$el.querySelector('.preview-frame');
-			if (iframe) {
-				try {
-					// Try to access iframe content - will throw error if blocked by CSP
-					const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-					// If we can access it, it's not a CSP error
-					this.iframeError = false;
-				} catch (e) {
-					console.warn('Possible CSP error:', e);
-					this.iframeError = true;
-				}
-			}
-		},
+        checkIframeLoaded() {
+            const iframe = this.$el.querySelector('iframe');
+            if (!iframe || !this.state.iframeUrl) return;
+            
+            // Check if iframe failed to load
+            iframe.onerror = () => {
+                // General loading error, not necessarily CSP
+                console.warn('Iframe failed to load:', this.state.iframeUrl);
+            };
+            
+            // Set a reasonable timeout to avoid false positives with slow sites
+            setTimeout(() => {
+                try {
+                    // Try to access iframe content
+                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                    
+                    // If we can access content, it's not a CSP error
+                    this.iframeError = false;
+                } catch (e) {
+                    // Check if this is actually a CSP error
+                    if (e.message && (
+                        e.message.includes('security') || 
+                        e.message.includes('cross-origin') ||
+                        e.message.includes('access')
+                    )) {
+                        console.warn('Possible CSP error:', e);
+                        this.iframeError = true;
+                    } else {
+                        // Other error type, don't show CSP message
+                        console.warn('Non-CSP iframe error:', e);
+                    }
+                }
+            }, 3000); // Longer timeout for slow sites
+        },
     
         /**
          * Handle errors loading icons
