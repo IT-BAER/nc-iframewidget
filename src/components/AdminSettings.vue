@@ -62,14 +62,13 @@
                         </div>
                     </div>
 
-                    <div v-if="isLoading && !iframeError" class="iframe-loading">
-                        <div class="icon icon-loading"></div>
-                        <span>{{ t('iframewidget', 'Loading content...') }}</span>
-                    </div>
-
                     <!-- iFrame URL -->
-                    <label for="iframe-url">
+                    <label for="iframe-url" class="url-label">
                         {{ t('iframewidget', 'URL to Display') }}
+                        <span v-if="isLoading && !iframeError" class="inline-loading">
+                            ({{ t('iframewidget', 'Loading content...') }}
+                            <span class="icon-loading-small"></span>)
+                        </span>
                     </label>
                     <input type="text" 
                         :value="typedUrl"
@@ -938,6 +937,29 @@ input[type="color"]::-moz-color-swatch {
 /* Hover state for action buttons */
 .error-actions .button:hover {
     background-color: var(--color-primary-element-hover);
+}
+
+/* Inline loading indicator styling */
+.url-label {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 5px;
+}
+
+.inline-loading {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.85em;
+    color: var(--color-text-maxcontrast);
+    font-weight: normal;
+}
+
+.inline-loading .icon-loading-small {
+    width: 16px;
+    height: 16px;
+    background-size: 16px;
+    margin: 0 3px;
 }
 
 </style>
