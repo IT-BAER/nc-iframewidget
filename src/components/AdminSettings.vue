@@ -5,7 +5,7 @@
             <h2>{{ t('iframewidget', 'iFrame Widget Settings') }}</h2>
             <div class="iframewidget-logo">
                 <img src="../../img/baer4-100x100.png" alt="Logo" class="iframewidget-logo-image">
-                <span class="iframewidget-version">v0.6.2</span>
+                <span class="iframewidget-version">{{ version }}</span>
             </div>
         </div>
         
@@ -164,6 +164,7 @@ import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 import { loadState } from '@nextcloud/initial-state'
 import { showSuccess, showError } from '@nextcloud/dialogs'
+import { appVersion } from '../version.js';
 
 export default {
     name: 'AdminSettings',
@@ -178,6 +179,7 @@ export default {
                 iframeUrl: '',
                 iframeHeight: ''
             },
+            version: appVersion,
             typedUrl: '',         // Temporary storage for URL during typing
         	typedIcon: '',
             urlUpdateTimer: null,  // Timer for debouncing URL updates
@@ -263,23 +265,29 @@ export default {
 		}
         window.removeEventListener('securitypolicyviolation', this.handleCSPViolation);
 	},
+
+    // Add a watcher for typedUrl directly
     watch: {
-    'state.iframeUrl': function(newUrl, oldUrl) {
-        if (newUrl !== oldUrl) {
+        'typedUrl': function(newUrl) {
+            // Reset error state when user starts typing a new URL
             this.iframeError = false;
-
-            // Attempt to reload iframe with new URL
-            this.$nextTick(() => {
-                const iframe = this.$el.querySelector('iframe');
-                if (iframe) {
-
-                    // Force reload by updating src
-                    iframe.src = newUrl;
+        },
+        'state.iframeUrl': function(newUrl, oldUrl) {
+            if (newUrl !== oldUrl) {
+                this.iframeError = false;
+                
+                // Attempt to reload iframe with new URL
+                this.$nextTick(() => {
+                    const iframe = this.$el.querySelector('iframe');
+                    if (iframe) {
+                        // Force reload by updating src
+                        iframe.src = newUrl;
                     }
                 });
             }
         }
     },
+
     methods: {
         /**
          * Handle color picker changes
@@ -294,6 +302,9 @@ export default {
          * Debounce URL updates to prevent excessive iframe reloads
          */
         debounceUrlUpdate() {
+            // Reset error state immediately when typing
+            this.iframeError = false;
+            
             // Clear any existing timer
             if (this.urlUpdateTimer) {
                 clearTimeout(this.urlUpdateTimer);

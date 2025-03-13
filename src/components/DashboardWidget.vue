@@ -147,10 +147,11 @@ export default {
         	setTimeout(() => {
             	this.checkIframeLoaded();
         	}, 3000);
-    	},
+    	}
         
         // Listen for actual CSP errors in the console
         window.addEventListener('securitypolicyviolation', this.handleCSPViolation);
+    },
     
     beforeDestroy() {
         if (this.observer) {

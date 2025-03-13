@@ -1,3 +1,10 @@
+## 0.6.2 - 2025-03-13
+
+### Bug Fixes
+
+- Fixed CSP Check behavior
+
+
 ## 0.6.1 - 2025-03-13
 
 ### New Features
