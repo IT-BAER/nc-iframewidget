@@ -63,13 +63,13 @@
                     </div>
 
                     <!-- URL to Display section -->
-                    <label for="iframeUrl">
-                        {{ t('iframewidget', 'URL to Display') }}
+                    <div class="url-label-container">
+                        <label for="iframeUrl">{{ t('iframewidget', 'URL to Display') }}</label>
                         <span v-if="isLoading && !iframeError" class="inline-loading">
-                            ({{ t('iframewidget', 'Loading content...') }}
-                            <span class="icon-loading-small"></span>)
+                            {{ t('iframewidget', 'Loading content...') }}
+                            <span class="icon-loading-small"></span>
                         </span>
-                    </label>
+                    </div>
                     <input type="text" 
                         :value="typedUrl"
                         @input="handleUrlInput"
@@ -941,20 +941,28 @@ input[type="color"]::-moz-color-swatch {
 }
 
 /* Inline loading indicator styling */
-.inline-loading {
-    display: inline-flex;
+.url-label-container {
+    display: flex;
     align-items: center;
-    margin-left: 8px;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.inline-loading {
+    display: flex;
+    align-items: center;
     font-size: 0.85em;
     color: var(--color-text-maxcontrast);
     font-weight: normal;
 }
 
 .inline-loading .icon-loading-small {
+    display: inline-block;
     width: 16px;
     height: 16px;
     background-size: 16px;
-    margin: 0 3px;
+    margin-left: 4px;
+    vertical-align: middle;
 }
 
 
