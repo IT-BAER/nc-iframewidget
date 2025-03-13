@@ -62,8 +62,8 @@
                         </div>
                     </div>
 
-                    <!-- iFrame URL -->
-                    <label for="iframe-url" class="url-label">
+                    <!-- URL to Display section -->
+                    <label for="iframeUrl">
                         {{ t('iframewidget', 'URL to Display') }}
                         <span v-if="isLoading && !iframeError" class="inline-loading">
                             ({{ t('iframewidget', 'Loading content...') }}
@@ -77,6 +77,7 @@
                         class="iframewidget-input" 
                         name="iframeUrl" 
                         placeholder="https://example.org">
+
 
                     <!-- iFrame Height -->
                     <label for="iframe-height">
@@ -940,16 +941,10 @@ input[type="color"]::-moz-color-swatch {
 }
 
 /* Inline loading indicator styling */
-.url-label {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 5px;
-}
-
 .inline-loading {
     display: inline-flex;
     align-items: center;
+    margin-left: 8px;
     font-size: 0.85em;
     color: var(--color-text-maxcontrast);
     font-weight: normal;
@@ -961,5 +956,6 @@ input[type="color"]::-moz-color-swatch {
     background-size: 16px;
     margin: 0 3px;
 }
+
 
 </style>
