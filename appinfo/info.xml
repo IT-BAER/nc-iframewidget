@@ -3,8 +3,35 @@
     <id>iframewidget</id>
     <name>iFrame Widget</name>
     <summary>Display external Websites in a Dashboard Widget</summary>
-    <description>Dashboard Widget that allows displaying external Websites in an iFrame</description>
-    <version>0.6.2</version>
+    <description><![CDATA[**🔲 iFrame Widget for Nextcloud Dashboard**
+
+This app adds a customizable iFrame widget to your Nextcloud dashboard, allowing you to embed external websites directly within Nextcloud.
+
+## ✨ Features
+
+- **🌐 Embed any website** directly in your Nextcloud dashboard
+- **🎨 Customize appearance** with custom titles and icons
+- **🎭 SimpleIcons integration** using the `si:` prefix for thousands of brand icons
+- **🖌️ Colorize icons** with a built-in color picker
+- **📏 Adjustable height** for perfect layout integration
+- **📱 Responsive design** with extra-wide display option (2 columns)
+
+## 🛠️ Configuration
+
+The widget is highly customizable with options for:
+- Custom title and icon
+- Icon coloring
+- iFrame height
+- Wide display mode
+
+## 🔒 CSP Configuration
+
+If you encounter Content Security Policy errors, you may need to adjust your Nextcloud configuration to allow embedding specific websites. See the full documentation on GitHub for details.
+
+## 💻 Compatibility
+- Nextcloud 30 & 31
+    ]]></description>
+    <version>0.6.3</version>
     <licence>agpl</licence>
     <author mail="admin@it-baer.net" homepage="https://it-baer.net">Bruno Miglar</author>
     <namespace>IframeWidget</namespace>

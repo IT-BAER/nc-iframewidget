@@ -345,37 +345,39 @@ export default {
             
             this.isLoading = true;
             
-            // Use a longer timeout for slow sites
+            // Set up a visibility check instead of content access
             const timeoutDuration = 5000;
             const loadTimeout = setTimeout(() => {
-                try {
-                    if (iframe.contentWindow.location.href) {
-                        // Successfully accessed iframe content
-                        this.iframeError = false;
-                        this.isLoading = false;
-                    }
-                } catch (e) {
-                    if (e.name === 'SecurityError' || e.name === 'Error' && e.message.includes('cross-origin')) {
-                        this.iframeError = true;
-                    }
-                    this.isLoading = false;
-                }
-            }, timeoutDuration);
-            
-            // Clear timeout if iframe loads successfully
-            iframe.onload = () => {
-                clearTimeout(loadTimeout);
-                try {
-                    // Try accessing the loaded content
-                    iframe.contentWindow.location.href;
+                // If iframe is visible and has non-zero dimensions, consider it loaded
+                if (iframe.offsetWidth > 0 && iframe.offsetHeight > 0) {
                     this.iframeError = false;
-                } catch (e) {
+                } else {
+                    // Only show error if iframe is not visible after timeout
                     this.iframeError = true;
                 }
                 this.isLoading = false;
+            }, timeoutDuration);
+            
+            // Clear timeout when iframe loads
+            iframe.onload = () => {
+                clearTimeout(loadTimeout);
+                this.iframeError = false;
+                this.isLoading = false;
             };
-        }
-,
+            
+            // Also clear the error if iframe becomes visible
+            const visibilityCheck = setInterval(() => {
+                if (iframe.offsetWidth > 0 && iframe.offsetHeight > 0) {
+                    clearInterval(visibilityCheck);
+                    this.iframeError = false;
+                    this.isLoading = false;
+                }
+            }, 500);
+            
+            // Clean up interval after max time
+            setTimeout(() => clearInterval(visibilityCheck), timeoutDuration + 1000);
+        },
+
     
         /**
          * Handle errors loading icons
