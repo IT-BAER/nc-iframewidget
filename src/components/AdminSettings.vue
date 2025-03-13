@@ -71,10 +71,12 @@
                     <label for="iframe-url">
                         {{ t('iframewidget', 'URL to Display') }}
                     </label>
-                    <input id="iframe-url"
-                        v-model="typedUrl"
-                        type="url"
-                        @input="debounceUrlUpdate"
+                    <input type="text" 
+                        :value="typedUrl"
+                        @input="handleUrlInput"
+                        id="iframeUrl" 
+                        class="iframewidget-input" 
+                        name="iframeUrl" 
                         placeholder="https://example.org">
 
                     <!-- iFrame Height -->
@@ -266,7 +268,6 @@ export default {
         window.removeEventListener('securitypolicyviolation', this.handleCSPViolation);
 	},
 
-    // Add a watcher for typedUrl directly
     watch: {
         'state.iframeUrl': function(newUrl, oldUrl) {
             if (newUrl !== oldUrl) {
@@ -293,23 +294,29 @@ export default {
         	this.state.widgetIconColor = event.target.value;
         	this.debounceIconUpdate();
     	},
-        
+
+        handleUrlInput(event) {
+            // Update internal value immediately (non-reactive)
+            this.typedUrl = event.target.value;
+            // Call debounce function
+            this.debounceUrlUpdate();
+        },
+
         /**
          * Debounce URL updates to prevent excessive iframe reloads
          */
         debounceUrlUpdate() {
-            // Reset error state immediately when typing
-            this.iframeError = false;
-            
+
             // Clear any existing timer
             if (this.urlUpdateTimer) {
                 clearTimeout(this.urlUpdateTimer);
             }
             
-            // Set a new timer
+            // Only store the input in this.typedUrl (non-reactive property)
             this.urlUpdateTimer = setTimeout(() => {
+
                 // Only after the full 500ms, update state and UI
-                this.iframeError = false; // Move error reset inside timeout
+                this.iframeError = false;
                 this.state.iframeUrl = this.typedUrl;
             }, 500);
         },
