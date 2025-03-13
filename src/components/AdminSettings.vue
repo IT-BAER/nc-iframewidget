@@ -5,7 +5,7 @@
             <h2>{{ t('iframewidget', 'iFrame Widget Settings') }}</h2>
             <div class="iframewidget-logo">
                 <img src="../../img/baer4-100x100.png" alt="Logo" class="iframewidget-logo-image">
-                <span class="iframewidget-version">v{{ version }}</span>
+                <span class="iframewidget-version">v0.6.2</span>
             </div>
         </div>
         
@@ -160,7 +160,6 @@ import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 import { loadState } from '@nextcloud/initial-state'
 import { showSuccess, showError } from '@nextcloud/dialogs'
-import { appVersion } from '../version.js';
 
 export default {
     name: 'AdminSettings',
@@ -175,7 +174,6 @@ export default {
                 iframeUrl: '',
                 iframeHeight: ''
             },
-            version: appVersion,
             typedUrl: '',         // Temporary storage for URL during typing
         	typedIcon: '',
             urlUpdateTimer: null,  // Timer for debouncing URL updates

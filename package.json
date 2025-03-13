@@ -1,10 +1,9 @@
 {
 	"name": "iframewidget",
-	"version": "{{ version }}",
+	"version": "0.6.2",
 	"description": "iFrame Widget for Nextcloud Dashboard",
 	"main": "index.js",
 	"scripts": {
-		"update-version": "node update-version.js",
 		"build": "NODE_ENV=production webpack --progress --config webpack.config.js",
 		"dev": "NODE_ENV=development webpack --progress --config webpack.config.js",
 		"watch": "NODE_ENV=development webpack --progress --watch --config webpack.config.js",
