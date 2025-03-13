@@ -1,7 +1,7 @@
 # Editor files
 .vscode/
 *.swp
-all_files.txt
+full_config.txt
 
 # Logs
 *.log

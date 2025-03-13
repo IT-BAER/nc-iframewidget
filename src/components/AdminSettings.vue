@@ -183,6 +183,7 @@ export default {
             urlUpdateTimer: null,  // Timer for debouncing URL updates
         	iconUpdateTimer: null,  // Timer for debouncing icon updates
         	loading: false,
+            isLoading: false,
         	iframeError: false     // Track iframe loading errors
         }
     },
@@ -232,8 +233,8 @@ export default {
 		}
     },
     mounted() {
-        this.typedUrl = this.state.iframeUrl; // Initialize with current URL
-    	this.typedIcon = this.state.widgetIcon;  // Initialize with current icon
+        this.typedUrl = this.state.iframeUrl;
+        this.typedIcon = this.state.widgetIcon;
         this.updatePreview();
         
         this.$nextTick(() => {
@@ -245,14 +246,13 @@ export default {
 
         // Listen for actual CSP errors in the console
         window.addEventListener('securitypolicyviolation', this.handleCSPViolation);
-        },
-
-		// Check if iframe loads correctly after a timeout
-		if (this.state.iframeUrl) {
-			setTimeout(() => {
-				this.checkIframeLoaded();
-			}, 3000);
-		}
+        
+        // Check if iframe loads correctly after a timeout
+        if (this.state.iframeUrl) {
+            setTimeout(() => {
+                this.checkIframeLoaded();
+            }, 3000);
+        }
     },
 	beforeDestroy() {
 		if (this.urlUpdateTimer) {
@@ -307,7 +307,9 @@ export default {
         },
 
         handleCSPViolation(e) {
-            if (e.blockedURI && e.blockedURI === this.config.iframeUrl) {
+            if (e.blockedURI && this.state.iframeUrl && 
+                (e.blockedURI === this.state.iframeUrl || 
+                this.state.iframeUrl.startsWith(e.blockedURI))) {
                 this.iframeError = true;
             }
         },
@@ -415,35 +417,37 @@ export default {
             const iframe = this.$el.querySelector('iframe');
             if (!iframe || !this.state.iframeUrl) return;
             
-            // Check if iframe failed to load
-            iframe.onerror = () => {
-                // General loading error, not necessarily CSP
-                console.warn('Iframe failed to load:', this.state.iframeUrl);
-            };
+            this.isLoading = true;
             
-            // Set a reasonable timeout to avoid false positives with slow sites
-            setTimeout(() => {
+            // timeout for slow sites
+            const timeoutDuration = 5000;
+            const loadTimeout = setTimeout(() => {
                 try {
-                    // Try to access iframe content
-                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-                    
-                    // If we can access content, it's not a CSP error
+                    if (iframe.contentWindow.location.href) {
+                        // Successfully accessed iframe content
+                        this.iframeError = false;
+                        this.isLoading = false;
+                    }
+                } catch (e) {
+                    if (e.name === 'SecurityError' || e.name === 'Error' && e.message.includes('cross-origin')) {
+                        this.iframeError = true;
+                    }
+                    this.isLoading = false;
+                }
+            }, timeoutDuration);
+            
+            // Clear timeout if iframe loads successfully
+            iframe.onload = () => {
+                clearTimeout(loadTimeout);
+                try {
+                    // Try accessing the loaded content
+                    iframe.contentWindow.location.href;
                     this.iframeError = false;
                 } catch (e) {
-                    // Check if this is actually a CSP error
-                    if (e.message && (
-                        e.message.includes('security') || 
-                        e.message.includes('cross-origin') ||
-                        e.message.includes('access')
-                    )) {
-                        console.warn('Possible CSP error:', e);
-                        this.iframeError = true;
-                    } else {
-                        // Other error type, don't show CSP message
-                        console.warn('Non-CSP iframe error:', e);
-                    }
+                    this.iframeError = true;
                 }
-            }, 3000); // Longer timeout for slow sites
+                this.isLoading = false;
+            };
         },
     
         /**
