@@ -23,11 +23,6 @@
     		</div>
 		</div>
 
-        <div v-if="isLoading && !iframeError" class="iframe-loading">
-            <div class="icon icon-loading"></div>
-            <span>{{ t('iframewidget', 'Loading content...') }}</span>
-        </div>
-
 		<!-- Iframe content -->
 		<iframe v-else-if="config.iframeUrl && !iframeError"
 				:src="config.iframeUrl"
