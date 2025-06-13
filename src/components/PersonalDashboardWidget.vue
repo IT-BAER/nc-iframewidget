@@ -178,16 +178,34 @@ export default {
             
             const parentPanel = this.$el.closest('.panel');
             if (parentPanel) {
-                // Use the computed isExtraWide property
-                parentPanel.classList.toggle('ifw-widget-extra-wide', this.isExtraWide);
-                // Use the computed widgetTitleEmpty property
+                // Force extra wide if enabled
+                if (this.isExtraWide) {
+                    parentPanel.classList.add('ifw-widget-extra-wide');
+                    // Explicitly set grid-column property to ensure it works
+                    parentPanel.style.gridColumn = 'span 2';
+                } else {
+                    parentPanel.classList.remove('ifw-widget-extra-wide');
+                    parentPanel.style.gridColumn = '';
+                }
+                
+                // Set empty title class if needed
                 parentPanel.classList.toggle('ifw-title-empty', this.widgetTitleEmpty);
+                
+                // Set widget ID for CSS targeting
                 parentPanel.setAttribute('data-widget-id', 'personal-iframewidget');
                 
-                if (this.config.widgetIcon && !this.widgetTitleEmpty) {
-                    const titleEl = parentPanel.querySelector('.panel--header h2');
-                    if (titleEl) {
-                        const originalIcon = titleEl.querySelector('.icon-personal-iframewidget, .icon-iframe'); // Check for personal or default icon
+                // Handle title and icon
+                const titleEl = parentPanel.querySelector('.panel--header h2');
+                if (titleEl) {
+                    // Ensure left alignment
+                    titleEl.style.textAlign = 'left';
+                    titleEl.style.display = 'flex';
+                    titleEl.style.alignItems = 'center';
+                    titleEl.style.justifyContent = 'flex-start';
+                    
+                    if (this.config.widgetIcon && !this.widgetTitleEmpty) {
+                        // Hide the original icon
+                        const originalIcon = titleEl.querySelector('.icon-personal-iframewidget, .icon-iframe'); 
                         if (originalIcon) {
                             originalIcon.style.display = 'none';
                         }
@@ -453,6 +471,7 @@ export default {
 /* Global styles for panel manipulation, similar to admin widget */
 :global(.panel.ifw-widget-extra-wide[data-widget-id="personal-iframewidget"]) {
     grid-column: span 2 !important;
+    width: calc(100% - var(--default-grid-gap)) !important;
 }
 
 :global(.panel.ifw-title-empty[data-widget-id="personal-iframewidget"] .app-popover-menu-utils) {
@@ -461,16 +480,24 @@ export default {
 
 /* Ensure dashboard icon styling is available */
 :global(.panel--header h2 .widget-icon) {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 8px; /* Adjust as needed */
-    vertical-align: middle;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-right: 8px !important;
+    vertical-align: middle !important;
 }
 
 :global(.panel--header h2 .widget-icon .dashboard-icon) {
-    width: 32px; /* Standard size */
-    height: 32px; /* Standard size */
-    object-fit: contain;
+    width: 32px !important;
+    height: 32px !important;
+    object-fit: contain !important;
+}
+
+/* Fix title alignment */
+:global(.panel[data-widget-id="personal-iframewidget"] .panel--header h2) {
+    display: flex !important;
+    align-items: center !important;
+    text-align: left !important;
+    justify-content: flex-start !important;
 }
 </style>
