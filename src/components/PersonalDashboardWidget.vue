@@ -4,6 +4,12 @@
          :style="{ visibility: configLoaded ? 'visible' : 'hidden' }"
          data-widget-id="personal-iframewidget">
     
+        <!-- Header with icon and title -->
+        <div v-if="config.widgetTitle || config.widgetIcon" class="widget-header">
+            <div v-if="config.widgetIcon" class="widget-icon" :style="iconStyle"></div>
+            <h3 v-if="config.widgetTitle" class="widget-title">{{ config.widgetTitle }}</h3>
+        </div>
+    
         <!-- Loading state -->
         <div v-if="loading" class="widget-loading">
             <div class="icon icon-loading"></div>
@@ -64,7 +70,7 @@ export default {
                 widgetTitle: '',
                 widgetIcon: '',
                 widgetIconColor: '',
-                extraWide: false,
+                extraWide: false
             },
             configLoaded: false,
             iframeHeight: '100%'
@@ -78,17 +84,43 @@ export default {
             return generateUrl('/settings/user/iframewidget')
         },
         isExtraWide() {
-            return this.config.extraWide === true || this.config.extraWide === 'true'
+            // Handle both string and boolean values
+            return this.config.extraWide === true || this.config.extraWide === 'true' || this.config.extraWide === '1'
+        },
+        iconStyle() {
+            if (this.config.widgetIcon && this.config.widgetIcon.startsWith('si:')) {
+                const iconName = this.config.widgetIcon.substring(3).toLowerCase()
+                let iconUrl = `https://cdn.simpleicons.org/${iconName}`
+                if (this.config.widgetIconColor) {
+                    iconUrl += '/' + this.config.widgetIconColor.replace('#', '')
+                }
+                return {
+                    backgroundImage: `url(${iconUrl})`,
+                    backgroundSize: 'contain',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'center'
+                }
+            }
+            return {}
         }
     },
     async created() {
         try {
             const config = await loadState('iframewidget', 'personal-iframewidget-config')
+            // Ensure all config values are properly set
             this.config = {
-                ...config,
-                extraWide: config.extraWide === true || config.extraWide === 'true'
+                iframeUrl: config.iframeUrl || '',
+                widgetTitle: config.widgetTitle || '',
+                widgetIcon: config.widgetIcon || '',
+                widgetIconColor: config.widgetIconColor || '',
+                extraWide: config.extraWide === true || config.extraWide === 'true' || config.extraWide === '1'
             }
             this.configLoaded = true
+
+            // Force an update to ensure all UI elements reflect the config
+            this.$nextTick(() => {
+                this.$forceUpdate()
+            })
         } catch (e) {
             console.error('Failed to load personal iFrame widget config:', e)
             this.error = true
@@ -96,17 +128,72 @@ export default {
             this.loading = false
         }
     },
+    mounted() {
+        // Add a mutation observer to handle dynamic class changes
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                    this.updateExtraWideClass()
+                }
+            })
+        })
+
+        if (this.$el) {
+            observer.observe(this.$el, {
+                attributes: true
+            })
+        }
+
+        // Initial class update
+        this.updateExtraWideClass()
+    },
+    beforeDestroy() {
+        // Clean up mutation observer if it exists
+        if (this.observer) {
+            this.observer.disconnect()
+        }
+    },
     methods: {
         handleIframeError() {
             this.iframeError = true
+            console.error('IFrame loading error')
+        },
+        updateExtraWideClass() {
+            if (this.$el) {
+                const shouldBeWide = this.isExtraWide
+                const hasClass = this.$el.classList.contains('ifw-widget-extra-wide')
+                
+                if (shouldBeWide && !hasClass) {
+                    this.$el.classList.add('ifw-widget-extra-wide')
+                } else if (!shouldBeWide && hasClass) {
+                    this.$el.classList.remove('ifw-widget-extra-wide')
+                }
+
+                // Update grid column span
+                if (shouldBeWide) {
+                    this.$el.style.gridColumn = 'span 2'
+                } else {
+                    this.$el.style.gridColumn = ''
+                }
+            }
         }
     },
     watch: {
         'config.extraWide': {
-            handler(newVal) {
-                if (this.$el) {
-                    this.$el.classList.toggle('ifw-widget-extra-wide', newVal)
-                }
+            handler() {
+                this.updateExtraWideClass()
+            },
+            immediate: true
+        },
+        'config.widgetIcon': {
+            handler() {
+                this.$forceUpdate()
+            },
+            immediate: true
+        },
+        'config.widgetIconColor': {
+            handler() {
+                this.$forceUpdate()
             },
             immediate: true
         }
@@ -118,7 +205,34 @@ export default {
 .iframewidget-container {
     position: relative;
     width: 100%;
-    transition: width 0.3s ease;
+    transition: all 0.3s ease;
+    background: var(--color-main-background);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+}
+
+.widget-header {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    background: var(--color-main-background);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.widget-icon {
+    width: 24px;
+    height: 24px;
+    margin-right: 8px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.widget-title {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-main-text);
 }
 
 .iframewidget-container.ifw-widget-extra-wide {
@@ -127,6 +241,7 @@ export default {
 
 .iframewidget-frame {
     width: 100%;
+    min-height: 200px;
     border: none;
     background: var(--color-main-background);
 }
@@ -138,8 +253,8 @@ export default {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100%;
     min-height: 200px;
+    padding: 20px;
     text-align: center;
     color: var(--color-text-lighter);
 }
@@ -182,9 +297,15 @@ export default {
 }
 
 .ifw-title-empty {
-    height: 0;
-    min-height: 0;
-    margin: 0;
-    padding: 0;
+    .widget-header {
+        display: none;
+    }
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+    .widget-header {
+        background: var(--color-background-dark);
+    }
 }
 </style>
