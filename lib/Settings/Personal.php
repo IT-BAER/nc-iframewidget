@@ -39,7 +39,7 @@ class Personal implements ISettings {
             'widgetIcon' => $this->config->getUserValue($userId, Application::APP_ID, 'personal_widget_icon', 'icon-iframe'),
             'iframeUrl' => $this->config->getUserValue($userId, Application::APP_ID, 'personal_iframe_url', ''),
             'extraWide' => $this->config->getUserValue($userId, Application::APP_ID, 'personal_extra_wide', '0') === '1',
-        ]);        return new TemplateResponse(Application::APP_ID, 'personalSettings');
+        ]);        return new TemplateResponse(Application::APP_ID, 'personalSettings', [], 'blank');
     }    public function getSectionID(): string {
         return Application::APP_ID;
     }

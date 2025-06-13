@@ -20,13 +20,13 @@ class Application extends App implements IBootstrap
     public function __construct()
     {
         parent::__construct(self::APP_ID);
-    }
-
-    public function register(IRegistrationContext $context): void
+    }    public function register(IRegistrationContext $context): void
     {
         // Register dashboard widgets
         $context->registerDashboardWidget(IframeWidget::class);
-        $context->registerDashboardWidget(PersonalIframeWidget::class);        // Register personal settings page
+        $context->registerDashboardWidget(PersonalIframeWidget::class);
+
+        // Register personal settings page and section
         $context->registerService(Personal::class, function($c) {
             return new Personal(
                 $c->get(\OCP\IConfig::class),
@@ -34,7 +34,9 @@ class Application extends App implements IBootstrap
                 $c->get(\OCP\AppFramework\Services\IInitialState::class),
                 $c->get(\OCP\IL10N::class)
             );
-        });        // Register settings
+        });
+
+        // Register personal section
         $context->registerService(PersonalSection::class, function($c) {
             return new PersonalSection(
                 $c->get(\OCP\IL10N::class),
@@ -42,8 +44,12 @@ class Application extends App implements IBootstrap
             );
         });
 
-        // Register both section and setting
-        $context->registerSettings(PersonalSection::class, Personal::class);
+        // Register personal settings in Nextcloud > 20
+        if (method_exists($context, 'registerPersonalPage')) {
+            $context->registerPersonalPage(Personal::class);
+        } else {
+            $context->registerPersonalPanel(Personal::class);
+        }
     }
     
     public function boot(IBootContext $context): void
