@@ -12,16 +12,9 @@ use OCP\IUserSession;
 use OCP\AppFramework\Services\IInitialState;
 
 class PersonalIframeWidget implements IWidget {
-    /** @var IL10N */
     private IL10N $l10n;
-    
-    /** @var IConfig */
     private IConfig $config;
-    
-    /** @var IInitialState */
     private IInitialState $initialStateService;
-
-    /** @var IUserSession */
     private IUserSession $userSession;
 
     public function __construct(
@@ -43,7 +36,7 @@ class PersonalIframeWidget implements IWidget {
     public function getTitle(): string {
         $userId = $this->userSession->getUser()->getUID();
         $title = $this->config->getUserValue($userId, Application::APP_ID, 'personal_widget_title', '');
-        return $title ?: $this->l10n->t('Personal iFrame');
+        return empty(trim($title)) ? '' : $title;
     }
 
     public function getOrder(): int {
@@ -52,16 +45,20 @@ class PersonalIframeWidget implements IWidget {
 
     public function getIconClass(): string {
         $userId = $this->userSession->getUser()->getUID();
-        $icon = $this->config->getUserValue($userId, Application::APP_ID, 'personal_widget_icon', 'icon-iframe');
-        $color = $this->config->getUserValue($userId, Application::APP_ID, 'personal_widget_icon_color', '');
+        $icon = $this->config->getUserValue($userId, Application::APP_ID, 'personal_widget_icon', '');
         
-        if ($icon && str_starts_with($icon, 'si:') && $color) {
-            $simpleIconName = substr($icon, 3);
-            $colorValue = ltrim($color, '#');
-            return "si:{$simpleIconName}?color={$colorValue}";
+        if (empty($icon)) {
+            return 'icon-iframe';
         }
         
-        return $icon ?: 'icon-iframe';
+        if (str_starts_with($icon, 'si:')) {
+            $color = $this->config->getUserValue($userId, Application::APP_ID, 'personal_widget_icon_color', '');
+            if (!empty($color)) {
+                return $icon . ' ' . $color;
+            }
+        }
+        
+        return $icon;
     }
 
     public function getUrl(): ?string {
@@ -71,16 +68,23 @@ class PersonalIframeWidget implements IWidget {
     public function load(): void {
         $userId = $this->userSession->getUser()->getUID();
         
-        // Convert the extra_wide value to a proper boolean
+        // Get widget settings
         $extraWide = $this->config->getUserValue($userId, Application::APP_ID, 'personal_extra_wide', '0');
-        $extraWide = ($extraWide === '1' || $extraWide === 'true' || $extraWide === true);
+        $widgetTitle = $this->config->getUserValue($userId, Application::APP_ID, 'personal_widget_title', '');
+        $widgetIcon = $this->config->getUserValue($userId, Application::APP_ID, 'personal_widget_icon', '');
+        $widgetIconColor = $this->config->getUserValue($userId, Application::APP_ID, 'personal_widget_icon_color', '');
+        $iframeUrl = $this->config->getUserValue($userId, Application::APP_ID, 'personal_iframe_url', '');
         
-        $this->initialStateService->provideInitialState('personal-iframewidget-config', [
-            'iframeUrl' => $this->config->getUserValue($userId, Application::APP_ID, 'personal_iframe_url', ''),
-            'widgetTitle' => $this->getTitle(),
-            'widgetIcon' => $this->config->getUserValue($userId, Application::APP_ID, 'personal_widget_icon', ''),
-            'widgetIconColor' => $this->config->getUserValue($userId, Application::APP_ID, 'personal_widget_icon_color', ''),
+        // Convert boolean value
+        $extraWide = ($extraWide === '1' || $extraWide === 'true');
+        
+        // Provide initial state
+        $this->initialStateService->provideInitialState('personal-widget-config', [
             'extraWide' => $extraWide,
+            'widgetTitle' => $widgetTitle,
+            'widgetIcon' => $widgetIcon,
+            'widgetIconColor' => $widgetIconColor,
+            'iframeUrl' => $iframeUrl
         ]);
     }
 }
