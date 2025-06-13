@@ -64,7 +64,7 @@ export default {
             iframeError: false,
             config: loadState('iframewidget', 'personal-iframewidget-config') || {
                 extraWide: false,
-                widgetTitle: '',
+                widgetTitle: 'Personal iFrame Widget',
                 widgetIcon: '',
                 widgetIconColor: '',
                 iframeUrl: '',
@@ -77,111 +77,61 @@ export default {
         settingsUrl() {
             return OC.generateUrl('/settings/user/iframewidget')
         },
+        
         isExtraWide() {
             return this.config.extraWide === true || this.config.extraWide === 'true'
         },
+        
         iframeHeight() {
             return (!this.config.iframeHeight || this.config.iframeHeight === '0') 
                 ? '100%' 
                 : parseInt(this.config.iframeHeight) + 'px'
         },
+        
         widgetTitleEmpty() {
             return !this.config.widgetTitle || this.config.widgetTitle.trim() === ''
         }
     },
-    mounted() {
-        this.$nextTick(() => {
-            this.applyPanelClasses()
-            
-            if (this.config.extraWide !== undefined) {
-                this.configLoaded = true
-            }
-        })
-
-        // Setup a mutation observer to watch for dashboard changes
-        this.observer = new MutationObserver(() => {
-            this.applyPanelClasses()
-        })
-
-        // Start observing once the component is mounted
-        setTimeout(() => {
-            const dashboard = document.querySelector('.app-dashboard')
-            if (dashboard) {
-                this.observer.observe(dashboard, { 
-                    childList: true,
-                    subtree: false,
-                    attributeFilter: ['class']
-                })
-            }
-        }, 500)
-
-        // Check if iframe loads correctly after a timeout
-        if (this.config.iframeUrl) {
-            setTimeout(() => {
-                this.checkIframeLoaded()
-            }, 3000)
-        }
-        
-        // Listen for actual CSP errors in the console
-        window.addEventListener('securitypolicyviolation', this.handleCSPViolation)
-    },
-    beforeDestroy() {
-        if (this.observer) {
-            this.observer.disconnect()
-        }
-        window.removeEventListener('securitypolicyviolation', this.handleCSPViolation)
-    },
-    watch: {
-        'config.iframeUrl': function(newUrl, oldUrl) {
-            if (newUrl !== oldUrl) {
-                this.iframeError = false
-
-                // Attempt to reload iframe with new URL
-                this.$nextTick(() => {
-                    const iframe = this.$el.querySelector('iframe')
-                    if (iframe) {
-                        // Force reload by updating src
-                        iframe.src = newUrl
-                    }
-                })
-            }
-        }
-    },
     methods: {
-        handleCSPViolation(e) {
-            if (e.blockedURI && this.config.iframeUrl && 
-                (e.blockedURI === this.config.iframeUrl || 
-                this.config.iframeUrl.startsWith(e.blockedURI))) {
-                this.iframeError = true
-            }
-        },
         applyPanelClasses() {
-            if (!this.$el || typeof this.$el.closest !== 'function') return
-            
-            const parentPanel = this.$el.closest('.panel')
-            if (parentPanel) {
-                parentPanel.classList.toggle('ifw-widget-extra-wide', this.isExtraWide)
-                parentPanel.classList.toggle('ifw-title-empty', this.widgetTitleEmpty)
-                parentPanel.setAttribute('data-widget-id', 'personal-iframewidget')
+            const panel = this.$el.closest('.panel')
+            if (panel) {
+                if (this.config.widgetIcon) {
+                    const iconColor = this.config.widgetIconColor || ''
+                    panel.style.setProperty('--ifw-icon-color', iconColor)
+                }
             }
         },
         handleIframeError() {
             this.iframeError = true
-        },
-        checkIframeLoaded() {
-            const iframe = this.$el.querySelector('iframe')
-            if (iframe && !this.iframeError) {
-                try {
-                    // Try to access iframe content to check if it loaded
-                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document
-                    if (!iframeDoc) {
-                        this.iframeError = true
-                    }
-                } catch (e) {
-                    // CSP or other security error
-                    this.iframeError = true
-                }
+            this.loading = false
+        }
+    },
+    mounted() {
+        this.$nextTick(() => {
+            this.configLoaded = this.config && this.config.extraWide !== undefined
+            this.loading = false
+            this.applyPanelClasses()
+            
+            // Create observer to reapply classes if DOM changes
+            this.observer = new MutationObserver(() => {
+                this.applyPanelClasses()
+            })
+            
+            // Start observing DOM changes
+            const panel = this.$el.closest('.panel')
+            if (panel) {
+                this.observer.observe(panel, { 
+                    attributes: true, 
+                    childList: true, 
+                    subtree: true 
+                })
             }
+        })
+    },
+    beforeDestroy() {
+        if (this.observer) {
+            this.observer.disconnect()
         }
     }
 }
