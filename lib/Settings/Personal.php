@@ -8,7 +8,6 @@ use OCA\IframeWidget\AppInfo\Application;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
 use OCP\IConfig;
-use OCP\Settings\ISettings;
 use OCP\Settings\ISettingsPage;
 use OCP\IUserSession;
 use OCP\IL10N;
@@ -17,7 +16,9 @@ class Personal implements ISettingsPage {
     private IConfig $config;
     private IUserSession $userSession;
     private IInitialState $initialStateService;
-    private IL10N $l;    public function __construct(
+    private IL10N $l;
+
+    public function __construct(
         IConfig $config,
         IUserSession $userSession,
         IInitialState $initialStateService,
@@ -37,10 +38,10 @@ class Personal implements ISettingsPage {
             'widgetIcon' => $this->config->getUserValue($userId, Application::APP_ID, 'personal_widget_icon', 'icon-iframe'),
             'iframeUrl' => $this->config->getUserValue($userId, Application::APP_ID, 'personal_iframe_url', ''),
             'extraWide' => $this->config->getUserValue($userId, Application::APP_ID, 'personal_extra_wide', '0') === '1',
-        ]);
+        ]);        return new TemplateResponse(Application::APP_ID, 'personalSettings');
+    }
 
-        return new TemplateResponse(Application::APP_ID, 'personalSettings');
-    }    public function getSection(): string {
+    public function getSection(): string {
         return 'personal-info';
     }
 
