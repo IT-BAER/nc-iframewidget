@@ -6,7 +6,8 @@ const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
 // Define entry points for the application
 webpackConfig.entry = {
     'iframewidget-dashboard': path.join(__dirname, 'src', 'dashboard.js'),
-    'iframewidget-admin': path.join(__dirname, 'src', 'admin.js')
+    'iframewidget-admin': path.join(__dirname, 'src', 'admin.js'),
+    'iframewidget-personal': path.join(__dirname, 'src', 'iframewidget-personal.js')
 }
 
 // Configure output paths

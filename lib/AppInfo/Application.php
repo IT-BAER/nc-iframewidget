@@ -9,6 +9,8 @@ use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\Bootstrap\IBootstrap;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
 use OCA\IframeWidget\Dashboard\IframeWidget;
+use OCA\IframeWidget\Dashboard\PersonalIframeWidget;
+use OCA\IframeWidget\Settings\Personal;
 
 class Application extends App implements IBootstrap
 {
@@ -21,7 +23,12 @@ class Application extends App implements IBootstrap
 
     public function register(IRegistrationContext $context): void
     {
+        // Register dashboard widgets
         $context->registerDashboardWidget(IframeWidget::class);
+        $context->registerDashboardWidget(PersonalIframeWidget::class);
+
+        // Register personal settings page
+        $context->registerPersonalSettings(Personal::class);
     }
     
     public function boot(IBootContext $context): void

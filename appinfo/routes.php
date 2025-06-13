@@ -11,11 +11,20 @@ return [
             'url' => '/config',
             'verb' => 'POST'
         ],
-		[
-    		'name' => 'config#proxyIcon',
-    		'url' => '/proxy-icon/{icon}',
-    		'verb' => 'GET'
-		]
-
+        [
+            'name' => 'config#proxyIcon',
+            'url' => '/proxy-icon/{icon}',
+            'verb' => 'GET'
+        ],
+        [
+            'name' => 'personal_settings#getSettings',
+            'url' => '/personal-settings',
+            'verb' => 'GET'
+        ],
+        [
+            'name' => 'personal_settings#setSettings',
+            'url' => '/personal-settings',
+            'verb' => 'POST'
+        ]
     ]
 ];
