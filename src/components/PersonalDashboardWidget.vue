@@ -1,21 +1,9 @@
 <template>
     <div class="iframewidget-container" 
-         :class="{'ifw-widget-extra-wide': isExtraWide, 'ifw-title-empty': widgetTitleEmpty}"
+         :class="{'ifw-widget-extra-wide': isExtraWide}"
          :style="{ visibility: configLoaded ? 'visible' : 'hidden' }"
          data-widget-id="personal-iframewidget">
     
-        <!-- Widget header -->
-        <div v-if="config.widgetTitle || config.widgetIcon" class="widget-header">
-            <div v-if="config.widgetIcon" class="widget-icon">
-                <img v-if="widgetIconUrl" 
-                     :src="widgetIconUrl" 
-                     :alt="config.widgetIcon"
-                     class="icon-image">
-                <span v-else :class="config.widgetIcon"></span>
-            </div>
-            <h3 v-if="config.widgetTitle" class="widget-title">{{ config.widgetTitle }}</h3>
-        </div>
-
         <!-- Loading state -->
         <div v-if="loading" class="widget-loading">
             <div class="icon icon-loading"></div>
@@ -69,73 +57,31 @@ export default {
     data() {
         return {
             loading: true,
+            configLoaded: false,
             error: false,
             iframeError: false,
-            config: {
-                iframeUrl: '',
+            config: loadState('iframewidget', 'personal-widget-config') || {
+                extraWide: false,
                 widgetTitle: '',
                 widgetIcon: '',
                 widgetIconColor: '',
-                extraWide: false,
+                iframeUrl: ''
             },
-            configLoaded: false,
-            iframeHeight: '100%'
+            iframeHeight: '100%',
+            observer: null
         }
     },
     computed: {
-        widgetTitleEmpty() {
-            return !this.config.widgetTitle || this.config.widgetTitle.trim() === ''
-        },
         settingsUrl() {
             return generateUrl('/settings/user/iframewidget')
         },
         isExtraWide() {
-            // Handle both string and boolean values
-            const extraWide = this.config.extraWide
-            return extraWide === true || extraWide === 'true' || extraWide === '1'
-        },
-        widgetIconUrl() {
-            if (!this.config.widgetIcon) {
-                return null
-            }
-
-            if (this.config.widgetIcon.startsWith('si:')) {
-                const iconName = this.config.widgetIcon.substring(3).toLowerCase()
-                let iconUrl = `https://cdn.simpleicons.org/${iconName}`
-                if (this.config.widgetIconColor) {
-                    iconUrl += '/' + this.config.widgetIconColor.replace('#', '')
-                }
-                return iconUrl
-            }
-
-            return null
+            return this.config.extraWide === true || this.config.extraWide === 'true'
         }
     },
-    async created() {
+    created() {
         try {
-            // Load initial state
-            const config = await loadState('iframewidget', 'personal-iframewidget-config')
-            
-            // Make sure all values are properly set
-            this.config = {
-                iframeUrl: config.iframeUrl || '',
-                widgetTitle: config.widgetTitle || '',
-                widgetIcon: config.widgetIcon || '',
-                widgetIconColor: config.widgetIconColor || '',
-                extraWide: config.extraWide === true || config.extraWide === 'true' || config.extraWide === '1',
-            }
-            
             this.configLoaded = true
-            
-            // Set extra wide class and grid column
-            if (this.isExtraWide) {
-                this.$nextTick(() => {
-                    if (this.$el) {
-                        this.$el.classList.add('ifw-widget-extra-wide')
-                        this.$el.style.gridColumn = 'span 2'
-                    }
-                })
-            }
         } catch (e) {
             console.error('Failed to load personal iFrame widget config:', e)
             this.error = true
@@ -143,10 +89,33 @@ export default {
             this.loading = false
         }
     },
+    mounted() {
+        this.setupResizeObserver()
+    },
+    beforeDestroy() {
+        if (this.observer) {
+            this.observer.disconnect()
+        }
+    },
     methods: {
         handleIframeError() {
             this.iframeError = true
             console.error('IFrame loading error')
+        },
+        setupResizeObserver() {
+            if (this.isExtraWide && this.$el) {
+                this.$el.style.gridColumn = 'span 2'
+            }
+
+            this.observer = new ResizeObserver(() => {
+                if (this.$el && this.isExtraWide) {
+                    this.$el.style.gridColumn = 'span 2'
+                }
+            })
+
+            if (this.$el) {
+                this.observer.observe(this.$el)
+            }
         }
     }
 }
@@ -156,45 +125,15 @@ export default {
 .iframewidget-container {
     position: relative;
     width: 100%;
+    min-height: 200px;
     transition: all 0.3s ease;
     background: var(--color-main-background);
     border-radius: var(--border-radius);
     overflow: hidden;
 }
 
-.widget-header {
-    display: flex;
-    align-items: center;
-    padding: 12px 16px;
-    background: var(--color-main-background);
-    border-bottom: 1px solid var(--color-border);
-}
-
-.widget-icon {
-    width: 24px;
-    height: 24px;
-    margin-right: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.widget-icon .icon-image {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-}
-
-.widget-title {
-    margin: 0;
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--color-main-text);
-}
-
-.iframewidget-container.ifw-widget-extra-wide {
+.ifw-widget-extra-wide {
     width: calc(200% + var(--grid-gap));
-    grid-column: span 2;
 }
 
 .iframewidget-frame {
@@ -248,18 +187,5 @@ export default {
     background-color: var(--color-background-dark);
     border-radius: var(--border-radius);
     padding: 20px;
-}
-
-.ifw-title-empty {
-    .widget-header {
-        display: none;
-    }
-}
-
-/* Dark mode adjustments */
-@media (prefers-color-scheme: dark) {
-    .widget-header {
-        background: var(--color-background-dark);
-    }
 }
 </style>
