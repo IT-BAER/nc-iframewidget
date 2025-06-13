@@ -4,12 +4,18 @@
          :style="{ visibility: configLoaded ? 'visible' : 'hidden' }"
          data-widget-id="personal-iframewidget">
     
-        <!-- Header with icon and title -->
+        <!-- Widget header -->
         <div v-if="config.widgetTitle || config.widgetIcon" class="widget-header">
-            <div v-if="config.widgetIcon" class="widget-icon" :style="iconStyle"></div>
+            <div v-if="config.widgetIcon" class="widget-icon">
+                <img v-if="widgetIconUrl" 
+                     :src="widgetIconUrl" 
+                     :alt="config.widgetIcon"
+                     class="icon-image">
+                <span v-else :class="config.widgetIcon"></span>
+            </div>
             <h3 v-if="config.widgetTitle" class="widget-title">{{ config.widgetTitle }}</h3>
         </div>
-    
+
         <!-- Loading state -->
         <div v-if="loading" class="widget-loading">
             <div class="icon icon-loading"></div>
@@ -70,7 +76,7 @@ export default {
                 widgetTitle: '',
                 widgetIcon: '',
                 widgetIconColor: '',
-                extraWide: false
+                extraWide: false,
             },
             configLoaded: false,
             iframeHeight: '100%'
@@ -85,42 +91,51 @@ export default {
         },
         isExtraWide() {
             // Handle both string and boolean values
-            return this.config.extraWide === true || this.config.extraWide === 'true' || this.config.extraWide === '1'
+            const extraWide = this.config.extraWide
+            return extraWide === true || extraWide === 'true' || extraWide === '1'
         },
-        iconStyle() {
-            if (this.config.widgetIcon && this.config.widgetIcon.startsWith('si:')) {
+        widgetIconUrl() {
+            if (!this.config.widgetIcon) {
+                return null
+            }
+
+            if (this.config.widgetIcon.startsWith('si:')) {
                 const iconName = this.config.widgetIcon.substring(3).toLowerCase()
                 let iconUrl = `https://cdn.simpleicons.org/${iconName}`
                 if (this.config.widgetIconColor) {
                     iconUrl += '/' + this.config.widgetIconColor.replace('#', '')
                 }
-                return {
-                    backgroundImage: `url(${iconUrl})`,
-                    backgroundSize: 'contain',
-                    backgroundRepeat: 'no-repeat',
-                    backgroundPosition: 'center'
-                }
+                return iconUrl
             }
-            return {}
+
+            return null
         }
     },
     async created() {
         try {
+            // Load initial state
             const config = await loadState('iframewidget', 'personal-iframewidget-config')
-            // Ensure all config values are properly set
+            
+            // Make sure all values are properly set
             this.config = {
                 iframeUrl: config.iframeUrl || '',
                 widgetTitle: config.widgetTitle || '',
                 widgetIcon: config.widgetIcon || '',
                 widgetIconColor: config.widgetIconColor || '',
-                extraWide: config.extraWide === true || config.extraWide === 'true' || config.extraWide === '1'
+                extraWide: config.extraWide === true || config.extraWide === 'true' || config.extraWide === '1',
             }
+            
             this.configLoaded = true
-
-            // Force an update to ensure all UI elements reflect the config
-            this.$nextTick(() => {
-                this.$forceUpdate()
-            })
+            
+            // Set extra wide class and grid column
+            if (this.isExtraWide) {
+                this.$nextTick(() => {
+                    if (this.$el) {
+                        this.$el.classList.add('ifw-widget-extra-wide')
+                        this.$el.style.gridColumn = 'span 2'
+                    }
+                })
+            }
         } catch (e) {
             console.error('Failed to load personal iFrame widget config:', e)
             this.error = true
@@ -128,74 +143,10 @@ export default {
             this.loading = false
         }
     },
-    mounted() {
-        // Add a mutation observer to handle dynamic class changes
-        const observer = new MutationObserver((mutations) => {
-            mutations.forEach((mutation) => {
-                if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
-                    this.updateExtraWideClass()
-                }
-            })
-        })
-
-        if (this.$el) {
-            observer.observe(this.$el, {
-                attributes: true
-            })
-        }
-
-        // Initial class update
-        this.updateExtraWideClass()
-    },
-    beforeDestroy() {
-        // Clean up mutation observer if it exists
-        if (this.observer) {
-            this.observer.disconnect()
-        }
-    },
     methods: {
         handleIframeError() {
             this.iframeError = true
             console.error('IFrame loading error')
-        },
-        updateExtraWideClass() {
-            if (this.$el) {
-                const shouldBeWide = this.isExtraWide
-                const hasClass = this.$el.classList.contains('ifw-widget-extra-wide')
-                
-                if (shouldBeWide && !hasClass) {
-                    this.$el.classList.add('ifw-widget-extra-wide')
-                } else if (!shouldBeWide && hasClass) {
-                    this.$el.classList.remove('ifw-widget-extra-wide')
-                }
-
-                // Update grid column span
-                if (shouldBeWide) {
-                    this.$el.style.gridColumn = 'span 2'
-                } else {
-                    this.$el.style.gridColumn = ''
-                }
-            }
-        }
-    },
-    watch: {
-        'config.extraWide': {
-            handler() {
-                this.updateExtraWideClass()
-            },
-            immediate: true
-        },
-        'config.widgetIcon': {
-            handler() {
-                this.$forceUpdate()
-            },
-            immediate: true
-        },
-        'config.widgetIconColor': {
-            handler() {
-                this.$forceUpdate()
-            },
-            immediate: true
         }
     }
 }
@@ -223,9 +174,15 @@ export default {
     width: 24px;
     height: 24px;
     margin-right: 8px;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.widget-icon .icon-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
 }
 
 .widget-title {
@@ -237,6 +194,7 @@ export default {
 
 .iframewidget-container.ifw-widget-extra-wide {
     width: calc(200% + var(--grid-gap));
+    grid-column: span 2;
 }
 
 .iframewidget-frame {
@@ -290,10 +248,6 @@ export default {
     background-color: var(--color-background-dark);
     border-radius: var(--border-radius);
     padding: 20px;
-}
-
-.ifw-widget-extra-wide {
-    grid-column: span 2;
 }
 
 .ifw-title-empty {
