@@ -114,7 +114,7 @@ export default {
     },
     created() {
         try {
-            const config = loadState('iframewidget', 'personal-widget-config')
+            const config = loadState('iframewidget', 'personal-iframewidget-config')
             this.state = { ...config }
             this.originalState = { ...config }
             this.typedIcon = this.state.widgetIcon
