@@ -1,6 +1,13 @@
 <template>
     <div id="iframewidget-personal-settings" class="section">
-        <h2>{{ t('iframewidget', 'Personal iFrame Widget Settings') }}</h2>
+        <!-- Header section -->
+        <div class="iframewidget-header">
+            <h2>{{ t('iframewidget', 'Personal iFrame Widget Settings') }}</h2>
+            <div class="iframewidget-logo">
+                <img src="../../img/baer4-100x100.png" alt="Logo" class="iframewidget-logo-image">
+                <span class="iframewidget-version">v0.6.3</span>
+            </div>
+        </div>
         
         <p class="settings-hint">
             {{ t('iframewidget', 'Configure your personal iFrame Widget for the Dashboard.') }}
@@ -157,7 +164,31 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
+.iframewidget-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2em;
+}
+
+.iframewidget-logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.iframewidget-logo-image {
+    width: 100px;
+    height: 100px;
+}
+
+.iframewidget-version {
+    font-size: 0.8em;
+    color: var(--color-text-lighter);
+    margin-top: 0.5em;
+}
+
 .iframewidget-settings-form {
     max-width: 800px;
 }
@@ -197,5 +228,11 @@ input[type="url"],
 input[type="text"] {
     width: 100%;
     max-width: 400px;
+}
+
+.icon-finder {
+    font-size: 0.9em;
+    color: var(--color-text-lighter);
+    margin-left: 0.5em;
 }
 </style>

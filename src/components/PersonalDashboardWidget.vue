@@ -74,7 +74,7 @@ export default {
             return !this.config.widgetTitle || this.config.widgetTitle.trim() === ''
         },
         settingsUrl() {
-            return generateUrl('/settings/user/personal')
+            return generateUrl('/settings/user/iframewidget')
         },
         isExtraWide() {
             return this.config.extraWide
