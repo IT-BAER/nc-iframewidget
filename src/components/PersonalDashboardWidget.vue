@@ -85,15 +85,15 @@ export default {
             return (!this.config.iframeHeight || this.config.iframeHeight === '0') 
                 ? '100%' 
                 : parseInt(this.config.iframeHeight) + 'px';
-        },
-        widgetTitleEmpty() {
+        },        widgetTitleEmpty() {
             // Use the title from the config for this check
-            return !this.config.widgetTitle || this.config.widgetTitle.trim() === '' || this.config.widgetTitle === this.l10n_t('Personal iFrame');
+            return !this.config.widgetTitle || this.config.widgetTitle.trim() === '';
         }
-    },
-    mounted() {
+    },    mounted() {
         this.$nextTick(() => {
-            this.applyPanelClasses();
+            if (this.$el) {
+                this.applyPanelClasses();
+            }
             
             // Ensure configLoaded is true if config is present
             if (this.config && this.config.extraWide !== undefined) {
@@ -307,9 +307,9 @@ export default {
 				};
 				img.src = `https://cdn.simpleicons.org/${simpleIconName}`;
 			});
-		},
-    
-        checkIframeLoaded() {
+		},        checkIframeLoaded() {
+            if (!this.$el || typeof this.$el.querySelector !== 'function') return;
+            
             const iframe = this.$el.querySelector('iframe');
             if (!iframe || !this.config.iframeUrl) return;
             
@@ -379,15 +379,6 @@ export default {
     transition: all 0.3s ease;
     background: var(--color-main-background);
     border-radius: var(--border-radius);
-}
-
-/* Added for consistency */
-.iframewidget-container.ifw-widget-extra-wide {
-    /* This class is applied to the parent panel, not this container directly in admin widget.
-       However, if direct styling is needed, it would be:
-       grid-column: span 2; 
-       But usually handled by applyPanelClasses on .panel
-    */
 }
 
 .iframewidget-frame {
