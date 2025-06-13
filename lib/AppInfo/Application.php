@@ -11,6 +11,7 @@ use OCP\AppFramework\Bootstrap\IRegistrationContext;
 use OCA\IframeWidget\Dashboard\IframeWidget;
 use OCA\IframeWidget\Dashboard\PersonalIframeWidget;
 use OCA\IframeWidget\Settings\Personal;
+use OCP\Settings\ISettings;
 
 class Application extends App implements IBootstrap
 {
@@ -27,8 +28,15 @@ class Application extends App implements IBootstrap
         $context->registerDashboardWidget(IframeWidget::class);
         $context->registerDashboardWidget(PersonalIframeWidget::class);
 
-        // Register personal settings page
-        $context->registerPersonalSettings(Personal::class);
+        // Register personal settings page        $context->registerService(Personal::class, function($c) {
+            return new Personal(
+                $c->get(\OCP\IConfig::class),
+                $c->get(\OCP\IUserSession::class),
+                $c->get(\OCP\AppFramework\Services\IInitialState::class),
+                $c->get(\OCP\IL10N::class)
+            );
+        });
+        $context->registerSettingsPage(Personal::class);
     }
     
     public function boot(IBootContext $context): void

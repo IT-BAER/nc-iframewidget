@@ -9,21 +9,24 @@ use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
 use OCP\IConfig;
 use OCP\Settings\ISettings;
+use OCP\Settings\ISettingsPage;
 use OCP\IUserSession;
+use OCP\IL10N;
 
-class Personal implements ISettings {
+class Personal implements ISettingsPage {
     private IConfig $config;
     private IUserSession $userSession;
     private IInitialState $initialStateService;
-
-    public function __construct(
+    private IL10N $l;    public function __construct(
         IConfig $config,
         IUserSession $userSession,
-        IInitialState $initialStateService
+        IInitialState $initialStateService,
+        IL10N $l
     ) {
         $this->config = $config;
         $this->userSession = $userSession;
         $this->initialStateService = $initialStateService;
+        $this->l = $l;
     }
 
     public function getForm(): TemplateResponse {
@@ -37,13 +40,15 @@ class Personal implements ISettings {
         ]);
 
         return new TemplateResponse(Application::APP_ID, 'personalSettings');
-    }
-
-    public function getSection(): string {
-        return 'personal-settings';
+    }    public function getSection(): string {
+        return 'personal-info';
     }
 
     public function getPriority(): int {
         return 10;
+    }
+
+    public function getName(): ?string {
+        return $this->l->t('Personal iFrame Widget');
     }
 }
