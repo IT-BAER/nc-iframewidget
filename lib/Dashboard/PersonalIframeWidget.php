@@ -31,12 +31,10 @@ class PersonalIframeWidget implements IWidget {
 
     public function getId(): string {
         return 'personal-iframewidget';
-    }
-
-    public function getTitle(): string {
+    }    public function getTitle(): string {
         $userId = $this->userSession->getUser()->getUID();
         $title = $this->config->getUserValue($userId, Application::APP_ID, 'personal_widget_title', '');
-        // Ensure a default title is provided if the user hasn't set one, to prevent empty title styling issues.
+        // For dashboard consistency, return a non-empty default if user hasn't set one
         return empty(trim($title)) ? $this->l10n->t('Personal iFrame') : $title;
     }
 

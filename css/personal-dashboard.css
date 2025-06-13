@@ -1,0 +1,71 @@
+/* Personal IFrame widget icon */
+.icon-personal-iframewidget,
+.icon-iframe {
+    background-image: url('../img/iframewidget-dark.svg');
+    filter: var(--background-invert-if-dark);
+}
+
+body.theme--dark .icon-personal-iframewidget,
+body.theme--dark .icon-iframe {
+    background-image: url('../img/iframewidget.svg');
+}
+
+/* Widget panel sizing and layout */
+.panel.ifw-widget-extra-wide[data-widget-id="personal-iframewidget"] {
+    width: 640px;
+    grid-column: span 2 !important;
+}
+
+.panel.ifw-title-empty[data-widget-id="personal-iframewidget"] .panel--header {
+    height: 16px;
+    padding: 0;
+}
+
+.panel.ifw-title-empty[data-widget-id="personal-iframewidget"] span.icon-personal-iframewidget,
+.panel.ifw-title-empty[data-widget-id="personal-iframewidget"] span.icon-iframe {
+    display: none;
+}
+
+.panel.ifw-title-empty[data-widget-id="personal-iframewidget"] .panel--content {
+    height: calc(424px + 78px);
+}
+
+/* Transition effects */
+.panel[data-widget-id="personal-iframewidget"] {
+    transition: width 0.3s ease-in-out;
+    will-change: width;
+    transform: translateZ(0); /* Forces hardware acceleration */
+}
+
+/* Custom Icon styling for personal widget */
+.panel--header h2 .widget-icon {
+    display: inline-block !important;
+    margin-right: 16px !important;
+    margin-left: 0 !important;
+    position: relative !important;
+    width: 32px !important;
+    height: 32px !important;
+}
+
+.panel--header h2 .widget-icon + .icon-personal-iframewidget,
+.panel--header h2 .widget-icon + .icon-iframe,
+.panel--header h2 .icon-personal-iframewidget.hidden,
+.panel--header h2 .icon-iframe.hidden {
+    display: none !important;
+}
+
+/* Fix title alignment */
+.panel[data-widget-id="personal-iframewidget"] .panel--header h2 {
+    display: flex !important;
+    align-items: center !important;
+    text-align: left !important;
+    justify-content: flex-start !important;
+}
+
+/* Fix widget extra-wide on dashboard */
+@media (min-width: 1024px) {
+    .panel.ifw-widget-extra-wide[data-widget-id="personal-iframewidget"] {
+        grid-column: span 2 !important;
+        width: calc(100% - var(--default-grid-gap)) !important;
+    }
+}
