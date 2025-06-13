@@ -78,6 +78,7 @@ export default {
             return OC.generateUrl('/settings/user/iframewidget');
         },
         isExtraWide() {
+            // Consistently check against string 'true' or boolean true
             return this.config.extraWide === 'true' || this.config.extraWide === true;
         },
         iframeHeight() {
@@ -86,7 +87,8 @@ export default {
                 : parseInt(this.config.iframeHeight) + 'px';
         },
         widgetTitleEmpty() {
-            return !this.config.widgetTitle || this.config.widgetTitle.trim() === '';
+            // Use the title from the config for this check
+            return !this.config.widgetTitle || this.config.widgetTitle.trim() === '' || this.config.widgetTitle === this.l10n_t('Personal iFrame');
         }
     },
     mounted() {
@@ -176,9 +178,11 @@ export default {
             
             const parentPanel = this.$el.closest('.panel');
             if (parentPanel) {
+                // Use the computed isExtraWide property
                 parentPanel.classList.toggle('ifw-widget-extra-wide', this.isExtraWide);
+                // Use the computed widgetTitleEmpty property
                 parentPanel.classList.toggle('ifw-title-empty', this.widgetTitleEmpty);
-                parentPanel.setAttribute('data-widget-id', 'personal-iframewidget'); // Use personal widget ID
+                parentPanel.setAttribute('data-widget-id', 'personal-iframewidget');
                 
                 if (this.config.widgetIcon && !this.widgetTitleEmpty) {
                     const titleEl = parentPanel.querySelector('.panel--header h2');

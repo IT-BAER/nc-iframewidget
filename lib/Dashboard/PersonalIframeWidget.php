@@ -36,7 +36,8 @@ class PersonalIframeWidget implements IWidget {
     public function getTitle(): string {
         $userId = $this->userSession->getUser()->getUID();
         $title = $this->config->getUserValue($userId, Application::APP_ID, 'personal_widget_title', '');
-        return empty(trim($title)) ? '' : $title;
+        // Ensure a default title is provided if the user hasn't set one, to prevent empty title styling issues.
+        return empty(trim($title)) ? $this->l10n->t('Personal iFrame') : $title;
     }
 
     public function getOrder(): int {
@@ -75,20 +76,21 @@ class PersonalIframeWidget implements IWidget {
         $userId = $this->userSession->getUser()->getUID();
         
         // Get widget settings
-        $extraWide = $this->config->getUserValue($userId, Application::APP_ID, 'personal_extra_wide', 'false');
+        $rawExtraWide = $this->config->getUserValue($userId, Application::APP_ID, 'personal_extra_wide', 'false');
         $widgetTitle = $this->config->getUserValue($userId, Application::APP_ID, 'personal_widget_title', '');
         $widgetIcon = $this->config->getUserValue($userId, Application::APP_ID, 'personal_widget_icon', '');
         $widgetIconColor = $this->config->getUserValue($userId, Application::APP_ID, 'personal_widget_icon_color', '');
         $iframeUrl = $this->config->getUserValue($userId, Application::APP_ID, 'personal_iframe_url', '');
         $iframeHeight = $this->config->getUserValue($userId, Application::APP_ID, 'personal_iframe_height', '');
         
-        // Convert extraWide to boolean string to match admin widget
-        $extraWide = ($extraWide === '1' || $extraWide === 'true' || $extraWide === true) ? 'true' : 'false';
+        // Ensure extraWide is a string 'true' or 'false' for consistency with how it's handled in JS
+        $extraWide = ($rawExtraWide === '1' || $rawExtraWide === 'true' || $rawExtraWide === true) ? 'true' : 'false';
         
         // Initialize config with all required fields
         $config = [
             'extraWide' => $extraWide,
-            'widgetTitle' => $widgetTitle ?: 'Personal iFrame Widget',
+            // Use the result of getTitle() to ensure default is applied if necessary
+            'widgetTitle' => $this->getTitle(), 
             'widgetIcon' => $widgetIcon,
             'widgetIconColor' => $widgetIconColor,
             'iframeUrl' => $iframeUrl,
