@@ -46,13 +46,13 @@ class Application extends App implements IBootstrap
             );
         });
 
-        // Register settings and sections
-        $context->registerPersonalSettings(Personal::class);
-        $context->registerPersonalSection(PersonalSection::class);
+        // Register service aliases for settings
+        $context->registerServiceAlias(\OCP\Settings\ISection::class, PersonalSection::class);
+        $context->registerServiceAlias(\OCP\Settings\ISettings::class, Personal::class);
     }
     
     public function boot(IBootContext $context): void
     {
-        // No need to manually register settings in boot() since we're using registerPersonalSettings/registerPersonalSection
+        // We don't need any boot-time registration anymore
     }
 }
