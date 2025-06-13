@@ -34,14 +34,14 @@ class Personal implements ISettings {
     public function getForm(): TemplateResponse {
         $userId = $this->userSession->getUser()->getUID();
 
-        $this->initialStateService->provideInitialState('personal-widget-config', [
+        $this->initialStateService->provideInitialState('personal-iframewidget-config', [
             'widgetTitle' => $this->config->getUserValue($userId, Application::APP_ID, 'personal_widget_title', ''),
             'widgetIcon' => $this->config->getUserValue($userId, Application::APP_ID, 'personal_widget_icon', 'icon-iframe'),
             'iframeUrl' => $this->config->getUserValue($userId, Application::APP_ID, 'personal_iframe_url', ''),
             'extraWide' => $this->config->getUserValue($userId, Application::APP_ID, 'personal_extra_wide', '0') === '1',
         ]);        return new TemplateResponse(Application::APP_ID, 'personalSettings');
     }    public function getSectionID(): string {
-        return 'additional';
+        return Application::APP_ID;
     }
 
     public function getPriority(): int {

@@ -34,14 +34,16 @@ class Application extends App implements IBootstrap
                 $c->get(\OCP\AppFramework\Services\IInitialState::class),
                 $c->get(\OCP\IL10N::class)
             );
-        });        // Register settings section
+        });        // Register settings
         $context->registerService(PersonalSection::class, function($c) {
             return new PersonalSection(
                 $c->get(\OCP\IL10N::class),
                 $c->get(\OCP\IURLGenerator::class)
             );
         });
-        $context->registerUserSettings(Application::APP_ID, Personal::class);
+
+        // Register both section and setting
+        $context->registerSettings(PersonalSection::class, Personal::class);
     }
     
     public function boot(IBootContext $context): void

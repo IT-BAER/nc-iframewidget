@@ -62,7 +62,7 @@ class PersonalIframeWidget implements IWidget {
     public function load(): void {
         $userId = $this->userSession->getUser()->getUID();
         
-        $this->initialStateService->provideInitialState('personal-widget-config', [
+        $this->initialStateService->provideInitialState('personal-iframewidget-config', [
             'iframeUrl' => $this->config->getUserValue($userId, Application::APP_ID, 'personal_iframe_url', ''),
             'widgetTitle' => $this->getTitle(),
             'widgetIcon' => $this->getIconClass(),
