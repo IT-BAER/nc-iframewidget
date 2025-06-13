@@ -28,9 +28,6 @@ class Application extends App implements IBootstrap
         $context->registerDashboardWidget(IframeWidget::class);
         $context->registerDashboardWidget(PersonalIframeWidget::class);
 
-        // Register settings
-        $context->registerSettings(Personal::class, PersonalSection::class);
-
         // Register services
         $context->registerService(Personal::class, function($c) {
             return new Personal(
@@ -51,5 +48,10 @@ class Application extends App implements IBootstrap
     
     public function boot(IBootContext $context): void
     {
+        $serverContainer = $context->getServerContainer();
+        $context->injectFn(function (ISettingsManager $settingsManager) {
+            $settingsManager->registerSetting(ISettingsManager::KEY_PERSONAL_SECTION, PersonalSection::class);
+            $settingsManager->registerSetting(ISettingsManager::KEY_PERSONAL_SETTINGS, Personal::class);
+        });
     }
 }
