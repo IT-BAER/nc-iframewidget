@@ -42,11 +42,9 @@ class Application extends App implements IBootstrap
                 $c->get(\OCP\IL10N::class),
                 $c->get(\OCP\IURLGenerator::class)
             );
-        });
-
-        // Register settings
-        $context->registerSection('personal-settings', PersonalSection::class);
-        $context->registerSetting('personal-settings', Personal::class);
+        });        // Register settings
+        $context->registerPersonalSection(PersonalSection::class);
+        $context->registerPersonalSettings(Personal::class);
     }
     
     public function boot(IBootContext $context): void

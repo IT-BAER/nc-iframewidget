@@ -13,7 +13,7 @@ use OCP\Settings\ISetting;
 use OCP\IUserSession;
 use OCP\IL10N;
 
-class Personal implements ISetting {
+class Personal implements ISettings {
     private IConfig $config;
     private IUserSession $userSession;
     private IInitialState $initialStateService;
@@ -41,7 +41,7 @@ class Personal implements ISetting {
             'extraWide' => $this->config->getUserValue($userId, Application::APP_ID, 'personal_extra_wide', '0') === '1',
         ]);        return new TemplateResponse(Application::APP_ID, 'personalSettings', [], 'blank');
     }    public function getSection(): string {
-        return 'personal-settings';
+        return Application::APP_ID;
     }
 
     public function getPriority(): int {

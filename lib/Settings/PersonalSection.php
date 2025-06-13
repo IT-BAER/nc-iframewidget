@@ -17,7 +17,7 @@ class PersonalSection implements IIconSection {
         $this->l = $l;
         $this->urlGenerator = $urlGenerator;
     }    public function getID(): string {
-        return 'personal-settings';
+        return Application::APP_ID;
     }
 
     public function getName(): string {
