@@ -247,7 +247,13 @@ export default {
     methods: {
         updateColor(event) {
             this.state.widgetIconColor = event.target.value;
-            // No need to call debounceIconUpdate here
+            // Update the icon preview immediately
+            this.$nextTick(() => {
+                const iconImage = this.$el?.querySelector('.widget-icon img');
+                if (iconImage && this.state.widgetIcon && this.state.widgetIcon.startsWith('si:')) {
+                    iconImage.src = this.getIconUrl(this.state.widgetIcon, this.state.widgetIconColor);
+                }
+            });
         },
         handleUrlInput(event) {
             this.typedUrl = event.target.value;
