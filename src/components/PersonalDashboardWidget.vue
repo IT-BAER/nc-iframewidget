@@ -62,7 +62,7 @@ export default {
             isLoading: false,
             error: false,
             iframeError: false,
-            config: loadState('iframewidget', 'personal-widget-config') || {
+            config: loadState('iframewidget', 'personal-iframewidget-config') || {
                 extraWide: false,
                 widgetTitle: '',
                 widgetIcon: '',

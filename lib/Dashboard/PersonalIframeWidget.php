@@ -46,16 +46,17 @@ class PersonalIframeWidget implements IWidget {
     public function getIconClass(): string {
         $userId = $this->userSession->getUser()->getUID();
         $icon = $this->config->getUserValue($userId, Application::APP_ID, 'personal_widget_icon', '');
+        $color = $this->config->getUserValue($userId, Application::APP_ID, 'personal_widget_icon_color', '');
         
         if (empty($icon)) {
             return 'icon-iframe';
         }
         
         if (str_starts_with($icon, 'si:')) {
-            $color = $this->config->getUserValue($userId, Application::APP_ID, 'personal_widget_icon_color', '');
             if (!empty($color)) {
                 return $icon . ' ' . $color;
             }
+            return $icon;
         }
         
         return $icon;
@@ -69,22 +70,23 @@ class PersonalIframeWidget implements IWidget {
         $userId = $this->userSession->getUser()->getUID();
         
         // Get widget settings
-        $extraWide = $this->config->getUserValue($userId, Application::APP_ID, 'personal_extra_wide', '0');
+        $extraWide = $this->config->getUserValue($userId, Application::APP_ID, 'personal_extra_wide', 'false');
         $widgetTitle = $this->config->getUserValue($userId, Application::APP_ID, 'personal_widget_title', '');
         $widgetIcon = $this->config->getUserValue($userId, Application::APP_ID, 'personal_widget_icon', '');
         $widgetIconColor = $this->config->getUserValue($userId, Application::APP_ID, 'personal_widget_icon_color', '');
         $iframeUrl = $this->config->getUserValue($userId, Application::APP_ID, 'personal_iframe_url', '');
         
-        // Convert boolean value
-        $extraWide = ($extraWide === '1' || $extraWide === 'true');
+        // Convert extraWide to the expected format
+        $extraWide = ($extraWide === '1' || $extraWide === 'true' || $extraWide === true);
         
-        // Provide initial state
-        $this->initialStateService->provideInitialState('personal-widget-config', [
+        // Provide initial state with same schema as admin widget
+        $this->initialStateService->provideInitialState('personal-iframewidget-config', [
             'extraWide' => $extraWide,
             'widgetTitle' => $widgetTitle,
             'widgetIcon' => $widgetIcon,
             'widgetIconColor' => $widgetIconColor,
-            'iframeUrl' => $iframeUrl
+            'iframeUrl' => $iframeUrl,
+            'iframeHeight' => '100%'  // Personal widgets always use 100% height
         ]);
     }
 }

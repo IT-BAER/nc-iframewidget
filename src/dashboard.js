@@ -19,23 +19,17 @@ Vue.prototype.n = n
 Vue.prototype.OC = OC
 Vue.prototype.OCA = OCA
 
-// Register both widgets
+// Register both widgets when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
+    // Register admin/public widget
     OCA.Dashboard.register('iframewidget', (el) => {
         const Widget = Vue.extend(DashboardWidget)
         return new Widget({}).$mount(el)
     })
 
+    // Register personal widget
     OCA.Dashboard.register('personal-iframewidget', (el) => {
         const Widget = Vue.extend(PersonalDashboardWidget)
         return new Widget({}).$mount(el)
-    })
-})
-
-// Initialize the Dashboard Widget when DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
-    OCA.Dashboard.register('iframewidget', (el) => {
-        const View = Vue.extend(DashboardWidget)
-        new View().$mount(el)
     })
 })
