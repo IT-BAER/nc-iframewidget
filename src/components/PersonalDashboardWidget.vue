@@ -1,6 +1,6 @@
 <template>
     <div class="iframewidget-container" 
-         :class="{'ifw-widget-extra-wide': isExtraWide}"
+         :class="{'ifw-widget-extra-wide': isExtraWide, 'ifw-title-empty': widgetTitleEmpty}"
          :style="{ visibility: configLoaded ? 'visible' : 'hidden' }"
          data-widget-id="personal-iframewidget">
     
@@ -49,8 +49,9 @@
 </template>
 
 <script>
-import { loadState } from '@nextcloud/initial-state'
+import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
+import { loadState } from '@nextcloud/initial-state'
 
 export default {
     name: 'PersonalDashboardWidget',
@@ -58,6 +59,7 @@ export default {
         return {
             loading: true,
             configLoaded: false,
+            isLoading: false,
             error: false,
             iframeError: false,
             config: loadState('iframewidget', 'personal-widget-config') || {
@@ -65,56 +67,120 @@ export default {
                 widgetTitle: '',
                 widgetIcon: '',
                 widgetIconColor: '',
-                iframeUrl: ''
+                iframeUrl: '',
+                iframeHeight: ''
             },
-            iframeHeight: '100%',
             observer: null
         }
     },
     computed: {
         settingsUrl() {
-            return generateUrl('/settings/user/iframewidget')
+            return OC.generateUrl('/settings/user/iframewidget')
         },
         isExtraWide() {
             return this.config.extraWide === true || this.config.extraWide === 'true'
-        }
-    },
-    created() {
-        try {
-            this.configLoaded = true
-        } catch (e) {
-            console.error('Failed to load personal iFrame widget config:', e)
-            this.error = true
-        } finally {
-            this.loading = false
+        },
+        iframeHeight() {
+            return (!this.config.iframeHeight || this.config.iframeHeight === '0') 
+                ? '100%' 
+                : parseInt(this.config.iframeHeight) + 'px'
+        },
+        widgetTitleEmpty() {
+            return !this.config.widgetTitle || this.config.widgetTitle.trim() === ''
         }
     },
     mounted() {
-        this.setupResizeObserver()
+        this.$nextTick(() => {
+            this.applyPanelClasses()
+            
+            if (this.config.extraWide !== undefined) {
+                this.configLoaded = true
+            }
+        })
+
+        // Setup a mutation observer to watch for dashboard changes
+        this.observer = new MutationObserver(() => {
+            this.applyPanelClasses()
+        })
+
+        // Start observing once the component is mounted
+        setTimeout(() => {
+            const dashboard = document.querySelector('.app-dashboard')
+            if (dashboard) {
+                this.observer.observe(dashboard, { 
+                    childList: true,
+                    subtree: false,
+                    attributeFilter: ['class']
+                })
+            }
+        }, 500)
+
+        // Check if iframe loads correctly after a timeout
+        if (this.config.iframeUrl) {
+            setTimeout(() => {
+                this.checkIframeLoaded()
+            }, 3000)
+        }
+        
+        // Listen for actual CSP errors in the console
+        window.addEventListener('securitypolicyviolation', this.handleCSPViolation)
     },
     beforeDestroy() {
         if (this.observer) {
             this.observer.disconnect()
         }
+        window.removeEventListener('securitypolicyviolation', this.handleCSPViolation)
+    },
+    watch: {
+        'config.iframeUrl': function(newUrl, oldUrl) {
+            if (newUrl !== oldUrl) {
+                this.iframeError = false
+
+                // Attempt to reload iframe with new URL
+                this.$nextTick(() => {
+                    const iframe = this.$el.querySelector('iframe')
+                    if (iframe) {
+                        // Force reload by updating src
+                        iframe.src = newUrl
+                    }
+                })
+            }
+        }
     },
     methods: {
+        handleCSPViolation(e) {
+            if (e.blockedURI && this.config.iframeUrl && 
+                (e.blockedURI === this.config.iframeUrl || 
+                this.config.iframeUrl.startsWith(e.blockedURI))) {
+                this.iframeError = true
+            }
+        },
+        applyPanelClasses() {
+            if (!this.$el || typeof this.$el.closest !== 'function') return
+            
+            const parentPanel = this.$el.closest('.panel')
+            if (parentPanel) {
+                parentPanel.classList.toggle('ifw-widget-extra-wide', this.isExtraWide)
+                parentPanel.classList.toggle('ifw-title-empty', this.widgetTitleEmpty)
+                parentPanel.setAttribute('data-widget-id', 'personal-iframewidget')
+            }
+        },
         handleIframeError() {
             this.iframeError = true
-            console.error('IFrame loading error')
         },
-        setupResizeObserver() {
-            if (this.isExtraWide && this.$el) {
-                this.$el.style.gridColumn = 'span 2'
-            }
-
-            this.observer = new ResizeObserver(() => {
-                if (this.$el && this.isExtraWide) {
-                    this.$el.style.gridColumn = 'span 2'
+        checkIframeLoaded() {
+            const iframe = this.$el.querySelector('iframe')
+            if (iframe && !this.iframeError) {
+                try {
+                    // Try to access iframe content to check if it loaded
+                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document
+                    if (!iframeDoc) {
+                        this.iframeError = true
+                    }
+                } catch (e) {
+                    // CSP or other security error
+                    this.iframeError = true
                 }
-            })
-
-            if (this.$el) {
-                this.observer.observe(this.$el)
             }
         }
     }
@@ -132,7 +198,7 @@ export default {
     overflow: hidden;
 }
 
-.ifw-widget-extra-wide {
+.iframewidget-container.ifw-widget-extra-wide {
     width: calc(200% + var(--grid-gap));
 }
 
@@ -187,5 +253,17 @@ export default {
     background-color: var(--color-background-dark);
     border-radius: var(--border-radius);
     padding: 20px;
+}
+
+/**
+ * Panel wrapper classes
+ * These are applied to the parent panel by applyPanelClasses()
+ */
+:global(.panel.ifw-widget-extra-wide) {
+    grid-column: span 2 !important;
+}
+
+:global(.panel.ifw-title-empty .app-popover-menu-utils) {
+    top: 0;
 }
 </style>
