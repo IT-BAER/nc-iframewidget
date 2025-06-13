@@ -13,7 +13,6 @@ body.theme--dark .icon-iframe {
 /* Widget panel sizing and layout */
 .panel.ifw-widget-extra-wide[data-widget-id="personal-iframewidget"] {
     width: 640px;
-    grid-column: span 2 !important;
 }
 
 .panel.ifw-title-empty[data-widget-id="personal-iframewidget"] .panel--header {
@@ -30,6 +29,24 @@ body.theme--dark .icon-iframe {
     height: calc(424px + 78px);
 }
 
+/* iFrame itself */
+.iframewidget-frame {
+    width: 100%;
+    border: none;
+    overflow: hidden;
+}
+
+.iframewidget-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.iframewidget-frame[style*="height: 100%"] {
+    flex: 1;
+    min-height: 100px;
+}
+
 /* Transition effects */
 .panel[data-widget-id="personal-iframewidget"] {
     transition: width 0.3s ease-in-out;
@@ -37,7 +54,11 @@ body.theme--dark .icon-iframe {
     transform: translateZ(0); /* Forces hardware acceleration */
 }
 
-/* Custom Icon styling for personal widget */
+.iframewidget-container {
+    transition: opacity 0.3s ease-in;
+}
+
+/* Custom Icon styling */
 .panel--header h2 .widget-icon {
     display: inline-block !important;
     margin-right: 16px !important;
@@ -54,15 +75,19 @@ body.theme--dark .icon-iframe {
     display: none !important;
 }
 
-/* Fix title alignment */
-.panel[data-widget-id="personal-iframewidget"] .panel--header h2 {
-    display: flex !important;
-    align-items: center !important;
-    text-align: left !important;
-    justify-content: flex-start !important;
+.panel--header h2 .widget-icon img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    vertical-align: middle;
 }
 
-/* Fix widget extra-wide on dashboard */
+.panel--header h2 {
+    display: flex !important;
+    align-items: center !important;
+}
+
+/* Extra-wide grid column span for personal widget */
 @media (min-width: 1024px) {
     .panel.ifw-widget-extra-wide[data-widget-id="personal-iframewidget"] {
         grid-column: span 2 !important;
