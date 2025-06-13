@@ -200,6 +200,19 @@ export default {
             return this.state.widgetIconColor || '#000000'
         }
     },
+    watch: {
+        'state.widgetIconColor': {
+            handler(newColor) {
+                if (this.state.widgetIcon && this.state.widgetIcon.startsWith('si:')) {
+                    const iconImage = this.$el?.querySelector('.widget-icon img');
+                    if (iconImage) {
+                        iconImage.src = this.getIconUrl(this.state.widgetIcon, newColor);
+                    }
+                }
+            },
+            immediate: true
+        }
+    },
     created() {
         try {
             const config = loadState('iframewidget', 'personal-iframewidget-config')
@@ -234,7 +247,7 @@ export default {
     methods: {
         updateColor(event) {
             this.state.widgetIconColor = event.target.value;
-            this.debounceIconUpdate();
+            // No need to call debounceIconUpdate here
         },
         handleUrlInput(event) {
             this.typedUrl = event.target.value;

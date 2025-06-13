@@ -63,6 +63,7 @@ export default {
                 iframeUrl: '',
                 widgetTitle: '',
                 widgetIcon: '',
+                widgetIconColor: '',
                 extraWide: false,
             },
             configLoaded: false,
@@ -77,12 +78,16 @@ export default {
             return generateUrl('/settings/user/iframewidget')
         },
         isExtraWide() {
-            return this.config.extraWide
+            return this.config.extraWide === true || this.config.extraWide === 'true'
         }
     },
     async created() {
         try {
-            this.config = await loadState('iframewidget', 'personal-iframewidget-config')
+            const config = await loadState('iframewidget', 'personal-iframewidget-config')
+            this.config = {
+                ...config,
+                extraWide: config.extraWide === true || config.extraWide === 'true'
+            }
             this.configLoaded = true
         } catch (e) {
             console.error('Failed to load personal iFrame widget config:', e)
@@ -95,6 +100,16 @@ export default {
         handleIframeError() {
             this.iframeError = true
         }
+    },
+    watch: {
+        'config.extraWide': {
+            handler(newVal) {
+                if (this.$el) {
+                    this.$el.classList.toggle('ifw-widget-extra-wide', newVal)
+                }
+            },
+            immediate: true
+        }
     }
 }
 </script>
@@ -102,8 +117,12 @@ export default {
 <style scoped>
 .iframewidget-container {
     position: relative;
-    min-height: 200px;
-    height: 100%;
+    width: 100%;
+    transition: width 0.3s ease;
+}
+
+.iframewidget-container.ifw-widget-extra-wide {
+    width: calc(200% + var(--grid-gap));
 }
 
 .iframewidget-frame {
@@ -139,8 +158,23 @@ export default {
     margin-top: 16px;
 }
 
+.error-actions .button {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: var(--color-primary);
+    color: var(--color-primary-text);
+    border-radius: var(--border-radius);
+    text-decoration: none;
+}
+
+.error-actions .button:hover {
+    background-color: var(--color-primary-hover);
+}
+
 .csp-error {
-    color: var(--color-error);
+    background-color: var(--color-background-dark);
+    border-radius: var(--border-radius);
+    padding: 20px;
 }
 
 .ifw-widget-extra-wide {
