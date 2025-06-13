@@ -29,33 +29,30 @@ class Application extends App implements IBootstrap
         $context->registerDashboardWidget(IframeWidget::class);
         $context->registerDashboardWidget(PersonalIframeWidget::class);
 
-        // Register services
+        // Register settings
         $context->registerService(Personal::class, function($c) {
             return new Personal(
-                $c->get('OCP\IConfig'),
-                $c->get('OCP\IUserSession'),
-                $c->get('OCP\AppFramework\Services\IInitialState'),
-                $c->get('OCP\IL10N')
+                $c->get(\OCP\IConfig::class),
+                $c->get(\OCP\IUserSession::class),
+                $c->get(\OCP\AppFramework\Services\IInitialState::class),
+                $c->get(\OCP\IL10N::class)
             );
         });
 
         $context->registerService(PersonalSection::class, function($c) {
             return new PersonalSection(
-                $c->get('OCP\IL10N'),
-                $c->get('OCP\IURLGenerator')
+                $c->get(\OCP\IL10N::class),
+                $c->get(\OCP\IURLGenerator::class)
             );
         });
+
+        // Register settings and sections
+        $context->registerPersonalSettings(Personal::class);
+        $context->registerPersonalSection(PersonalSection::class);
     }
     
     public function boot(IBootContext $context): void
     {
-        $container = $context->getServerContainer();
-        
-        /** @var ISettingsManager $settingsManager */
-        $settingsManager = $container->get(ISettingsManager::class);
-        
-        // Register settings pages
-        $settingsManager->registerSetting(ISettingsManager::KEY_PERSONAL_SETTINGS, Personal::class);
-        $settingsManager->registerSection(ISettingsManager::KEY_PERSONAL_SECTION, PersonalSection::class);
+        // No need to manually register settings in boot() since we're using registerPersonalSettings/registerPersonalSection
     }
 }
