@@ -44,12 +44,9 @@ class Application extends App implements IBootstrap
             );
         });
 
-        // Register personal settings in Nextcloud > 20
-        if (method_exists($context, 'registerPersonalPage')) {
-            $context->registerPersonalPage(Personal::class);
-        } else {
-            $context->registerPersonalPanel(Personal::class);
-        }
+        // Register settings
+        $context->registerSection('personal-settings', PersonalSection::class);
+        $context->registerSetting('personal-settings', Personal::class);
     }
     
     public function boot(IBootContext $context): void

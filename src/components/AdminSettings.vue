@@ -242,9 +242,8 @@ export default {
 
         // Listen for actual CSP errors in the console
         window.addEventListener('securitypolicyviolation', this.handleCSPViolation);
-        
-        // Check if iframe loads correctly after a timeout
-        if (this.state.iframeUrl) {
+          // Check if iframe loads correctly after a timeout
+        if (this.config?.iframeUrl) {
             setTimeout(() => {
                 this.checkIframeLoaded();
             }, 3000);

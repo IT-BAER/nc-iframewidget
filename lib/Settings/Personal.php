@@ -9,11 +9,11 @@ use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
 use OCP\IConfig;
 use OCP\Settings\IIconSection;
-use OCP\Settings\ISettings;
+use OCP\Settings\ISetting;
 use OCP\IUserSession;
 use OCP\IL10N;
 
-class Personal implements ISettings {
+class Personal implements ISetting {
     private IConfig $config;
     private IUserSession $userSession;
     private IInitialState $initialStateService;
@@ -40,8 +40,8 @@ class Personal implements ISettings {
             'iframeUrl' => $this->config->getUserValue($userId, Application::APP_ID, 'personal_iframe_url', ''),
             'extraWide' => $this->config->getUserValue($userId, Application::APP_ID, 'personal_extra_wide', '0') === '1',
         ]);        return new TemplateResponse(Application::APP_ID, 'personalSettings', [], 'blank');
-    }    public function getSectionID(): string {
-        return Application::APP_ID;
+    }    public function getSection(): string {
+        return 'personal-settings';
     }
 
     public function getPriority(): int {
