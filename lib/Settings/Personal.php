@@ -9,9 +9,9 @@ use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
 use OCP\IConfig;
 use OCP\Settings\IIconSection;
-use OCP\Settings\ISetting;
 use OCP\IUserSession;
 use OCP\IL10N;
+use OCP\Settings\ISettings;
 
 class Personal implements ISettings {
     private IConfig $config;
@@ -38,9 +38,12 @@ class Personal implements ISettings {
             'widgetTitle' => $this->config->getUserValue($userId, Application::APP_ID, 'personal_widget_title', ''),
             'widgetIcon' => $this->config->getUserValue($userId, Application::APP_ID, 'personal_widget_icon', 'icon-iframe'),
             'iframeUrl' => $this->config->getUserValue($userId, Application::APP_ID, 'personal_iframe_url', ''),
-            'extraWide' => $this->config->getUserValue($userId, Application::APP_ID, 'personal_extra_wide', '0') === '1',
-        ]);        return new TemplateResponse(Application::APP_ID, 'personalSettings', [], 'blank');
-    }    public function getSection(): string {
+            'extraWide' => $this->config->getUserValue($userId, Application::APP_ID, 'personal_extra_wide', '0') === '1',        ]);
+        
+        return new TemplateResponse(Application::APP_ID, 'personalSettings', [], 'blank');
+    }
+
+    public function getSection(): string {
         return Application::APP_ID;
     }
 
