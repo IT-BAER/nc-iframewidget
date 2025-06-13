@@ -24,7 +24,7 @@
                     <input id="personal-iframe-widget-title"
                         v-model="state.widgetTitle"
                         type="text"
-                        :placeholder="t('iframewidget', 'Hidden')">
+                        placeholder="Hidden">
                     
                     <!-- Widget Icon -->
                     <label for="personal-widget-icon">
@@ -43,13 +43,13 @@
                             v-model="typedIcon"
                             type="text"
                             @input="debounceIconUpdate"
-                            :placeholder="t('iframewidget', 'si:github or si:nextcloud')">
+                            style="max-width: 350px!important;"
+                            placeholder="si:github or si:nextcloud">
                         <input type="color" 
                                :value="colorValue" 
                                @input="updateColor" 
                                :disabled="!state.widgetIcon || !state.widgetIcon.startsWith('si:')"
                                class="color-picker">
-                                
                         <div class="color-button-container" :class="{'has-button': state.widgetIconColor && state.widgetIconColor !== ''}">
                             <transition name="fade-scale">
                                 <button v-if="state.widgetIconColor && state.widgetIconColor !== ''" 
@@ -71,7 +71,7 @@
                         @input="handleUrlInput"
                         type="text"
                         class="iframewidget-input"
-                        :placeholder="t('iframewidget', 'https://example.org')">
+                        placeholder="https://example.org">
 
                     <!-- Extra Wide Toggle -->
                     <label for="personal-extra-wide" class="checkbox-label">
@@ -342,12 +342,59 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+/* Form layout */
+.iframewidget-grid-form {
+    display: grid;
+    margin-top: 30px;
+}
+
+.iframewidget-grid-form label:not(:first-child) {
+    margin-top: 20px;
+}
+
+input {
+    max-width: 400px;
+    width: 100%;
+}
+
+/* Checkbox styles */
+.checkbox-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.checkbox-container input[type="checkbox"] {
+    position: static;
+    display: block;
+    height: 16px;
+    width: 16px;
+    margin: 0;
+    opacity: 1;
+    cursor: pointer;
+}
+
+.checkbox-container .checkbox-icon {
+    display: none; 
+}
+
+.checkbox-container input[type="checkbox"]:checked {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+/* Button styles */
+.iframewidget-button-group {
+    margin-top: 20px;
+}
+
+/* Header styles */
 .iframewidget-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2em;
+    align-items: flex-start;
+    margin-bottom: 10px;
 }
 
 .iframewidget-logo {
@@ -357,195 +404,298 @@ export default {
 }
 
 .iframewidget-logo-image {
-    width: 100px;
-    height: 100px;
+    width: 60px;
+    height: 60px;
+    border-radius: 5px;
 }
 
 .iframewidget-version {
-    font-size: 0.8em;
-    color: var(--color-text-lighter);
-    margin-top: 0.5em;
+    font-size: 12px;
+    color: var(--color-text-maxcontrast);
+    margin-top: 5px;
 }
 
+/* Layout container */
 .iframewidget-admin-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2em;
-    max-width: 1200px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 20px;
 }
 
 .iframewidget-admin-form {
-    max-width: 600px;
+    flex: 0.5;
+    min-width: 330px;
 }
 
-.iframewidget-grid-form {
-    display: grid;
-    grid-template-columns: 200px 1fr;
-    gap: 1em;
-    align-items: center;
-    margin: 1em 0;
+.iframewidget-admin-preview {
+    flex: 1;
+    min-width: 320px;
+    max-width: 640px;
 }
 
-.icon-input-container {
-    display: flex;
-    gap: 0.5em;
-    align-items: center;
-}
-
-.icon-preview {
-    width: 44px;
-    height: 44px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 22px;
-}
-
-.settings-hint {
-    color: var(--color-text-lighter);
-}
-
-.iframewidget-button-group {
-    margin-top: 2em;
-}
-
-input[type="url"],
-input[type="text"] {
-    width: 100%;
-    max-width: 400px;
-}
-
-.icon-finder {
-    font-size: 0.9em;
-    color: var(--color-text-lighter);
-    margin-left: 0.5em;
-}
-
-.preview-title {
-    margin-bottom: 1em;
-}
-
+/* Preview styles */
 .preview-container {
-    border: 2px solid var(--color-border);
-    border-radius: 8px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-container-large);
     overflow: hidden;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+    background-color: var(--color-main-background-blur);
     transition: width 0.3s ease;
 }
 
 .preview-header {
-    padding: 1em;
-    border-bottom: 1px solid var(--color-border);
-    background: var(--color-main-background);
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    background-color: var(--color-main-background-blur);
 }
 
 .preview-header h2 {
-    display: flex;
+    display: block;
     align-items: center;
-    gap: 0.5em;
+    flex-grow: 1;
     margin: 0;
-    font-size: 1em;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 16px 8px;
+    height: 56px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.preview-header span:first-child {
+    width: 16px;
+    height: 16px;
+    background-size: 16px;
+    margin-right: 8px;
+}
+
+.preview-header span {
+    background-size: 32px!important;
+    width: 32px!important;
+    height: 32px!important;
+    margin-right: 16px!important;
+    background-position: center;
+    float: left;
+    margin-top: -6px;
+    margin-left: 6px;
 }
 
 .preview-content {
-    height: 300px;
-    background: var(--color-main-background);
+    margin: 0 16px 16px 16px;
     position: relative;
+    height: 424px;
 }
 
 .preview-empty {
     display: flex;
-    flex-direction: column;
-    align-items: center;
     justify-content: center;
-    height: 100%;
+    align-items: center;
+    height: 200px;
+    padding: 20px;
+    color: var(--color-text-maxcontrast);
     text-align: center;
-    color: var(--color-text-lighter);
 }
 
 .preview-frame {
     width: 100%;
     height: 100%;
     border: none;
+    min-height: 50px;
 }
 
-.widget-icon {
+.preview-title {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    margin-top: 0;
+}
+
+/* Empty title styles */
+.preview-header.preview-title-empty {
+    height: 10px !important;
+    padding: 0 !important;
+}
+
+.preview-header.preview-title-empty h2 {
+    display: none !important;
+}
+
+.preview-content.preview-title-empty {
+    height: calc(424px + 78px);
+}
+
+/* Custom icon styles */
+.preview-header h2 .widget-icon {
     display: inline-flex;
     align-items: center;
+    margin-right: 8px;
+    width: 32px !important;
+    height: 32px !important;
 }
 
-.dashboard-icon {
-    width: 20px;
-    height: 20px;
+.preview-header h2 .widget-icon img {
+    width: 32px;
+    height: 32px;
     object-fit: contain;
+    vertical-align: middle;
 }
 
-.color-picker {
-    width: 44px !important;
-    height: 44px;
+/* Hide default icon when custom icon is present */
+.preview-header h2 .widget-icon + .icon-iframewidget {
+    display: none !important;
+}
+
+/* Icon input styles */
+.icon-input-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    max-width: 400px!important;
+}
+
+/* Icon Finder Link styles */
+.icon-finder {
+    font-size: 0.85em;
+    font-weight: normal;
+    color: var(--color-text-maxcontrast);
+}
+
+.icon-finder a {
+    color: var(--color-primary);
+}
+
+/* Color button container transitions */
+.color-button-container {
+    display: inline-flex;
+    transition: width 0.3s ease, margin 0.3s ease;
+    width: 0;
+    height: 32px;
+}
+
+.color-button-container.has-button {
+    width: 32px;
+    margin-left: 4px;
+}
+
+/* Color picker styles */
+input[type="color"] {
+    aspect-ratio: 1/1;
+    min-width: 32px;
+    min-height: 32px;
+    width: 32px;
+    height: 32px;
+    padding: 0!important;
+    margin: 0!important;
+    border-radius: 50%;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.5) !important;
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer!important;
+}
+
+input[type="color"]:hover {
+    transform: scale(1.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.5) !important;
+}
+
+input[type="color"]::-webkit-color-swatch-wrapper {
     padding: 0;
-    border: none;
-    border-radius: 22px;
-    cursor: pointer;
 }
 
-.icon-reset-color {
-    background-position: center;
-    width: 44px;
-    height: 44px;
+input[type="color"]::-webkit-color-swatch {
     border: none;
-    border-radius: 22px;
+    border-radius: 50%;
+}
+
+/* Firefox support */
+input[type="color"]::-moz-color-swatch {
+    border: none;
+    border-radius: 50%;
+}
+
+/* Color reset button transitions */
+.icon-reset-color {
+    min-width: 32px;
+    min-height: 32px;
+    background-color: transparent;
+    border: none;
     cursor: pointer;
     opacity: 0.7;
+    margin: 0!important;
+    border-radius: 50%;
 }
 
 .icon-reset-color:hover {
     opacity: 1;
+    background-color: var(--color-background-hover);
 }
 
-.checkbox-container {
-    display: flex;
-    align-items: center;
+.fade-scale-enter-from {
+    opacity: 0;
+    transform: scale(0);
 }
 
-.checkbox-container label {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-}
-
-.checkbox {
-    margin-right: 0.5em;
-}
-
-.fade-scale-enter-active, .fade-scale-leave-active {
+.fade-scale-enter-active, 
+.fade-scale-leave-active {
     transition: all 0.3s ease;
 }
 
-.fade-scale-enter, .fade-scale-leave-to {
+.fade-scale-enter-from,
+.fade-scale-leave-to {
     opacity: 0;
-    transform: scale(0.5);
+    transform: scale(0);
 }
 
-.widget-error {
-    padding: 2em;
-    text-align: center;
+.icon-preview {
+    display: inline-flex;
+    align-items: center;
+    margin: 0 4px;
 }
 
-.error-title {
-    font-weight: bold;
-    margin-bottom: 1em;
-}
-
-.error-actions {
-    margin-top: 2em;
-}
-
-.csp-error {
+/* CSP error display styling */
+.widget-error.csp-error {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    padding: 16px;
+    text-align: center;
+    height: 200px;
     justify-content: center;
-    height: 100%;
-    background: var(--color-background-darker);
 }
+
+/* Error title styling */
+.widget-error .error-title {
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: var(--color-text-maxcontrast);
+}
+
+/* Error message paragraph styling */
+.widget-error p {
+    margin: 8px 0;
+    color: var(--color-text-maxcontrast);
+}
+
+/* Container for action buttons in error state */
+.error-actions {
+    margin-top: 16px;
+}
+
+/* Button styling for error actions */
+.error-actions .button {
+    display: inline-block;
+    padding: 8px 16px;
+    text-decoration: none;
+    border-radius: var(--border-radius);
+    background-color: var(--color-primary);
+    color: var(--color-primary-text);
+}
+
+/* Hover state for action buttons */
+.error-actions .button:hover {
+    background-color: var(--color-primary-element-hover);
+}
+
 </style>
