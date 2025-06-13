@@ -59,37 +59,55 @@ export default {
         return {
             loading: true,
             configLoaded: false,
-            isLoading: false, // Added for consistency
+            isLoading: false,
             error: false,
             iframeError: false,
             config: loadState('iframewidget', 'personal-iframewidget-config') || {
                 extraWide: false,
-                widgetTitle: 'Personal iFrame Widget', // Default title
+                widgetTitle: 'Personal iFrame Widget',
                 widgetIcon: '',
                 widgetIconColor: '',
                 iframeUrl: '',
-                iframeHeight: '' // Default height, can be '0' for 100%
+                iframeHeight: ''
             },
             observer: null
         }
     },
     computed: {
+        /**
+         * Quick link to the Personal Widget Settings
+         */
         settingsUrl() {
             return OC.generateUrl('/settings/user/iframewidget');
         },
+    
+        /**
+         * Determine if widget should be displayed in extra wide mode
+         * @returns {boolean} True if widget should be extra wide
+         */
         isExtraWide() {
-            // Consistently check against string 'true' or boolean true
-            return this.config.extraWide === 'true' || this.config.extraWide === true;
+            return this.config.extraWide === 'true' || this.config.extraWide === true
         },
+        
+        /**
+         * Calculate iframe height based on configuration
+         * @returns {string} CSS height value
+         */
         iframeHeight() {
             return (!this.config.iframeHeight || this.config.iframeHeight === '0') 
                 ? '100%' 
                 : parseInt(this.config.iframeHeight) + 'px';
-        },        widgetTitleEmpty() {
-            // Use the title from the config for this check
+        },
+        
+        /**
+         * Check if widget title is empty
+         * @returns {boolean} True if title is empty
+         */
+        widgetTitleEmpty() {
             return !this.config.widgetTitle || this.config.widgetTitle.trim() === '';
         }
-    },    mounted() {
+    },
+    mounted() {
         this.$nextTick(() => {
             this.applyPanelClasses();
             
@@ -97,8 +115,6 @@ export default {
                 this.configLoaded = true;
             }
         });
-    
-        this.fetchConfig();
     
         // Setup a mutation observer to watch for dashboard changes
         this.observer = new MutationObserver(() => {
@@ -117,12 +133,12 @@ export default {
             }
         }, 500);
     
-    	// Check if iframe loads correctly after a timeout
-    	if (this.config.iframeUrl) {
-        	setTimeout(() => {
-            	this.checkIframeLoaded();
-        	}, 3000);
-    	}
+        // Check if iframe loads correctly after a timeout
+        if (this.config.iframeUrl) {
+            setTimeout(() => {
+                this.checkIframeLoaded();
+            }, 3000);
+        }
         
         // Listen for actual CSP errors in the console
         window.addEventListener('securitypolicyviolation', this.handleCSPViolation);
@@ -135,30 +151,22 @@ export default {
         window.removeEventListener('securitypolicyviolation', this.handleCSPViolation);
     },
     watch: {
-    'config.iframeUrl': function(newUrl, oldUrl) {
-        if (newUrl !== oldUrl) {
-            this.iframeError = false; // Reset error state
+        'config.iframeUrl': function(newUrl, oldUrl) {
+            if (newUrl !== oldUrl) {
+                this.iframeError = false;
 
-            // Attempt to reload iframe with new URL
-            this.$nextTick(() => {
-                const iframe = this.$el.querySelector('iframe');
-                if (iframe) {
-                    // Force reload by updating src
-                    iframe.src = newUrl;
+                // Attempt to reload iframe with new URL
+                this.$nextTick(() => {
+                    const iframe = this.$el.querySelector('iframe');
+                    if (iframe) {
+                        // Force reload by updating src
+                        iframe.src = newUrl;
                     }
                 });
             }
-        },
-    // Watch for config changes to re-apply panel classes
-    config: {
-      handler() {
-        this.$nextTick(() => {
-          this.applyPanelClasses();
-        });
-      },
-      deep: true
-    }
-    },    methods: {
+        }
+    },
+    methods: {
         handleCSPViolation(e) {
             if (e.blockedURI && this.config.iframeUrl && 
                 (e.blockedURI === this.config.iframeUrl || 
@@ -200,45 +208,45 @@ export default {
                             titleEl.insertBefore(iconEl, titleEl.firstChild);
                         }
                         
-						// Set up image
-						let imgEl = iconEl.querySelector('img');
-						if (!imgEl) {
-							imgEl = document.createElement('img');
-							imgEl.addEventListener('error', this.handleIconError);
-							iconEl.appendChild(imgEl);
-						}
+                        // Set up image
+                        let imgEl = iconEl.querySelector('img');
+                        if (!imgEl) {
+                            imgEl = document.createElement('img');
+                            imgEl.addEventListener('error', this.handleIconError);
+                            iconEl.appendChild(imgEl);
+                        }
 
-						// Pre-validate icon for SimpleIcons
-						if (this.config.widgetIcon && this.config.widgetIcon.startsWith('si:')) {
-							imgEl.alt = this.config.widgetIcon;
-							imgEl.className = 'dashboard-icon';
-							
-							// First set to loading state or fallback
-							const prefersDarkMode = window.matchMedia && 
-								window.matchMedia('(prefers-color-scheme: dark)').matches;
-							const tempIcon = prefersDarkMode ? 
-								OC.filePath('iframewidget', 'img', 'iframewidget-dark.svg') : 
-								OC.filePath('iframewidget', 'img', 'iframewidget.svg');
-							imgEl.src = tempIcon;
-							
-							// Then validate and update if valid
-							this.validateIcon(this.config.widgetIcon).then(isValid => {
-								if (isValid) {
-									imgEl.src = this.getIconUrl(
-										this.config.widgetIcon, 
-										this.config.widgetIconColor
-									);
-								}
-							});
-						} else {
-							// Non-SimpleIcons don't need validation
-							imgEl.src = this.getIconUrl(
-								this.config.widgetIcon, 
-								this.config.widgetIconColor
-							);
-							imgEl.alt = this.config.widgetIcon;
-							imgEl.className = 'dashboard-icon';
-						}
+                        // Pre-validate icon for SimpleIcons
+                        if (this.config.widgetIcon && this.config.widgetIcon.startsWith('si:')) {
+                            imgEl.alt = this.config.widgetIcon;
+                            imgEl.className = 'dashboard-icon';
+                            
+                            // First set to loading state or fallback
+                            const prefersDarkMode = window.matchMedia && 
+                                window.matchMedia('(prefers-color-scheme: dark)').matches;
+                            const tempIcon = prefersDarkMode ? 
+                                OC.filePath('iframewidget', 'img', 'iframewidget-dark.svg') : 
+                                OC.filePath('iframewidget', 'img', 'iframewidget.svg');
+                            imgEl.src = tempIcon;
+                            
+                            // Then validate and update if valid
+                            this.validateIcon(this.config.widgetIcon).then(isValid => {
+                                if (isValid) {
+                                    imgEl.src = this.getIconUrl(
+                                        this.config.widgetIcon, 
+                                        this.config.widgetIconColor
+                                    );
+                                }
+                            });
+                        } else {
+                            // Non-SimpleIcons don't need validation
+                            imgEl.src = this.getIconUrl(
+                                this.config.widgetIcon, 
+                                this.config.widgetIconColor
+                            );
+                            imgEl.alt = this.config.widgetIcon;
+                            imgEl.className = 'dashboard-icon';
+                        }
                         
                         // Force size constraints
                         imgEl.style.width = '32px';
@@ -286,49 +294,51 @@ export default {
                 OC.filePath('iframewidget', 'img', 'iframewidget.svg');
         },
     
-		/**
-		 * Check if icon exists using img element instead of XHR
-		 * @param {string} iconName - Icon name with si: prefix
-		 * @returns {Promise} Promise resolving to boolean indicating if icon exists
-		 */
-		validateIcon(iconName) {
-			return new Promise((resolve) => {
-				if (!iconName || !iconName.startsWith('si:')) {
-					resolve(true); // Non-simple icons don't need validation
-					return;
-				}
-				
-				const simpleIconName = iconName.substring(3).toLowerCase();
-				
-				// Use image loading instead of XHR to avoid CORS
-				const img = new Image();
-				const timeoutId = setTimeout(() => {
-					// Consider it failed if it takes too long
-					img.src = ''; // Cancel the request
-					resolve(false);
-				}, 5000);
-				
-				img.onload = () => {
-					clearTimeout(timeoutId);
-					resolve(true);
-				};
-				
-				img.onerror = () => {
-					clearTimeout(timeoutId);
-					resolve(false);
-				};
-				
-				// Start loading the image
-				img.src = `https://cdn.simpleicons.org/${simpleIconName}`;
-			});
-		},
+        /**
+         * Check if icon exists using img element instead of XHR
+         * @param {string} iconName - Icon name with si: prefix
+         * @returns {Promise} Promise resolving to boolean indicating if icon exists
+         */
+        validateIcon(iconName) {
+            return new Promise((resolve) => {
+                if (!iconName || !iconName.startsWith('si:')) {
+                    resolve(true); // Non-simple icons don't need validation
+                    return;
+                }
+                
+                const simpleIconName = iconName.substring(3).toLowerCase();
+                
+                // Use image loading instead of XHR to avoid CORS
+                const img = new Image();
+                const timeoutId = setTimeout(() => {
+                    // Consider it failed if it takes too long
+                    img.src = ''; // Cancel the request
+                    resolve(false);
+                }, 5000);
+                
+                img.onload = () => {
+                    clearTimeout(timeoutId);
+                    resolve(true);
+                };
+                
+                img.onerror = () => {
+                    clearTimeout(timeoutId);
+                    resolve(false);
+                };
+                
+                // Start loading the image
+                img.src = `https://cdn.simpleicons.org/${simpleIconName}`;
+            });
+        },
     
-		/**
-		 * Checks if iframe content can be accessed
-		 * Detects Content Security Policy (CSP) violations by trying to access iframe DOM
-		 * Sets iframeError flag if access is blocked by browser security
-		 */
+        /**
+         * Checks if iframe content can be accessed
+         * Detects Content Security Policy (CSP) violations by trying to access iframe DOM
+         * Sets iframeError flag if access is blocked by browser security
+         */
         checkIframeLoaded() {
+            if (!this.$el || typeof this.$el.querySelector !== 'function') return;
+            
             const iframe = this.$el.querySelector('iframe');
             if (!iframe || !this.config.iframeUrl) return;
             
@@ -367,55 +377,32 @@ export default {
             setTimeout(() => clearInterval(visibilityCheck), timeoutDuration + 1000);
         },
 
-    
         /**
          * Handle errors loading icons
          * @param {Event} event - Error event
          */
-		handleIconError(event) {
-    		console.warn(`Icon not found or blocked by CSP: ${event.target.alt}`);
+        handleIconError(event) {
+            console.warn(`Icon not found or blocked by CSP: ${event.target.alt}`);
     
-    		// Choose appropriate fallback based on theme
-    		const prefersDarkMode = window.matchMedia && 
-        		window.matchMedia('(prefers-color-scheme: dark)').matches;
+            // Choose appropriate fallback based on theme
+            const prefersDarkMode = window.matchMedia && 
+                window.matchMedia('(prefers-color-scheme: dark)').matches;
     
-    		const fallbackIcon = prefersDarkMode ? 
-        		OC.filePath('iframewidget', 'img', 'iframewidget-dark.svg') : 
-        		OC.filePath('iframewidget', 'img', 'iframewidget.svg');
+            const fallbackIcon = prefersDarkMode ? 
+                OC.filePath('iframewidget', 'img', 'iframewidget-dark.svg') : 
+                OC.filePath('iframewidget', 'img', 'iframewidget.svg');
     
-   			// Replace with fallback
-    		event.target.src = fallbackIcon;
-		},
+            // Replace with fallback
+            event.target.src = fallbackIcon;
+        },
 
-		/**
-		 * Handle errors loading iframe content
-		 * @param {Event} event - Error event from iframe
-		 */
-    	handleIframeError(event) {
-    		console.warn('Failed to load iframe content: ', event);
-    		this.iframeError = true;
-		},
-        
         /**
-         * Fetch widget configuration from backend
+         * Handle errors loading iframe content
+         * @param {Event} event - Error event from iframe
          */
-        fetchConfig() {
-            this.loading = true;
-            const url = generateUrl('/apps/iframewidget/personal/config');
-
-            axios.get(url)
-                .then((response) => {
-                    this.config = response.data;
-                    this.loading = false;
-                    this.configLoaded = true;
-                    this.applyPanelClasses();
-                })
-                .catch((error) => {
-                    console.error(error);
-                    this.loading = false;
-                    this.error = true;
-                    this.configLoaded = true;
-                });
+        handleIframeError(event) {
+            console.warn('Failed to load iframe content: ', event);
+            this.iframeError = true;
         }
     }
 }
@@ -444,7 +431,7 @@ export default {
     height: 200px;
     width: 100%;
     color: var(--color-text-maxcontrast);
-	text-align: center;
+    text-align: center;
     flex-direction: column;
 }
 
