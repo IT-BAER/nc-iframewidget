@@ -12,7 +12,7 @@ body.theme--dark .icon-iframe {
 
 /* Widget panel sizing and layout */
 .panel.ifw-widget-extra-wide[data-widget-id="personal-iframewidget"] {
-    width: 640px !important;
+    width: 640px;
 }
 
 .panel.ifw-title-empty[data-widget-id="personal-iframewidget"] .panel--header {
@@ -60,7 +60,6 @@ body.theme--dark .icon-iframe {
 
 /* Custom Icon styling */
 .panel--header h2 .widget-icon {
-    float: left !important;
     display: inline-block !important;
     margin-right: 16px !important;
     margin-left: 0 !important;
@@ -86,22 +85,23 @@ body.theme--dark .icon-iframe {
 .panel--header h2 {
     display: flex !important;
     align-items: center !important;
-    justify-content: flex-start !important;
     width: 100% !important;
 }
 
-/* Add specific styles to ensure header alignment */
+/* Use Nextcloud's default dashboard widget header styles */
 .panel[data-widget-id="iframewidget"] .panel--header h2,
 .panel[data-widget-id="personal-iframewidget"] .panel--header h2 {
-    justify-content: flex-start !important;
+    display: flex !important;
+    align-items: center !important;
     text-align: left !important;
+    padding-left: 0 !important;
 }
 
 /* Extra-wide grid column span for personal widget */
 @media (min-width: 1024px) {
     body .app-dashboard .panel.ifw-widget-extra-wide[data-widget-id="personal-iframewidget"] {
         grid-column: span 2 !important;
-        width: calc(100% - var(--default-grid-gap)) !important;
+        width: 100% !important;
         max-width: none !important;
     }
 }

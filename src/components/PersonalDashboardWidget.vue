@@ -176,12 +176,9 @@ export default {
             
             const parentPanel = this.$el.closest('.panel');
             if (parentPanel) {
-                // Ensure extra-wide class is applied
-                if (this.isExtraWide) {
-                    parentPanel.classList.add('ifw-widget-extra-wide');
-                } else {
-                    parentPanel.classList.remove('ifw-widget-extra-wide');
-                }
+                // Ensure extra-wide class is explicitly toggled based on the config
+                console.log('PersonalDashboardWidget extraWide:', this.isExtraWide, this.config.extraWide);
+                parentPanel.classList.toggle('ifw-widget-extra-wide', this.isExtraWide);
                 
                 parentPanel.classList.toggle('ifw-title-empty', this.widgetTitleEmpty);
                 parentPanel.setAttribute('data-widget-id', 'personal-iframewidget');
