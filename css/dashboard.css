@@ -1,35 +1,28 @@
-/* Main iFrame widget icons for both widgets */
-.icon-iframewidget,
-.icon-personal-iframewidget,
-.icon-iframe {
+/* Main iFrame widget icon */
+.icon-iframewidget {
     background-image: url('../img/iframewidget-dark.svg');
     filter: var(--background-invert-if-dark);
 }
 
-body.theme--dark .icon-iframewidget,
-body.theme--dark .icon-personal-iframewidget,
-body.theme--dark .icon-iframe {
+body.theme--dark .icon-iframewidget {
     background-image: url('../img/iframewidget.svg');
 }
 
 /* Widget panel sizing and layout */
-/* Do not specify default width - let Nextcloud handle it */
-/* Only modify width for extra-wide mode */
+.panel.ifw-widget-extra-wide[data-widget-id="iframewidget"] {
+    width: 100% !important;
+}
 
-.panel.ifw-title-empty[data-widget-id="iframewidget"] .panel--header,
-.panel.ifw-title-empty[data-widget-id="personal-iframewidget"] .panel--header {
+.panel.ifw-title-empty[data-widget-id="iframewidget"] .panel--header {
     height: 16px;
     padding: 0;
 }
 
-.panel.ifw-title-empty[data-widget-id="iframewidget"] span.icon-iframewidget,
-.panel.ifw-title-empty[data-widget-id="personal-iframewidget"] span.icon-personal-iframewidget,
-.panel.ifw-title-empty[data-widget-id="personal-iframewidget"] span.icon-iframe {
+.panel.ifw-title-empty[data-widget-id="iframewidget"] span.icon-iframewidget {
     display: none;
 }
 
-.panel.ifw-title-empty[data-widget-id="iframewidget"] .panel--content,
-.panel.ifw-title-empty[data-widget-id="personal-iframewidget"] .panel--content {
+.panel.ifw-title-empty[data-widget-id="iframewidget"] .panel--content {
     height: calc(424px + 78px);
 }
 
@@ -52,8 +45,7 @@ body.theme--dark .icon-iframe {
 }
 
 /* Transition effects */
-.panel[data-widget-id="iframewidget"],
-.panel[data-widget-id="personal-iframewidget"] {
+.panel[data-widget-id="iframewidget"] {
     transition: width 0.3s ease-in-out;
     will-change: width;
     transform: translateZ(0); /* Forces hardware acceleration */
@@ -75,11 +67,7 @@ body.theme--dark .icon-iframe {
 }
 
 .panel--header h2 .widget-icon + .icon-iframewidget,
-.panel--header h2 .widget-icon + .icon-personal-iframewidget,
-.panel--header h2 .widget-icon + .icon-iframe,
-.panel--header h2 .icon-iframewidget.hidden,
-.panel--header h2 .icon-personal-iframewidget.hidden,
-.panel--header h2 .icon-iframe.hidden {
+.panel--header h2 .icon-iframewidget.hidden {
     display: none !important;
 }
 
@@ -97,69 +85,18 @@ body.theme--dark .icon-iframe {
     width: 100% !important;
 }
 
-/* Add specific styles to ensure consistent header alignment for both widgets */
+/* Add specific styles to ensure header alignment */
 .panel[data-widget-id="iframewidget"] .panel--header h2,
 .panel[data-widget-id="personal-iframewidget"] .panel--header h2 {
     justify-content: flex-start !important;
     text-align: left !important;
-    display: flex !important;
-    align-items: center !important;
-    width: 100% !important;
-    font-weight: normal !important;
-    margin: 0 !important;
-    padding: 0 !important;
 }
 
-/* Override specific panel header styles */
-.panel[data-widget-id="iframewidget"] .panel--header,
-.panel[data-widget-id="personal-iframewidget"] .panel--header {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: flex-start !important;
-    padding-left: 20px !important;
-    padding-right: 20px !important;
-    height: 50px !important;
-    box-sizing: border-box !important;
-}
-
-/* Extra-wide mode for both widgets - force across all screen sizes */
-.app-dashboard .panel.ifw-widget-extra-wide[data-widget-id="iframewidget"],
-.app-dashboard .panel.ifw-widget-extra-wide[data-widget-id="personal-iframewidget"] {
-    grid-column: span 2 !important;
-    width: auto !important; /* Let grid layout handle the width */
-    max-width: none !important;
-    min-width: 0 !important; /* Allow the panel to shrink if needed */
-    flex-basis: auto !important; /* Reset any flex-basis that might interfere */
-}
-
-/* Ensure the extra-wide rule applies regardless of dashboard grid settings */
-body.dashboard-grid-1 .app-dashboard .panel.ifw-widget-extra-wide[data-widget-id="iframewidget"],
-body.dashboard-grid-1 .app-dashboard .panel.ifw-widget-extra-wide[data-widget-id="personal-iframewidget"],
-body.dashboard-grid-2 .app-dashboard .panel.ifw-widget-extra-wide[data-widget-id="iframewidget"],
-body.dashboard-grid-2 .app-dashboard .panel.ifw-widget-extra-wide[data-widget-id="personal-iframewidget"],
-body.dashboard-grid-3 .app-dashboard .panel.ifw-widget-extra-wide[data-widget-id="iframewidget"],
-body.dashboard-grid-3 .app-dashboard .panel.ifw-widget-extra-wide[data-widget-id="personal-iframewidget"],
-body.dashboard-grid-4 .app-dashboard .panel.ifw-widget-extra-wide[data-widget-id="iframewidget"],
-body.dashboard-grid-4 .app-dashboard .panel.ifw-widget-extra-wide[data-widget-id="personal-iframewidget"] {
-    grid-column: span 2 !important;
-}
-
-/* Override Nextcloud's dashboard panel styles for our widgets */
-body .app-dashboard .panel[data-widget-id="iframewidget"],
-body .app-dashboard .panel[data-widget-id="personal-iframewidget"] {
-    display: flex !important;
-    flex-direction: column !important;
-}
-
-/* Ensure consistent header text styling */
-.panel[data-widget-id="iframewidget"] .panel--header h2 .title,
-.panel[data-widget-id="personal-iframewidget"] .panel--header h2 .title {
-    font-size: 16px !important;
-    line-height: 24px !important;
-    font-weight: normal !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-    white-space: nowrap !important;
+/* Extra-wide grid column span for widget */
+@media (min-width: 1024px) {
+    body .app-dashboard .panel.ifw-widget-extra-wide[data-widget-id="iframewidget"] {
+        grid-column: span 2 !important;
+        width: calc(100% - var(--default-grid-gap)) !important;
+        max-width: none !important;
+    }
 }

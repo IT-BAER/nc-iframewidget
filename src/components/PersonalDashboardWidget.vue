@@ -89,9 +89,6 @@ export default {
             return !this.config.widgetTitle || this.config.widgetTitle.trim() === '';
         }
     },    mounted() {
-        // Apply panel classes immediately and again after next tick
-        this.applyPanelClasses();
-        
         this.$nextTick(() => {
             this.applyPanelClasses();
             
@@ -179,29 +176,12 @@ export default {
             
             const parentPanel = this.$el.closest('.panel');
             if (parentPanel) {
-                // Set the widget ID first
-                parentPanel.setAttribute('data-widget-id', 'personal-iframewidget');
+                // Ensure extra-wide class is explicitly toggled based on the config
+                console.log('PersonalDashboardWidget extraWide:', this.isExtraWide, this.config.extraWide);
+                parentPanel.classList.toggle('ifw-widget-extra-wide', this.isExtraWide);
                 
-                // Handle extra-wide class with explicit add/remove and force DOM update
-                if (this.isExtraWide) {
-                    parentPanel.classList.add('ifw-widget-extra-wide');
-                    console.log('Personal widget - Extra wide enabled', this.config.extraWide);
-                    
-                    // Force DOM update by triggering reflow
-                    void parentPanel.offsetWidth;
-                    
-                    // Add force-grid-column rule to ensure span 2
-                    parentPanel.style.gridColumn = 'span 2';
-                } else {
-                    parentPanel.classList.remove('ifw-widget-extra-wide');
-                    console.log('Personal widget - Extra wide disabled', this.config.extraWide);
-                    
-                    // Remove any inline grid-column style
-                    parentPanel.style.removeProperty('grid-column');
-                }
-                
-                // Handle empty title class
                 parentPanel.classList.toggle('ifw-title-empty', this.widgetTitleEmpty);
+                parentPanel.setAttribute('data-widget-id', 'personal-iframewidget');
                 
                 // Add custom icon if widget has a title and icon
                 if (this.config.widgetIcon && !this.widgetTitleEmpty) {
@@ -429,16 +409,7 @@ export default {
                     this.config = response.data;
                     this.loading = false;
                     this.configLoaded = true;
-                    
-                    // Force applying panel classes with a slight delay to ensure DOM is ready
-                    setTimeout(() => {
-                        this.applyPanelClasses();
-                        // Apply another time after a short delay to ensure it takes effect
-                        setTimeout(() => {
-                            this.applyPanelClasses();
-                            console.log('Personal widget - Enforcing extra-wide', this.isExtraWide);
-                        }, 300);
-                    }, 100);
+                    this.applyPanelClasses();
                 })
                 .catch((error) => {
                     console.error(error);
