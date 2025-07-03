@@ -196,9 +196,9 @@ export default {
         },
         colorValue() {
             if (!this.state.widgetIcon || !this.state.widgetIcon.startsWith('si:')) {
-                return '#000000'
+                return '#ffffff'
             }
-            return this.state.widgetIconColor || '#000000'
+            return this.state.widgetIconColor || '#ffffff'
         }
     },
     watch: {
