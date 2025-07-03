@@ -147,6 +147,14 @@ export default {
                 }
             });
         }
+    },
+    config: {
+        handler() {
+            this.$nextTick(() => {
+                this.applyPanelClasses();
+            });
+        },
+        deep: true
     }
     },    methods: {
         handleCSPViolation(e) {
@@ -168,6 +176,7 @@ export default {
             
             const parentPanel = this.$el.closest('.panel');
             if (parentPanel) {
+                // Ensure consistent application of the extra-wide class
                 parentPanel.classList.toggle('ifw-widget-extra-wide', this.isExtraWide);
                 parentPanel.classList.toggle('ifw-title-empty', this.widgetTitleEmpty);
                 parentPanel.setAttribute('data-widget-id', 'personal-iframewidget');
