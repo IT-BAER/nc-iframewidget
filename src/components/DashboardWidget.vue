@@ -203,13 +203,11 @@ export default {
                 
                 // Handle extra-wide setting with fixed width of 640px (double the standard 320px)
                 if (this.isExtraWide) {
-                    console.log('Admin widget - ExtraWide enabled:', this.config.extraWide);
                     parentPanel.classList.add('ifw-widget-extra-wide');
                     // Set explicit width
                     parentPanel.style.width = '640px';
                     parentPanel.style.maxWidth = '640px';
                 } else {
-                    console.log('Admin widget - ExtraWide disabled:', this.config.extraWide);
                     parentPanel.classList.remove('ifw-widget-extra-wide');
                     // Reset inline width styles
                     parentPanel.style.removeProperty('width');
@@ -236,7 +234,6 @@ export default {
                             
                             // Force hide
                             icon.style.display = 'none';
-                            console.log('Admin widget: hiding icon', icon);
                         });
                         
                         // Create or get icon element
