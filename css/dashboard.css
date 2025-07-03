@@ -10,7 +10,7 @@ body.theme--dark .icon-iframewidget {
 
 /* Widget panel sizing and layout */
 .panel.ifw-widget-extra-wide[data-widget-id="iframewidget"] {
-    width: 640px;
+    width: 100% !important;
 }
 
 .panel.ifw-title-empty[data-widget-id="iframewidget"] .panel--header {
@@ -81,12 +81,22 @@ body.theme--dark .icon-iframewidget {
 .panel--header h2 {
     display: flex !important;
     align-items: center !important;
+    justify-content: flex-start !important;
+    width: 100% !important;
+}
+
+/* Add specific styles to ensure header alignment */
+.panel[data-widget-id="iframewidget"] .panel--header h2,
+.panel[data-widget-id="personal-iframewidget"] .panel--header h2 {
+    justify-content: flex-start !important;
+    text-align: left !important;
 }
 
 /* Extra-wide grid column span for widget */
 @media (min-width: 1024px) {
-    .panel.ifw-widget-extra-wide[data-widget-id="iframewidget"] {
+    body .app-dashboard .panel.ifw-widget-extra-wide[data-widget-id="iframewidget"] {
         grid-column: span 2 !important;
         width: calc(100% - var(--default-grid-gap)) !important;
+        max-width: none !important;
     }
 }
