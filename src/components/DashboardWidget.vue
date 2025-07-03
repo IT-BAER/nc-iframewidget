@@ -209,11 +209,22 @@ export default {
                 if (this.config.widgetIcon && !this.widgetTitleEmpty) {
                     const titleEl = parentPanel.querySelector('.panel--header h2');
                     if (titleEl) {
-                        // Hide the original icon
-                        const originalIcon = titleEl.querySelector('.icon-iframewidget');
-                        if (originalIcon) {
-                            originalIcon.style.display = 'none';
+                        // Hide the original icon - search for any of the possible icon classes
+                        const iconSelectors = ['.icon-iframewidget'];
+                        
+                        // Also add a selector for the custom icon if it's a SimpleIcon (si:) format
+                        if (this.config.widgetIcon && this.config.widgetIcon.startsWith('si:')) {
+                            iconSelectors.push('.' + this.config.widgetIcon.substring(3).toLowerCase());
                         }
+                        
+                        // Find and hide all matching icons
+                        iconSelectors.forEach(selector => {
+                            const icon = titleEl.querySelector(selector);
+                            if (icon) {
+                                icon.style.display = 'none';
+                                icon.classList.add('hidden');
+                            }
+                        });
                         
                         // Create or get icon element
                         let iconEl = titleEl.querySelector('.widget-icon');
