@@ -88,12 +88,15 @@ class IframeWidget implements IWidget
     public function load(): void
     {
         // Get widget settings
-        $extraWide = $this->config->getAppValue(Application::APP_ID, 'extraWide', 'false');
+        $rawExtraWide = $this->config->getAppValue(Application::APP_ID, 'extraWide', 'false');
         $widgetTitle = $this->config->getAppValue(Application::APP_ID, 'widgetTitle', '');
         $widgetIcon = $this->config->getAppValue(Application::APP_ID, 'widgetIcon', '');
         $widgetIconColor = $this->config->getAppValue(Application::APP_ID, 'widgetIconColor', '');
         $iframeHeight = $this->config->getAppValue(Application::APP_ID, 'iframeHeight', '');
         $iframeUrl = $this->config->getAppValue(Application::APP_ID, 'iframeUrl', '');
+        
+        // Ensure extraWide is a string 'true' or 'false' for consistency with how it's handled in JS
+        $extraWide = ($rawExtraWide === '1' || $rawExtraWide === 'true' || $rawExtraWide === true) ? 'true' : 'false';
         
         // Provide initial state directly
         $this->initialStateService->provideInitialState('widget-config', [
