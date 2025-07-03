@@ -52,9 +52,11 @@ class PersonalIframeWidget implements IWidget {
             return 'icon-iframe';
         }
         
-        // Semantic UI icons (si:) or custom icons
+        // For SimpleIcons (si:), we need to use a generic class and handle the icon in JavaScript
+        // Never return the raw si: format as it's not a valid CSS class name
         if (str_starts_with($icon, 'si:')) {
-            return !empty($color) ? $icon . ' ' . $color : $icon;
+            // Return a consistent class that CSS can target properly
+            return 'icon-personal-iframewidget';
         }
         
         // For regular icons (icon-*), append icon-loading class
