@@ -12,11 +12,9 @@ body.theme--dark .icon-iframe {
     background-image: url('../img/iframewidget.svg');
 }
 
-/* Widget panel sizing and layout - standard width for both widgets */
-.panel.ifw-widget-extra-wide[data-widget-id="iframewidget"],
-.panel.ifw-widget-extra-wide[data-widget-id="personal-iframewidget"] {
-    width: 320px !important; /* Default widget width */
-}
+/* Widget panel sizing and layout */
+/* Do not specify default width - let Nextcloud handle it */
+/* Only modify width for extra-wide mode */
 
 .panel.ifw-title-empty[data-widget-id="iframewidget"] .panel--header,
 .panel.ifw-title-empty[data-widget-id="personal-iframewidget"] .panel--header {
@@ -104,6 +102,17 @@ body.theme--dark .icon-iframe {
 .panel[data-widget-id="personal-iframewidget"] .panel--header h2 {
     justify-content: flex-start !important;
     text-align: left !important;
+    display: flex !important;
+    align-items: center !important;
+    width: 100% !important;
+}
+
+/* Override specific panel header styles */
+.panel[data-widget-id="iframewidget"] .panel--header,
+.panel[data-widget-id="personal-iframewidget"] .panel--header {
+    display: flex !important;
+    align-items: center !important;
+    padding-left: 20px !important;
 }
 
 /* Extra-wide grid column span for both widgets */
@@ -111,7 +120,20 @@ body.theme--dark .icon-iframe {
     body .app-dashboard .panel.ifw-widget-extra-wide[data-widget-id="iframewidget"],
     body .app-dashboard .panel.ifw-widget-extra-wide[data-widget-id="personal-iframewidget"] {
         grid-column: span 2 !important;
-        width: calc(690px - var(--default-grid-gap)) !important;
-        max-width: none !important;
     }
+}
+
+/* Force extra-wide styling for both widgets regardless of screen size */
+body:not(.dashboard-grid-1):not(.dashboard-grid-2):not(.dashboard-grid-3) .app-dashboard .panel.ifw-widget-extra-wide[data-widget-id="iframewidget"],
+body:not(.dashboard-grid-1):not(.dashboard-grid-2):not(.dashboard-grid-3) .app-dashboard .panel.ifw-widget-extra-wide[data-widget-id="personal-iframewidget"] {
+    grid-column-end: span 2 !important;
+    width: auto !important; /* Let grid layout handle the width */
+    max-width: none !important;
+}
+
+/* Override Nextcloud's dashboard panel styles for our widgets */
+body .app-dashboard .panel[data-widget-id="iframewidget"],
+body .app-dashboard .panel[data-widget-id="personal-iframewidget"] {
+    display: flex !important;
+    flex-direction: column !important;
 }

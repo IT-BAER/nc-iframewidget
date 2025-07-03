@@ -109,6 +109,9 @@ export default {
         }
     },
     mounted() {
+        // Apply panel classes immediately and again after next tick
+        this.applyPanelClasses();
+        
         this.$nextTick(() => {
             this.applyPanelClasses();
             
@@ -198,15 +201,22 @@ export default {
             
             const parentPanel = this.$el.closest('.panel');
             if (parentPanel) {
-                // Ensure extra-wide class is explicitly applied when needed
+                // Set the widget ID first
+                parentPanel.setAttribute('data-widget-id', 'iframewidget');
+                
+                // Handle extra-wide class with explicit add/remove
                 if (this.isExtraWide) {
                     parentPanel.classList.add('ifw-widget-extra-wide');
+                    // Add a debug console log
+                    console.log('Admin widget - Extra wide enabled', this.config.extraWide);
                 } else {
                     parentPanel.classList.remove('ifw-widget-extra-wide');
+                    // Add a debug console log
+                    console.log('Admin widget - Extra wide disabled', this.config.extraWide);
                 }
                 
+                // Handle empty title class
                 parentPanel.classList.toggle('ifw-title-empty', this.widgetTitleEmpty);
-                parentPanel.setAttribute('data-widget-id', 'iframewidget');
                 
                 // Add custom icon if widget has a title and icon
                 if (this.config.widgetIcon && !this.widgetTitleEmpty) {
