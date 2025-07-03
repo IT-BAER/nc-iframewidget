@@ -60,6 +60,7 @@ body.theme--dark .icon-iframe {
 
 /* Custom Icon styling */
 .panel--header h2 .widget-icon {
+    float: left !important;
     display: inline-block !important;
     margin-right: 16px !important;
     margin-left: 0 !important;

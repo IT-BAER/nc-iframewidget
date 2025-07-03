@@ -1,6 +1,5 @@
 <template>
     <div class="iframewidget-container" 
-         :class="{'ifw-widget-extra-wide': isExtraWide, 'ifw-title-empty': widgetTitleEmpty}"
          :style="{ visibility: configLoaded ? 'visible' : 'hidden' }"
          data-widget-id="iframewidget">
     
@@ -192,15 +191,7 @@ export default {
             
             const parentPanel = this.$el.closest('.panel');
             if (parentPanel) {
-                // Apply extra-wide class and explicitly set grid-column for compatibility
-                if (this.isExtraWide) {
-                    parentPanel.classList.add('ifw-widget-extra-wide');
-                    parentPanel.style.gridColumn = 'span 2';
-                } else {
-                    parentPanel.classList.remove('ifw-widget-extra-wide');
-                    parentPanel.style.gridColumn = '';
-                }
-                
+                parentPanel.classList.toggle('ifw-widget-extra-wide', this.isExtraWide);
                 parentPanel.classList.toggle('ifw-title-empty', this.widgetTitleEmpty);
                 parentPanel.setAttribute('data-widget-id', 'iframewidget');
                 
@@ -208,12 +199,6 @@ export default {
                 if (this.config.widgetIcon && !this.widgetTitleEmpty) {
                     const titleEl = parentPanel.querySelector('.panel--header h2');
                     if (titleEl) {
-                        // Ensure consistent text alignment
-                        titleEl.style.textAlign = 'left';
-                        titleEl.style.display = 'flex';
-                        titleEl.style.alignItems = 'center';
-                        titleEl.style.justifyContent = 'flex-start';
-                        
                         // Hide the original icon
                         const originalIcon = titleEl.querySelector('.icon-iframewidget');
                         if (originalIcon) {
