@@ -39,7 +39,7 @@ If you encounter Content Security Policy errors, you may need to adjust your Nex
     <bugs>https://github.com/IT-BAER/nc-iframewidget/issues</bugs>
 	<screenshot>https://raw.githubusercontent.com/IT-BAER/nc-iframewidget/refs/heads/main/nc-iframewidget-dashboard.png</screenshot>
     <dependencies>
-        <nextcloud min-version="30" max-version="31" />
+        <nextcloud min-version="30" max-version="33" />
     </dependencies>    <settings>
         <admin>OCA\IframeWidget\Settings\Admin</admin>
         <admin-section>OCA\IframeWidget\Settings\Section</admin-section>

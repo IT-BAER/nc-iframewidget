@@ -1,3 +1,14 @@
+## 0.7.0 - 2025-07-03
+
+### New Features
+
+- Added personal widget support: Users can now configure their own iFrame widget !
+- Admin Widget may now be used as "Public" Widget for all Users
+
+### Enhancements
+
+- Improved widget rendering and styling
+
 ## 0.6.3 - 2025-03-13
 
 ### Documentation
