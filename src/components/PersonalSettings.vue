@@ -433,14 +433,7 @@ input {
 }
 
 .iframewidget-logo a.logo-link {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    border-radius: 5px;
     display: block;
-}
-
-.iframewidget-logo a.logo-link:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .iframewidget-logo a:hover .iframewidget-version {
@@ -452,6 +445,12 @@ input {
     width: 60px;
     height: 60px;
     border-radius: 5px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.iframewidget-logo-image:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .iframewidget-version {
