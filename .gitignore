@@ -2,6 +2,7 @@
 .vscode/
 *.swp
 full_config.txt
+.github/
 
 # Logs
 *.log
