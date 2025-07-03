@@ -53,7 +53,6 @@ class Application extends App implements IBootstrap
     
     public function boot(IBootContext $context): void
     {
-        // Load additional CSS for personal widget
-        \OCP\Util::addStyle(self::APP_ID, 'personal-dashboard');
+        // No additional CSS needed - all styles in dashboard.css
     }
 }
