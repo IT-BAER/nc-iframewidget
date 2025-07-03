@@ -5,7 +5,9 @@
             <h2>{{ t('iframewidget', 'iFrame Widget Settings') }}</h2>
             <div class="iframewidget-logo">
                 <img src="../../img/baer4-100x100.png" alt="Logo" class="iframewidget-logo-image">
-                <span class="iframewidget-version">v0.6.3</span>
+                <a href="https://github.com/IT-BAER" target="_blank" rel="noopener noreferrer">
+                    <span class="iframewidget-version">v0.7.0</span>
+                </a>
             </div>
         </div>
         
@@ -638,6 +640,16 @@ input {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.iframewidget-logo a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.iframewidget-logo a:hover .iframewidget-version {
+    text-decoration: underline;
+    color: var(--color-primary-element);
 }
 
 .iframewidget-logo-image {
