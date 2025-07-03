@@ -1,6 +1,5 @@
 <template>
     <div class="iframewidget-container" 
-         :class="{'ifw-widget-extra-wide': isExtraWide, 'ifw-title-empty': widgetTitleEmpty}"
          :style="{ visibility: configLoaded ? 'visible' : 'hidden' }"
          data-widget-id="personal-iframewidget">
     
@@ -145,18 +144,9 @@ export default {
                 if (iframe) {
                     // Force reload by updating src
                     iframe.src = newUrl;
-                    }
-                });
-            }
-        },
-    // Watch for config changes to re-apply panel classes
-    config: {
-      handler() {
-        this.$nextTick(() => {
-          this.applyPanelClasses();
-        });
-      },
-      deep: true
+                }
+            });
+        }
     }
     },    methods: {
         handleCSPViolation(e) {
