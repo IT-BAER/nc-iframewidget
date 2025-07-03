@@ -48,10 +48,11 @@ body.theme--dark .icon-iframe {
     min-height: 100px;
 }
 
-/* Transition effects */
-.panel[data-widget-id="iframewidget"] {
-    transition: width 0.3s ease-in-out;
-    will-change: width;
+/* Transition effects - apply to both widgets */
+.panel[data-widget-id="iframewidget"],
+.panel[data-widget-id="personal-iframewidget"] {
+    transition: width 0.3s ease-in-out, grid-column 0.3s ease-in-out;
+    will-change: width, grid-column;
     transform: translateZ(0); /* Forces hardware acceleration */
 }
 
@@ -72,7 +73,6 @@ body.theme--dark .icon-iframe {
 
 /* Hide all original and custom icons when our widget icon is present */
 .panel--header h2 .widget-icon + span,
-.panel--header h2 .hidden,
 .panel--header h2 span[class^="si:"],
 .panel--header h2 span[class*=" si:"],
 .panel--header h2 .widget-icon + .icon-iframewidget,
@@ -102,11 +102,20 @@ body.theme--dark .icon-iframe {
     text-align: left !important;
 }
 
-/* Extra-wide grid column span for widget */
-@media (min-width: 1024px) {
-    body .app-dashboard .panel.ifw-widget-extra-wide[data-widget-id="iframewidget"] {
+/* Extra-wide grid column span for both widgets - apply across all screen sizes */
+@media (min-width: 768px) {
+    body .app-dashboard .panel.ifw-widget-extra-wide[data-widget-id="iframewidget"],
+    body .app-dashboard .panel.ifw-widget-extra-wide[data-widget-id="personal-iframewidget"] {
         grid-column: span 2 !important;
-        width: calc(100% - var(--default-grid-gap)) !important;
+        width: auto !important; /* Let grid handle the width */
         max-width: none !important;
+    }
+    
+    /* Explicitly target all dashboard grid configurations */
+    body.dashboard-grid-1 .app-dashboard .panel.ifw-widget-extra-wide,
+    body.dashboard-grid-2 .app-dashboard .panel.ifw-widget-extra-wide,
+    body.dashboard-grid-3 .app-dashboard .panel.ifw-widget-extra-wide,
+    body.dashboard-grid-4 .app-dashboard .panel.ifw-widget-extra-wide {
+        grid-column: span 2 !important;
     }
 }
