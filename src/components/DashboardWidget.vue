@@ -162,13 +162,20 @@ export default {
             this.$nextTick(() => {
                 const iframe = this.$el.querySelector('iframe');
                 if (iframe) {
-
                     // Force reload by updating src
                     iframe.src = newUrl;
-                    }
-                });
-            }
+                }
+            });
         }
+    },
+    config: {
+        handler() {
+            this.$nextTick(() => {
+                this.applyPanelClasses();
+            });
+        },
+        deep: true
+    }
     },
     methods: {
 
@@ -191,6 +198,7 @@ export default {
             
             const parentPanel = this.$el.closest('.panel');
             if (parentPanel) {
+                // Ensure consistent application of the extra-wide class
                 parentPanel.classList.toggle('ifw-widget-extra-wide', this.isExtraWide);
                 parentPanel.classList.toggle('ifw-title-empty', this.widgetTitleEmpty);
                 parentPanel.setAttribute('data-widget-id', 'iframewidget');
