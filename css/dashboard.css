@@ -97,7 +97,7 @@ body.theme--dark .icon-iframe {
     width: 100% !important;
 }
 
-/* Add specific styles to ensure header alignment */
+/* Add specific styles to ensure consistent header alignment for both widgets */
 .panel[data-widget-id="iframewidget"] .panel--header h2,
 .panel[data-widget-id="personal-iframewidget"] .panel--header h2 {
     justify-content: flex-start !important;
@@ -105,6 +105,9 @@ body.theme--dark .icon-iframe {
     display: flex !important;
     align-items: center !important;
     width: 100% !important;
+    font-weight: normal !important;
+    margin: 0 !important;
+    padding: 0 !important;
 }
 
 /* Override specific panel header styles */
@@ -112,23 +115,33 @@ body.theme--dark .icon-iframe {
 .panel[data-widget-id="personal-iframewidget"] .panel--header {
     display: flex !important;
     align-items: center !important;
+    justify-content: flex-start !important;
     padding-left: 20px !important;
+    padding-right: 20px !important;
+    height: 50px !important;
+    box-sizing: border-box !important;
 }
 
-/* Extra-wide grid column span for both widgets */
-@media (min-width: 1024px) {
-    body .app-dashboard .panel.ifw-widget-extra-wide[data-widget-id="iframewidget"],
-    body .app-dashboard .panel.ifw-widget-extra-wide[data-widget-id="personal-iframewidget"] {
-        grid-column: span 2 !important;
-    }
-}
-
-/* Force extra-wide styling for both widgets regardless of screen size */
-body:not(.dashboard-grid-1):not(.dashboard-grid-2):not(.dashboard-grid-3) .app-dashboard .panel.ifw-widget-extra-wide[data-widget-id="iframewidget"],
-body:not(.dashboard-grid-1):not(.dashboard-grid-2):not(.dashboard-grid-3) .app-dashboard .panel.ifw-widget-extra-wide[data-widget-id="personal-iframewidget"] {
-    grid-column-end: span 2 !important;
+/* Extra-wide mode for both widgets - force across all screen sizes */
+.app-dashboard .panel.ifw-widget-extra-wide[data-widget-id="iframewidget"],
+.app-dashboard .panel.ifw-widget-extra-wide[data-widget-id="personal-iframewidget"] {
+    grid-column: span 2 !important;
     width: auto !important; /* Let grid layout handle the width */
     max-width: none !important;
+    min-width: 0 !important; /* Allow the panel to shrink if needed */
+    flex-basis: auto !important; /* Reset any flex-basis that might interfere */
+}
+
+/* Ensure the extra-wide rule applies regardless of dashboard grid settings */
+body.dashboard-grid-1 .app-dashboard .panel.ifw-widget-extra-wide[data-widget-id="iframewidget"],
+body.dashboard-grid-1 .app-dashboard .panel.ifw-widget-extra-wide[data-widget-id="personal-iframewidget"],
+body.dashboard-grid-2 .app-dashboard .panel.ifw-widget-extra-wide[data-widget-id="iframewidget"],
+body.dashboard-grid-2 .app-dashboard .panel.ifw-widget-extra-wide[data-widget-id="personal-iframewidget"],
+body.dashboard-grid-3 .app-dashboard .panel.ifw-widget-extra-wide[data-widget-id="iframewidget"],
+body.dashboard-grid-3 .app-dashboard .panel.ifw-widget-extra-wide[data-widget-id="personal-iframewidget"],
+body.dashboard-grid-4 .app-dashboard .panel.ifw-widget-extra-wide[data-widget-id="iframewidget"],
+body.dashboard-grid-4 .app-dashboard .panel.ifw-widget-extra-wide[data-widget-id="personal-iframewidget"] {
+    grid-column: span 2 !important;
 }
 
 /* Override Nextcloud's dashboard panel styles for our widgets */
@@ -136,4 +149,17 @@ body .app-dashboard .panel[data-widget-id="iframewidget"],
 body .app-dashboard .panel[data-widget-id="personal-iframewidget"] {
     display: flex !important;
     flex-direction: column !important;
+}
+
+/* Ensure consistent header text styling */
+.panel[data-widget-id="iframewidget"] .panel--header h2 .title,
+.panel[data-widget-id="personal-iframewidget"] .panel--header h2 .title {
+    font-size: 16px !important;
+    line-height: 24px !important;
+    font-weight: normal !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
 }

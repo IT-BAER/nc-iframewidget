@@ -204,15 +204,22 @@ export default {
                 // Set the widget ID first
                 parentPanel.setAttribute('data-widget-id', 'iframewidget');
                 
-                // Handle extra-wide class with explicit add/remove
+                // Handle extra-wide class with explicit add/remove and force DOM update
                 if (this.isExtraWide) {
                     parentPanel.classList.add('ifw-widget-extra-wide');
-                    // Add a debug console log
                     console.log('Admin widget - Extra wide enabled', this.config.extraWide);
+                    
+                    // Force DOM update by triggering reflow
+                    void parentPanel.offsetWidth;
+                    
+                    // Add force-grid-column rule to ensure span 2
+                    parentPanel.style.gridColumn = 'span 2';
                 } else {
                     parentPanel.classList.remove('ifw-widget-extra-wide');
-                    // Add a debug console log
                     console.log('Admin widget - Extra wide disabled', this.config.extraWide);
+                    
+                    // Remove any inline grid-column style
+                    parentPanel.style.removeProperty('grid-column');
                 }
                 
                 // Handle empty title class
@@ -444,7 +451,16 @@ export default {
                     this.config = response.data;
                     this.loading = false;
                     this.configLoaded = true;
-                    this.applyPanelClasses();
+                    
+                    // Force applying panel classes with a slight delay to ensure DOM is ready
+                    setTimeout(() => {
+                        this.applyPanelClasses();
+                        // Apply another time after a short delay to ensure it takes effect
+                        setTimeout(() => {
+                            this.applyPanelClasses();
+                            console.log('Admin widget - Enforcing extra-wide', this.isExtraWide);
+                        }, 300);
+                    }, 100);
                 })
                 .catch((error) => {
                     console.error(error);
