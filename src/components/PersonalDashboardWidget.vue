@@ -187,21 +187,22 @@ export default {
                 if (this.config.widgetIcon && !this.widgetTitleEmpty) {
                     const titleEl = parentPanel.querySelector('.panel--header h2');
                     if (titleEl) {
-                        // Hide the original icon - search for any of the possible icon classes
-                        const iconSelectors = ['.icon-personal-iframewidget', '.icon-iframe'];
+                        // Hide ALL default and original icons, regardless of class names
+                        // Get all spans inside the title that might be icons (but not our custom widget-icon)
+                        const iconElements = titleEl.querySelectorAll('span:not(.widget-icon)');
                         
-                        // Also add a selector for the custom icon if it's a SimpleIcon (si:) format
-                        if (this.config.widgetIcon && this.config.widgetIcon.startsWith('si:')) {
-                            iconSelectors.push('.' + this.config.widgetIcon.substring(3).toLowerCase());
-                        }
-                        
-                        // Find and hide all matching icons
-                        iconSelectors.forEach(selector => {
-                            const icon = titleEl.querySelector(selector);
-                            if (icon) {
-                                icon.style.display = 'none';
-                                icon.classList.add('hidden');
+                        // Hide all potential icon elements
+                        iconElements.forEach(icon => {
+                            if (icon.classList.contains('widget-icon') || 
+                                icon.classList.contains('title')) {
+                                // Skip our custom icon container or the title element
+                                return;
                             }
+                            
+                            // Force hide and add hidden class
+                            icon.style.display = 'none';
+                            icon.classList.add('hidden');
+                            console.log('Personal widget: hiding icon', icon);
                         });
                         
                         // Create or get icon element

@@ -1,10 +1,14 @@
-/* Main iFrame widget icon */
-.icon-iframewidget {
+/* Main iFrame widget icons for both widgets */
+.icon-iframewidget,
+.icon-personal-iframewidget,
+.icon-iframe {
     background-image: url('../img/iframewidget-dark.svg');
     filter: var(--background-invert-if-dark);
 }
 
-body.theme--dark .icon-iframewidget {
+body.theme--dark .icon-iframewidget,
+body.theme--dark .icon-personal-iframewidget,
+body.theme--dark .icon-iframe {
     background-image: url('../img/iframewidget.svg');
 }
 
@@ -66,12 +70,14 @@ body.theme--dark .icon-iframewidget {
     height: 32px !important;
 }
 
+/* Hide all original and custom icons when our widget icon is present */
+.panel--header h2 .widget-icon + span,
+.panel--header h2 .hidden,
+.panel--header h2 span[class^="si:"],
+.panel--header h2 span[class*=" si:"],
 .panel--header h2 .widget-icon + .icon-iframewidget,
 .panel--header h2 .widget-icon + .icon-personal-iframewidget,
-.panel--header h2 .widget-icon + .icon-iframe,
-.panel--header h2 .icon-iframewidget.hidden,
-.panel--header h2 .icon-personal-iframewidget.hidden,
-.panel--header h2 .icon-iframe.hidden {
+.panel--header h2 .widget-icon + .icon-iframe {
     display: none !important;
 }
 
