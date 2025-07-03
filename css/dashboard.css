@@ -18,7 +18,7 @@ body.theme--dark .icon-iframewidget {
     padding: 0;
 }
 
-.panel.ifw-title-empty[data-widget-id="iframewidget"] span.icon-iframewidget {
+.panel.ifw-title-empty[data-widget-id="iframewidget"] {
     display: none;
 }
 
