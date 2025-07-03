@@ -14,11 +14,11 @@ Display external websites directly in your Nextcloud dashboard with this customi
 - Adjustable iframe height
 - Extra-wide display option (2 columns)
 - Clean, responsive design that integrates with Nextcloud themes
+- Seperate Personal and Public iFrame Widgets
 
 
 ### TODO
 
-- User-specific Settings & Admin-specific/Public Settings
 - 3-Column Size
 - Refresh Button (or Refresh Timer Option)
 - Localization Support
