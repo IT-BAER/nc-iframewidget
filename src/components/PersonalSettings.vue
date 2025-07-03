@@ -4,8 +4,10 @@
         <div class="iframewidget-header">
             <h2>{{ t('iframewidget', 'Personal iFrame Widget Settings') }}</h2>
             <div class="iframewidget-logo">
-                <img src="../../img/baer4-100x100.png" alt="Logo" class="iframewidget-logo-image">
-                <a href="https://github.com/IT-BAER" target="_blank" rel="noopener noreferrer">
+                <a href="https://github.com/IT-BAER" target="_blank" rel="noopener noreferrer" class="logo-link">
+                    <img src="../../img/baer4-100x100.png" alt="Logo" class="iframewidget-logo-image">
+                </a>
+                <a href="https://github.com/IT-BAER/nc-iframewidget/releases" target="_blank" rel="noopener noreferrer" class="version-link">
                     <span class="iframewidget-version">v0.7.0</span>
                 </a>
             </div>
@@ -428,6 +430,17 @@ input {
 .iframewidget-logo a {
     text-decoration: none;
     color: inherit;
+}
+
+.iframewidget-logo a.logo-link {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border-radius: 5px;
+    display: block;
+}
+
+.iframewidget-logo a.logo-link:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .iframewidget-logo a:hover .iframewidget-version {
