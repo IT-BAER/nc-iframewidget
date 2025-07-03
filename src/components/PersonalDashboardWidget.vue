@@ -179,17 +179,19 @@ export default {
                 // Set the widget ID first before applying any classes
                 parentPanel.setAttribute('data-widget-id', 'personal-iframewidget');
                 
-                // Handle extra-wide setting with explicit style to ensure grid layout applies it
+                // Handle extra-wide setting with fixed width of 640px (double the standard 320px)
                 if (this.isExtraWide) {
                     console.log('Personal widget - ExtraWide enabled:', this.config.extraWide);
                     parentPanel.classList.add('ifw-widget-extra-wide');
-                    // Force grid column to span 2
-                    parentPanel.style.gridColumn = 'span 2';
+                    // Set explicit width
+                    parentPanel.style.width = '640px';
+                    parentPanel.style.maxWidth = '640px';
                 } else {
                     console.log('Personal widget - ExtraWide disabled:', this.config.extraWide);
                     parentPanel.classList.remove('ifw-widget-extra-wide');
-                    // Reset any inline grid-column style
-                    parentPanel.style.removeProperty('grid-column');
+                    // Reset inline width styles
+                    parentPanel.style.removeProperty('width');
+                    parentPanel.style.removeProperty('max-width');
                 }
                 
                 parentPanel.classList.toggle('ifw-title-empty', this.widgetTitleEmpty);
