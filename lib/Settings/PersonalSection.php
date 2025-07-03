@@ -29,6 +29,6 @@ class PersonalSection implements IIconSection {
     }
 
     public function getIcon(): string {
-        return $this->urlGenerator->imagePath(Application::APP_ID, 'iframewidget.svg');
+        return $this->urlGenerator->imagePath(Application::APP_ID, 'iframewidget-dark.svg');
     }
 }
