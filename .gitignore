@@ -1,7 +1,22 @@
-# Editor files
+# Development files - not included in Git
+node_modules/
+src/
+webpack.config.js
+package-lock.json
+package.json
 .vscode/
-*.swp
+release_temp/
+create_release.bat
+create_release.sh
+
+# Documentation files not needed for the app store
+nc-iframewidget-dashboard.png
+nc-iframewidget-demo.mp4
+nc-iframewidget-settings.png
+iframewidget_context.txt
 full_config.txt
+
+# GitHub workflow files - can be excluded if not needed for CI/CD
 .github/
 
 # Logs
@@ -12,5 +27,5 @@ npm-debug.log*
 .DS_Store
 Thumbs.db
 
-node_modules/
-iframewidget_context.txt
+# Editor files
+*.swp
