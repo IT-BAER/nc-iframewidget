@@ -1,0 +1,23 @@
+# Exclude development files from archives
+.git export-ignore
+.github export-ignore
+.gitignore export-ignore
+.gitattributes export-ignore
+.vscode export-ignore
+node_modules export-ignore
+package-lock.json export-ignore
+package.json export-ignore
+webpack.config.js export-ignore
+src export-ignore
+*.log export-ignore
+*.swp export-ignore
+full_config.txt export-ignore
+iframewidget_context.txt export-ignore
+
+# Exclude documentation and media files that are not required for the app to function
+nc-iframewidget-dashboard.png export-ignore
+nc-iframewidget-demo.mp4 export-ignore
+nc-iframewidget-settings.png export-ignore
+
+# Set line ending behavior
+* text=auto
