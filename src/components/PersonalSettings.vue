@@ -450,7 +450,7 @@ input {
 
 .iframewidget-logo-image:hover {
     transform: scale(1.05);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    filter: drop-shadow(1px -1px 3px rgba(0, 0, 0, 0.5));
 }
 
 .iframewidget-version {
