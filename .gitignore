@@ -4,6 +4,7 @@ src/
 webpack.config.js
 package-lock.json
 package.json
+.nextcloud/
 .vscode/
 release_temp/
 create_release.bat
