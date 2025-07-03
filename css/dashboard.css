@@ -51,8 +51,8 @@ body.theme--dark .icon-iframe {
 /* Transition effects - apply to both widgets */
 .panel[data-widget-id="iframewidget"],
 .panel[data-widget-id="personal-iframewidget"] {
-    transition: width 0.3s ease-in-out, grid-column 0.3s ease-in-out;
-    will-change: width, grid-column;
+    transition: width 0.3s ease-in-out, max-width 0.3s ease-in-out;
+    will-change: width, max-width;
     transform: translateZ(0); /* Forces hardware acceleration */
 }
 
@@ -102,20 +102,25 @@ body.theme--dark .icon-iframe {
     text-align: left !important;
 }
 
-/* Extra-wide grid column span for both widgets - apply across all screen sizes */
-@media (min-width: 768px) {
+/* Extra-wide fixed width approach for both widgets - double the standard width */
+body .app-dashboard .panel.ifw-widget-extra-wide[data-widget-id="iframewidget"],
+body .app-dashboard .panel.ifw-widget-extra-wide[data-widget-id="personal-iframewidget"] {
+    width: 640px !important; /* Double the standard widget width of 320px */
+    max-width: 640px !important;
+}
+
+/* Ensure widgets remain responsive on smaller screens */
+@media (max-width: 767px) {
     body .app-dashboard .panel.ifw-widget-extra-wide[data-widget-id="iframewidget"],
     body .app-dashboard .panel.ifw-widget-extra-wide[data-widget-id="personal-iframewidget"] {
-        grid-column: span 2 !important;
-        width: auto !important; /* Let grid handle the width */
-        max-width: none !important;
+        width: 100% !important;
+        max-width: 100% !important;
     }
-    
-    /* Explicitly target all dashboard grid configurations */
-    body.dashboard-grid-1 .app-dashboard .panel.ifw-widget-extra-wide,
-    body.dashboard-grid-2 .app-dashboard .panel.ifw-widget-extra-wide,
-    body.dashboard-grid-3 .app-dashboard .panel.ifw-widget-extra-wide,
-    body.dashboard-grid-4 .app-dashboard .panel.ifw-widget-extra-wide {
-        grid-column: span 2 !important;
-    }
+}
+
+/* Special case for single-column dashboard layout */
+body.dashboard-grid-1 .app-dashboard .panel.ifw-widget-extra-wide[data-widget-id="iframewidget"],
+body.dashboard-grid-1 .app-dashboard .panel.ifw-widget-extra-wide[data-widget-id="personal-iframewidget"] {
+    width: 100% !important;
+    max-width: 100% !important;
 }
