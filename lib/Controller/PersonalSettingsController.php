@@ -37,6 +37,7 @@ class PersonalSettingsController extends Controller {
             'widgetIcon' => $this->config->getUserValue($userId, Application::APP_ID, 'personal_widget_icon', 'icon-iframe'),
             'widgetIconColor' => $this->config->getUserValue($userId, Application::APP_ID, 'personal_widget_icon_color', ''),
             'iframeUrl' => $this->config->getUserValue($userId, Application::APP_ID, 'personal_iframe_url', ''),
+            'iframeHeight' => $this->config->getUserValue($userId, Application::APP_ID, 'personal_iframe_height', ''),
             'extraWide' => $this->config->getUserValue($userId, Application::APP_ID, 'personal_extra_wide', '0') === '1',
         ]);
     }
@@ -48,7 +49,8 @@ class PersonalSettingsController extends Controller {
         string $widgetTitle = '', 
         string $widgetIcon = '', 
         string $widgetIconColor = '',
-        string $iframeUrl = '', 
+        string $iframeUrl = '',
+        string $iframeHeight = '', 
         bool $extraWide = false
     ): JSONResponse {
         $userId = $this->userSession->getUser()->getUID();
@@ -57,6 +59,7 @@ class PersonalSettingsController extends Controller {
         $this->config->setUserValue($userId, Application::APP_ID, 'personal_widget_icon', $widgetIcon);
         $this->config->setUserValue($userId, Application::APP_ID, 'personal_widget_icon_color', $widgetIconColor);
         $this->config->setUserValue($userId, Application::APP_ID, 'personal_iframe_url', $iframeUrl);
+        $this->config->setUserValue($userId, Application::APP_ID, 'personal_iframe_height', $iframeHeight);
         $this->config->setUserValue($userId, Application::APP_ID, 'personal_extra_wide', $extraWide ? '1' : '0');
 
         return new JSONResponse(['status' => 'success']);

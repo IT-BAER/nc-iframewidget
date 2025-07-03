@@ -401,7 +401,7 @@ export default {
          */
         fetchConfig() {
             this.loading = true;
-            const url = generateUrl('/apps/iframewidget/personal/config');
+            const url = generateUrl('/apps/iframewidget/personal-settings');
 
             axios.get(url)
                 .then((response) => {
