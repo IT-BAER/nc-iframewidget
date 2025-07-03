@@ -164,6 +164,7 @@ export default {
                 widgetIcon: '',
                 widgetIconColor: '',
                 iframeUrl: '',
+                iframeHeight: '',
                 extraWide: false,
             },
             saving: false,
