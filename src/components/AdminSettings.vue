@@ -737,11 +737,9 @@ input {
     background-size: 32px!important;
     width: 32px!important;
     height: 32px!important;
-    margin-right: 16px!important;
     background-position: center;
     float: left;
     margin-top: -6px;
-    margin-left: 6px;
 }
 
 .preview-content {
@@ -790,9 +788,11 @@ input {
 
 /* Custom icon styles */
 .preview-header h2 .widget-icon {
-    display: inline-flex;
-    align-items: center;
-    margin-right: 8px;
+    float: left !important;
+    display: inline-flex !important;
+    margin-right: 16px !important;
+    margin-left: 0 !important;
+    position: relative !important;
     width: 32px !important;
     height: 32px !important;
 }
