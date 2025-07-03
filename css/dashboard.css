@@ -57,7 +57,6 @@ body.theme--dark .icon-iframewidget {
 
 /* Custom Icon styling */
 .panel--header h2 .widget-icon {
-    float: left !important;
     display: inline-block !important;
     margin-right: 16px !important;
     margin-left: 0 !important;
@@ -81,4 +80,14 @@ body.theme--dark .icon-iframewidget {
 .panel--header h2 {
     display: flex !important;
     align-items: center !important;
+    text-align: left !important;
+    justify-content: flex-start !important;
+}
+
+/* Extra-wide grid column span for public widget */
+@media (min-width: 1024px) {
+    .panel.ifw-widget-extra-wide[data-widget-id="iframewidget"] {
+        grid-column: span 2 !important;
+        width: calc(100% - var(--default-grid-gap)) !important;
+    }
 }
