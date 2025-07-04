@@ -14,11 +14,11 @@ Display external websites directly in your Nextcloud dashboard with this customi
 - Adjustable iframe height
 - Extra-wide display option (2 columns)
 - Clean, responsive design that integrates with Nextcloud themes
+- Seperate Personal and Public iFrame Widgets
 
 
 ### TODO
 
-- User-specific Settings & Admin-specific/Public Settings
 - 3-Column Size
 - Refresh Button (or Refresh Timer Option)
 - Localization Support
@@ -105,7 +105,6 @@ Some websites explicitly block being embedded in iframes using their own CSP hea
 - Some websites block embedding using X-Frame-Options headers
 - Use trusted sources for embedded content
 
-
 ## FAQ
 
 ### Personal widget settings cannot be saved after upgrading to v0.7.0
@@ -151,12 +150,14 @@ If the widget doesn't appear on your dashboard after installation:
 
 If you find this app useful, consider supporting this and future developments, which heavily relies on coffee:
 
-<a href="https://www.buymeacoffee.com/itbaer" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;max-width: 217px !important;" ></a>
+<a href="https://www.buymeacoffee.com/itbaer" target="_blank"><img src="https://github.com/user-attachments/assets/64107f03-ba5b-473e-b8ad-f3696fe06002" alt="Buy Me A Coffee" style="height: 60px !important;max-width: 217px !important;" ></a>
+
+
+## License
+
+This project is licensed under the [AGPL-3.0-or-later](LICENSE) license.
 
 ## Credits
 
 - [Simple Icons](https://simpleicons.org/) - Used for widget icons
 
-## License
-
-This project is licensed under the [AGPL-3.0-or-later](LICENSE) license.
