@@ -106,11 +106,57 @@ Some websites explicitly block being embedded in iframes using their own CSP hea
 - Use trusted sources for embedded content
 
 
-## License
+## FAQ
 
-This project is licensed under the [AGPL-3.0-or-later](LICENSE) license.
+### Personal widget settings cannot be saved after upgrading to v0.7.0
+
+If you experience issues with saving personal widget settings after upgrading to v0.7.0, try the following solutions:
+
+1. **Clear the Nextcloud cache**:
+   ```bash
+   php occ maintenance:mode --on
+   php occ memcache:clear
+   php occ maintenance:mode --off
+   ```
+
+2. **Restart your web server**:
+   For Apache:
+   ```bash
+   sudo systemctl restart apache2
+   ```
+   For Nginx:
+   ```bash
+   sudo systemctl restart nginx
+   sudo systemctl restart php-fpm
+   ```
+
+3. **Disable and re-enable the app**:
+   ```bash
+   php occ app:disable iframewidget
+   php occ app:enable iframewidget
+   ```
+
+4. **Check your browser console for JavaScript errors**:
+   If you see CSRF token errors, clearing your browser cache might help.
+
+### Widget doesn't appear on the dashboard
+
+If the widget doesn't appear on your dashboard after installation:
+
+1. Make sure you've added it from the dashboard customization screen (+ button)
+2. Verify that there are no JavaScript errors in your browser console
+3. Check that the app is properly enabled: `php occ app:list | grep iframe`
+
+## Support Development
+
+If you find this app useful, consider supporting this and future developments, which heavily relies on coffee:
+
+<a href="https://www.buymeacoffee.com/itbaer" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
 
 ## Credits
 
 - [Simple Icons](https://simpleicons.org/) - Used for widget icons
 
+## License
+
+This project is licensed under the [AGPL-3.0-or-later](LICENSE) license.
