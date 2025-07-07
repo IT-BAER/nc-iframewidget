@@ -46,7 +46,13 @@ OC.L10N.register(
     "iFrame Widget admin settings": "iFrame Widget administratörsinställningar",
     "Personal iFrame Widget admin settings": "Personliga iFrame Widget administratörsinställningar",
     "Allow personal iFrame Widget": "Tillåt personlig iFrame-widget",
-    "Allow users to add personal iFrame widgets to their dashboard": "Tillåt användare att lägga till personliga iFrame-widgets till sin dashboard"
+    "Allow users to add personal iFrame widgets to their dashboard": "Tillåt användare att lägga till personliga iFrame-widgets till sin dashboard",
+    "No URL configured. Please set a URL in the Settings.": "Ingen URL konfigurerad. Ange en URL i inställningarna.",
+    "No URL configured.": "Ingen URL konfigurerad.",
+    "Please set a URL in the": "Ange en URL i",
+    "Admin Settings": "Administratörsinställningar",
+    "Please set a URL in your": "Ange en URL i dina",
+    "Personal Settings": "Personliga inställningar"
 },
 "nplurals=2; plural=(n != 1);"
 );

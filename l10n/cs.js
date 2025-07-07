@@ -46,7 +46,13 @@ OC.L10N.register(
     "iFrame Widget admin settings": "Nastavení správce pro widget iFrame",
     "Personal iFrame Widget admin settings": "Nastavení správce pro osobní widget iFrame",
     "Allow personal iFrame Widget": "Povolit osobní widget iFrame",
-    "Allow users to add personal iFrame widgets to their dashboard": "Povolit uživatelům přidávat osobní widgety iFrame do jejich řídicího panelu"
+    "Allow users to add personal iFrame widgets to their dashboard": "Povolit uživatelům přidávat osobní widgety iFrame do jejich řídicího panelu",
+    "No URL configured. Please set a URL in the Settings.": "Není nakonfigurována žádná URL. Nastavte prosím URL v Nastavení.",
+    "No URL configured.": "Není nakonfigurována žádná URL.",
+    "Please set a URL in the": "Nastavte prosím URL v",
+    "Admin Settings": "Nastavení správce",
+    "Please set a URL in your": "Nastavte prosím URL ve vašem",
+    "Personal Settings": "Osobním nastavení"
 },
 "nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;"
 );

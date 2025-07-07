@@ -75,6 +75,26 @@ msgstr ""
 msgid "No URL configured. Please set a URL in the Settings."
 msgstr ""
 
+#: src/components/DashboardWidget.vue:16 src/components/PersonalDashboardWidget.vue:16
+msgid "No URL configured."
+msgstr ""
+
+#: src/components/DashboardWidget.vue:18
+msgid "Please set a URL in the"
+msgstr ""
+
+#: src/components/DashboardWidget.vue:19
+msgid "Admin Settings"
+msgstr ""
+
+#: src/components/PersonalDashboardWidget.vue:18
+msgid "Please set a URL in your"
+msgstr ""
+
+#: src/components/PersonalDashboardWidget.vue:19
+msgid "Personal Settings"
+msgstr ""
+
 #: src/components/AdminSettings.vue:138 src/components/PersonalSettings.vue:138
 msgid "Failed to load content"
 msgstr ""

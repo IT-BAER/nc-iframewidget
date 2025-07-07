@@ -46,7 +46,13 @@ OC.L10N.register(
     "iFrame Widget admin settings": "iFrame 小部件管理员设置",
     "Personal iFrame Widget admin settings": "个人 iFrame 小部件管理员设置",
     "Allow personal iFrame Widget": "允许个人 iFrame 小部件",
-    "Allow users to add personal iFrame widgets to their dashboard": "允许用户在其仪表板中添加个人 iFrame 小部件"
+    "Allow users to add personal iFrame widgets to their dashboard": "允许用户在其仪表板中添加个人 iFrame 小部件",
+    "No URL configured. Please set a URL in the Settings.": "未配置 URL。请在设置中设置 URL。",
+    "No URL configured.": "未配置 URL。",
+    "Please set a URL in the": "请在以下位置设置 URL",
+    "Admin Settings": "管理员设置",
+    "Please set a URL in your": "请在您的以下位置设置 URL",
+    "Personal Settings": "个人设置"
 },
 "nplurals=1; plural=0;"
 );
