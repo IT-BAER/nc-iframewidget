@@ -69,8 +69,21 @@ Browse available icons at [SimpleIcons.org](https://simpleicons.org/).
 
 iFrame Widget supports multiple languages and can be translated. Currently, the following languages are available:
 
-- English (default)
-- German
+  - English (en)
+  - German (de)
+  - French (fr)
+  - Spanish (es)
+  - Italian (it)
+  - Dutch (nl)
+  - Russian (ru)
+  - Polish (pl)
+  - Portuguese (pt)
+  - Brazilian Portuguese (pt_BR)
+  - Chinese (Simplified) (zh_CN)
+  - Japanese (ja)
+  - Czech (cs)
+  - Swedish (sv)
+  - Norwegian Bokmål (nb)
 
 If you'd like to contribute translations, please see the [translation guide](docs/TRANSLATING.md).
 
