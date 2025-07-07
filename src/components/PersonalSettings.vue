@@ -8,7 +8,7 @@
                     <img src="../../img/baer4-100x100.png" alt="Logo" class="iframewidget-logo-image">
                 </a>
                 <a href="https://github.com/IT-BAER/nc-iframewidget/releases" target="_blank" rel="noopener noreferrer" class="version-link">
-                    <span class="iframewidget-version">v0.7.0</span>
+                    <span class="iframewidget-version">v0.7.5</span>
                 </a>
             </div>
         </div>
@@ -76,6 +76,16 @@
                         type="text"
                         class="iframewidget-input"
                         placeholder="https://example.org">
+
+                    <!-- iFrame Height -->
+                    <label for="personal-iframe-height">
+                        {{ t('iframewidget', 'iFrame Height (px)') }}
+                    </label>
+                    <input id="personal-iframe-height"
+                        v-model="state.iframeHeight"
+                        type="number"
+                        min="0"
+                        placeholder="100%">
 
                     <!-- Extra Wide Toggle -->
                     <label for="personal-extra-wide" class="checkbox-label">

@@ -25,6 +25,7 @@
 
 - Fixed missing translations for "No URL configured" messages in dashboard widgets
 - Ensured consistent translations across all components
+- Added missing iframe height setting in Personal Widget settings
 
 ## 0.7.0 - 2025-07-07
 
