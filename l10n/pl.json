@@ -1,0 +1,27 @@
+{
+    "translations": {
+        "iFrame Widget": "Widget iFrame",
+        "iFrame Widget Settings": "Ustawienia widgetu iFrame",
+        "Personal iFrame Widget Settings": "Osobiste ustawienia widgetu iFrame",
+        "Configure the iFrame Widget for the Dashboard.": "Skonfiguruj widget iFrame dla pulpitu.",
+        "Configure your personal iFrame Widget for the Dashboard.": "Skonfiguruj swój osobisty widget iFrame dla pulpitu.",
+        "Widget Title": "Tytuł widgetu",
+        "Widget Icon": "Ikona widgetu",
+        "Find icons at": "Znajdź ikony na",
+        "Reset color": "Zresetuj kolor",
+        "URL to Display": "URL do wyświetlenia",
+        "iFrame Height (px)": "Wysokość iFrame (px)",
+        "Extra Wide (2 Col)": "Ekstra szeroki (2 kolumny)",
+        "Save": "Zapisz",
+        "No URL configured. Please set a URL in the Settings.": "Nie skonfigurowano adresu URL. Ustaw adres URL w Ustawieniach.",
+        "Failed to load content": "Nie udało się załadować zawartości",
+        "This might be caused by Content Security Policy (CSP) restrictions.": "Może to być spowodowane ograniczeniami Polityki Bezpieczeństwa Treści (CSP).",
+        "View CSP Configuration Guide": "Zobacz przewodnik konfiguracji CSP",
+        "Settings saved": "Ustawienia zapisane",
+        "Could not save settings": "Nie można zapisać ustawień",
+        "Settings saved successfully": "Ustawienia zostały pomyślnie zapisane",
+        "Failed to save settings": "Nie udało się zapisać ustawień",
+        "Icon not found: {name}": "Nie znaleziono ikony: {name}"
+    },
+    "pluralForm": "nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);"
+}
