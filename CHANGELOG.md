@@ -23,9 +23,8 @@
 
 ### Bug Fixes
 
-- Fixed missing translations for "No URL configured" messages in dashboard widgets
-- Ensured consistent translations across all components
 - Added missing iframe height setting in Personal Widget settings
+- Fixed preview height in Personal Widget settings to properly show iframe height changes
 
 ## 0.7.0 - 2025-07-07
 

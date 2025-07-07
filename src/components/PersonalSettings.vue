@@ -147,7 +147,7 @@
                         </div>
                         <iframe v-else
                                 :src="state.iframeUrl"
-                                :style="{ height: '100%' }"
+                                :style="{ height: previewHeight }"
                                 class="preview-frame"
                                 referrerpolicy="no-referrer"
                                 allow="fullscreen"
@@ -213,6 +213,13 @@ export default {
                 return '#ffffff'
             }
             return this.state.widgetIconColor || '#ffffff'
+        },
+        previewHeight() {
+            if (!this.state.iframeHeight || this.state.iframeHeight === '0') {
+                return '100%';
+            } else {
+                return parseInt(this.state.iframeHeight) + 'px';
+            }
         }
     },
     watch: {
