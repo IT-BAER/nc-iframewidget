@@ -1,13 +1,15 @@
-## 0.7.0 - 2025-07-03
+## 0.7.0 - 2025-07-07
 
 ### New Features
 
 - Added personal widget support: Users can now configure their own iFrame widget !
 - Admin Widget may now be used as "Public" Widget for all Users
+- Added full localization support with translation capabilities
 
 ### Enhancements
 
 - Improved widget rendering and styling
+- Added translation infrastructure with sample German translation
 
 ## 0.6.3 - 2025-03-13
 

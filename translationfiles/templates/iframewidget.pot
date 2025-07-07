@@ -1,0 +1,109 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Nextcloud\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-07-07 12:00+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: lib/Dashboard/IframeWidget.php:48 lib/Dashboard/PersonalIframeWidget.php:52
+msgid "iFrame Widget"
+msgstr ""
+
+#: lib/Settings/Admin.php:80 lib/Settings/Section.php:45
+msgid "iFrame Widget"
+msgstr ""
+
+#: lib/Settings/PersonalSection.php:27
+msgid "iFrame Widget"
+msgstr ""
+
+#: src/components/AdminSettings.vue:6
+msgid "iFrame Widget Settings"
+msgstr ""
+
+#: src/components/PersonalSettings.vue:6
+msgid "Personal iFrame Widget Settings"
+msgstr ""
+
+#: src/components/AdminSettings.vue:21
+msgid "Configure the iFrame Widget for the Dashboard."
+msgstr ""
+
+#: src/components/PersonalSettings.vue:21
+msgid "Configure your personal iFrame Widget for the Dashboard."
+msgstr ""
+
+#: src/components/AdminSettings.vue:28 src/components/PersonalSettings.vue:28
+msgid "Widget Title"
+msgstr ""
+
+#: src/components/AdminSettings.vue:39 src/components/PersonalSettings.vue:39
+msgid "Widget Icon"
+msgstr ""
+
+#: src/components/AdminSettings.vue:41 src/components/PersonalSettings.vue:41
+msgid "Find icons at"
+msgstr ""
+
+#: src/components/AdminSettings.vue:58 src/components/PersonalSettings.vue:58
+msgid "Reset color"
+msgstr ""
+
+#: src/components/AdminSettings.vue:65 src/components/PersonalSettings.vue:65
+msgid "URL to Display"
+msgstr ""
+
+#: src/components/AdminSettings.vue:77
+msgid "iFrame Height (px)"
+msgstr ""
+
+#: src/components/AdminSettings.vue:87
+msgid "Extra Wide (2 Col)"
+msgstr ""
+
+#: src/components/AdminSettings.vue:101 src/components/PersonalSettings.vue:101
+msgid "Save"
+msgstr ""
+
+#: src/components/AdminSettings.vue:133 src/components/PersonalSettings.vue:133
+msgid "No URL configured. Please set a URL in the Settings."
+msgstr ""
+
+#: src/components/AdminSettings.vue:138 src/components/PersonalSettings.vue:138
+msgid "Failed to load content"
+msgstr ""
+
+#: src/components/AdminSettings.vue:139 src/components/PersonalSettings.vue:139
+msgid "This might be caused by Content Security Policy (CSP) restrictions."
+msgstr ""
+
+#: src/components/AdminSettings.vue:142 src/components/PersonalSettings.vue:142
+msgid "View CSP Configuration Guide"
+msgstr ""
+
+#: src/components/AdminSettings.vue:574
+msgid "Settings saved"
+msgstr ""
+
+#: src/components/AdminSettings.vue:578
+msgid "Could not save settings"
+msgstr ""
+
+#: src/components/PersonalSettings.vue:350
+msgid "Settings saved successfully"
+msgstr ""
+
+#: src/components/PersonalSettings.vue:353
+msgid "Failed to save settings"
+msgstr ""
+
+#: src/components/PersonalSettings.vue:275
+#: src/components/AdminSettings.vue:275
+msgid "Icon not found: {name}"
+msgstr ""
