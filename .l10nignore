@@ -1,0 +1,16 @@
+# Compiled JavaScript files
+js/
+node_modules/
+
+# Vendor files
+vendor/
+
+# Documentation
+docs/
+
+# License files
+LICENSE
+
+# Build files
+build.log
+webpack.config.js

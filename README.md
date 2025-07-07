@@ -15,13 +15,13 @@ Display external websites directly in your Nextcloud dashboard with this customi
 - Extra-wide display option (2 columns)
 - Clean, responsive design that integrates with Nextcloud themes
 - Seperate Personal and Public iFrame Widgets
+- Multi-language support with translations
 
 
 ### TODO
 
 - 3-Column Size
 - Refresh Button (or Refresh Timer Option)
-- Localization Support
 
 
 ## Screenshots
@@ -63,6 +63,16 @@ Browse available icons at [SimpleIcons.org](https://simpleicons.org/).
 - Nextcloud 30+
 - Website to be embedded must allow iframe embedding (not all sites do)
 - Content Security Policy (CSP) configuration to allow external domains in iframes
+
+
+### Translations
+
+iFrame Widget supports multiple languages and can be translated. Currently, the following languages are available:
+
+- English (default)
+- German
+
+If you'd like to contribute translations, please see the [translation guide](docs/TRANSLATING.md).
 
 
 ### CSP Configuration
