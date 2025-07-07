@@ -44,5 +44,11 @@
     "iFrame Widget admin settings": "Configurações de administrador do Widget iFrame",
     "Personal iFrame Widget admin settings": "Configurações pessoais de administrador do Widget iFrame",
     "Allow personal iFrame Widget": "Permitir Widget iFrame pessoal",
-    "Allow users to add personal iFrame widgets to their dashboard": "Permitir que os usuários adicionem widgets iFrame pessoais ao seu painel"
+    "Allow users to add personal iFrame widgets to their dashboard": "Permitir que os usuários adicionem widgets iFrame pessoais ao seu painel",
+    "No URL configured. Please set a URL in the Settings.": "Nenhuma URL configurada. Por favor, defina uma URL nas Configurações.",
+    "No URL configured.": "Nenhuma URL configurada.",
+    "Please set a URL in the": "Por favor, defina uma URL nas",
+    "Admin Settings": "Configurações de administrador",
+    "Please set a URL in your": "Por favor, defina uma URL nas suas",
+    "Personal Settings": "Configurações pessoais"
 }

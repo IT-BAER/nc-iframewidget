@@ -44,5 +44,11 @@
     "iFrame Widget admin settings": "iFrameウィジェット管理者設定",
     "Personal iFrame Widget admin settings": "個人iFrameウィジェット管理者設定",
     "Allow personal iFrame Widget": "個人iFrameウィジェットを許可",
-    "Allow users to add personal iFrame widgets to their dashboard": "ユーザーが個人iFrameウィジェットをダッシュボードに追加することを許可"
+    "Allow users to add personal iFrame widgets to their dashboard": "ユーザーが個人iFrameウィジェットをダッシュボードに追加することを許可",
+    "No URL configured. Please set a URL in the Settings.": "URLが設定されていません。設定でURLを設定してください。",
+    "No URL configured.": "URLが設定されていません。",
+    "Please set a URL in the": "以下でURLを設定してください",
+    "Admin Settings": "管理者設定",
+    "Please set a URL in your": "あなたの以下でURLを設定してください",
+    "Personal Settings": "個人設定"
 }

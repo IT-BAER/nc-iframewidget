@@ -46,7 +46,13 @@ OC.L10N.register(
     "iFrame Widget admin settings": "iFrame-miniprogram admininnstillinger",
     "Personal iFrame Widget admin settings": "Personlige iFrame-miniprogram admininnstillinger",
     "Allow personal iFrame Widget": "Tillat personlig iFrame-miniprogram",
-    "Allow users to add personal iFrame widgets to their dashboard": "Tillat brukere å legge til personlige iFrame-miniprogrammer i dashbordet sitt"
+    "Allow users to add personal iFrame widgets to their dashboard": "Tillat brukere å legge til personlige iFrame-miniprogrammer i dashbordet sitt",
+    "No URL configured. Please set a URL in the Settings.": "Ingen URL konfigurert. Vennligst sett en URL i innstillingene.",
+    "No URL configured.": "Ingen URL konfigurert.",
+    "Please set a URL in the": "Vennligst sett en URL i",
+    "Admin Settings": "Admininstillinger",
+    "Please set a URL in your": "Vennligst sett en URL i dine",
+    "Personal Settings": "Personlige innstillinger"
 },
 "nplurals=2; plural=(n != 1);"
 );
