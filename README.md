@@ -42,10 +42,14 @@
 
 </div>
 
+The iFrame Widget provides both admin/public and personal configuration options, allowing administrators to set up shared widgets for all users while enabling individual users to create their own personalized widgets.
+
 
 ## ⚙️ Configuration
 
-Access the widget settings from:
+### 👥 Admin/Public Widget Settings
+
+Access the administrator settings from:
 
 1. Settings → Administration → iFrame Widget
 2. Configure the following options:
@@ -56,6 +60,23 @@ Access the widget settings from:
    - **📏 iFrame Height**: Set a fixed height or use 100% (default)
    - **🖥️ Extra Wide**: Toggle to span two dashboard columns
 
+These settings apply to the public widget that appears on all users' dashboards.
+
+### 👤 Personal Widget Settings
+
+Each user can configure their own personal iFrame widget:
+
+1. Settings → Personal → iFrame Widget
+2. Configure the following options:
+   - **🔤 Widget Title**: Set a custom title for your personal widget
+   - **🎨 Widget Icon**: Choose your preferred icon with `si:` prefix
+   - **🎭 Icon Color**: Set a custom color for your widget icon
+   - **🌐 URL to Display**: Add your personal website URL to embed
+   - **📏 iFrame Height**: Adjust the height to fit your needs
+   - **🖥️ Extra Wide**: Enable for a wider widget view
+
+Personal widgets are visible only to the user who configured them and don't affect other users.
+
 ## 🎨 Icon System
 
 This widget uses Simple Icons for custom icons:
@@ -64,9 +85,9 @@ This widget uses Simple Icons for custom icons:
 
 For example:
 
-- `si:github` - <img src="https://simpleicons.org/icons/github.svg" width="16" height="16" style="vertical-align: middle"> GitHub icon
-- `si:youtube` - <img src="https://simpleicons.org/icons/youtube.svg" width="16" height="16" style="vertical-align: middle"> YouTube icon
-- `si:nextcloud` - <img src="https://simpleicons.org/icons/nextcloud.svg" width="16" height="16" style="vertical-align: middle"> Nextcloud icon
+- `si:github` - <img src="https://cdn.simpleicons.org/github/grey" width="16" height="16" style="vertical-align: middle"> GitHub icon
+- `si:youtube` - <img src="https://cdn.simpleicons.org/youtube" width="16" height="16" style="vertical-align: middle"> YouTube icon
+- `si:nextcloud` - <img src="https://cdn.simpleicons.org/nextcloud" width="16" height="16" style="vertical-align: middle"> Nextcloud icon
 
 Browse available icons at [SimpleIcons.org](https://simpleicons.org/).
 
@@ -141,9 +162,9 @@ Some websites explicitly block being embedded in iframes using their own CSP hea
 
 ## ❓ FAQ
 
-### 🔍 Personal widget settings cannot be saved after upgrading to v0.7.5
+### 🔍 Personal widget settings cannot be saved after upgrading to v0.7.0
 
-If you experience issues with saving personal widget settings after upgrading to v0.7.5, try the following solutions:
+If you experience issues with saving personal widget settings after upgrading to v0.7.0, try the following solutions:
 
 1. **🗑️ Clear the Nextcloud cache**:
    ```bash
@@ -180,7 +201,15 @@ If the widget doesn't appear on your dashboard after installation:
 2. Verify that there are no JavaScript errors in your browser console
 3. Check that the app is properly enabled: `php occ app:list | grep iframe`
 
-## ☕ Support Development
+### ❓ What's the difference between admin and personal widgets?
+
+- **Admin/Public Widget**: Configured by administrators and appears on all users' dashboards with the same content
+- **Personal Widget**: Each user can configure their own widget that's visible only to them
+- You can use both simultaneously - users can have the admin-configured widget and their own personal widget
+
+Both widgets need to be added to your dashboard using the "+" button in dashboard customization.
+
+## 💜 Support Development
 
 If you find this app useful, consider supporting this and future developments, which heavily relies on coffee:
 
