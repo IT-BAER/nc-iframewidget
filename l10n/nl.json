@@ -1,0 +1,27 @@
+{
+    "translations": {
+        "iFrame Widget": "iFrame Widget",
+        "iFrame Widget Settings": "iFrame Widget-instellingen",
+        "Personal iFrame Widget Settings": "Persoonlijke iFrame Widget-instellingen",
+        "Configure the iFrame Widget for the Dashboard.": "Configureer de iFrame Widget voor het Dashboard.",
+        "Configure your personal iFrame Widget for the Dashboard.": "Configureer je persoonlijke iFrame Widget voor het Dashboard.",
+        "Widget Title": "Widget Titel",
+        "Widget Icon": "Widget Icoon",
+        "Find icons at": "Vind iconen op",
+        "Reset color": "Kleur resetten",
+        "URL to Display": "URL om weer te geven",
+        "iFrame Height (px)": "iFrame Hoogte (px)",
+        "Extra Wide (2 Col)": "Extra Breed (2 kolommen)",
+        "Save": "Opslaan",
+        "No URL configured. Please set a URL in the Settings.": "Geen URL geconfigureerd. Stel een URL in bij Instellingen.",
+        "Failed to load content": "Kan inhoud niet laden",
+        "This might be caused by Content Security Policy (CSP) restrictions.": "Dit kan worden veroorzaakt door beperkingen van het Content Security Policy (CSP).",
+        "View CSP Configuration Guide": "Bekijk CSP configuratiehandleiding",
+        "Settings saved": "Instellingen opgeslagen",
+        "Could not save settings": "Kon instellingen niet opslaan",
+        "Settings saved successfully": "Instellingen succesvol opgeslagen",
+        "Failed to save settings": "Kon instellingen niet opslaan",
+        "Icon not found: {name}": "Icoon niet gevonden: {name}"
+    },
+    "pluralForm": "nplurals=2; plural=(n != 1);"
+}

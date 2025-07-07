@@ -1,0 +1,28 @@
+OC.L10N.register(
+    "iframewidget",
+    {
+        "iFrame Widget": "Виджет iFrame",
+        "iFrame Widget Settings": "Настройки виджета iFrame",
+        "Personal iFrame Widget Settings": "Персональные настройки виджета iFrame",
+        "Configure the iFrame Widget for the Dashboard.": "Настройте виджет iFrame для панели управления.",
+        "Configure your personal iFrame Widget for the Dashboard.": "Настройте ваш персональный виджет iFrame для панели управления.",
+        "Widget Title": "Заголовок виджета",
+        "Widget Icon": "Иконка виджета",
+        "Find icons at": "Найти иконки на",
+        "Reset color": "Сбросить цвет",
+        "URL to Display": "URL для отображения",
+        "iFrame Height (px)": "Высота iFrame (px)",
+        "Extra Wide (2 Col)": "Сверхширокий (2 столбца)",
+        "Save": "Сохранить",
+        "No URL configured. Please set a URL in the Settings.": "URL не настроен. Пожалуйста, установите URL в настройках.",
+        "Failed to load content": "Не удалось загрузить содержимое",
+        "This might be caused by Content Security Policy (CSP) restrictions.": "Это может быть вызвано ограничениями политики безопасности контента (CSP).",
+        "View CSP Configuration Guide": "Просмотреть руководство по настройке CSP",
+        "Settings saved": "Настройки сохранены",
+        "Could not save settings": "Не удалось сохранить настройки",
+        "Settings saved successfully": "Настройки успешно сохранены",
+        "Failed to save settings": "Не удалось сохранить настройки",
+        "Icon not found: {name}": "Иконка не найдена: {name}"
+    },
+    "nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);"
+);

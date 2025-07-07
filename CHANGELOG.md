@@ -1,3 +1,26 @@
+## 0.7.5 - 2025-08-15
+
+### Enhancements
+
+- Added complete localization support for the 14 most common Nextcloud languages:
+  - English (en)
+  - German (de)
+  - French (fr)
+  - Spanish (es)
+  - Italian (it)
+  - Dutch (nl)
+  - Russian (ru)
+  - Polish (pl)
+  - Portuguese (pt)
+  - Brazilian Portuguese (pt_BR)
+  - Chinese (Simplified) (zh_CN)
+  - Japanese (ja)
+  - Czech (cs)
+  - Swedish (sv)
+  - Norwegian Bokmål (nb)
+- Improved translation file organization and documentation
+- Added translation guide for contributors
+
 ## 0.7.0 - 2025-07-07
 
 ### New Features

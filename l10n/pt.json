@@ -1,0 +1,27 @@
+{
+    "translations": {
+        "iFrame Widget": "Widget iFrame",
+        "iFrame Widget Settings": "Configurações do Widget iFrame",
+        "Personal iFrame Widget Settings": "Configurações pessoais do Widget iFrame",
+        "Configure the iFrame Widget for the Dashboard.": "Configure o Widget iFrame para o Painel.",
+        "Configure your personal iFrame Widget for the Dashboard.": "Configure o seu Widget iFrame pessoal para o Painel.",
+        "Widget Title": "Título do Widget",
+        "Widget Icon": "Ícone do Widget",
+        "Find icons at": "Encontre ícones em",
+        "Reset color": "Repor cor",
+        "URL to Display": "URL para exibir",
+        "iFrame Height (px)": "Altura do iFrame (px)",
+        "Extra Wide (2 Col)": "Extra largo (2 colunas)",
+        "Save": "Guardar",
+        "No URL configured. Please set a URL in the Settings.": "Nenhum URL configurado. Por favor, defina um URL nas Configurações.",
+        "Failed to load content": "Falha ao carregar conteúdo",
+        "This might be caused by Content Security Policy (CSP) restrictions.": "Isto pode ser causado por restrições da Política de Segurança de Conteúdo (CSP).",
+        "View CSP Configuration Guide": "Ver Guia de Configuração CSP",
+        "Settings saved": "Configurações guardadas",
+        "Could not save settings": "Não foi possível guardar as configurações",
+        "Settings saved successfully": "Configurações guardadas com sucesso",
+        "Failed to save settings": "Falha ao guardar as configurações",
+        "Icon not found: {name}": "Ícone não encontrado: {name}"
+    },
+    "pluralForm": "nplurals=2; plural=(n != 1);"
+}

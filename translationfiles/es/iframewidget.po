@@ -1,0 +1,110 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Nextcloud\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-07-07 12:00+0000\n"
+"PO-Revision-Date: 2025-07-07 12:30+0000\n"
+"Last-Translator: Spanish Translator <translator@example.com>\n"
+"Language-Team: Spanish <es@li.org>\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: lib/Dashboard/IframeWidget.php:48 lib/Dashboard/PersonalIframeWidget.php:52
+msgid "iFrame Widget"
+msgstr "Widget iFrame"
+
+#: lib/Settings/Admin.php:80 lib/Settings/Section.php:45
+msgid "iFrame Widget"
+msgstr "Widget iFrame"
+
+#: lib/Settings/PersonalSection.php:27
+msgid "iFrame Widget"
+msgstr "Widget iFrame"
+
+#: src/components/AdminSettings.vue:6
+msgid "iFrame Widget Settings"
+msgstr "Configuración del Widget iFrame"
+
+#: src/components/PersonalSettings.vue:6
+msgid "Personal iFrame Widget Settings"
+msgstr "Configuración personal del Widget iFrame"
+
+#: src/components/AdminSettings.vue:21
+msgid "Configure the iFrame Widget for the Dashboard."
+msgstr "Configure el Widget iFrame para el Tablero."
+
+#: src/components/PersonalSettings.vue:21
+msgid "Configure your personal iFrame Widget for the Dashboard."
+msgstr "Configure su Widget iFrame personal para el Tablero."
+
+#: src/components/AdminSettings.vue:28 src/components/PersonalSettings.vue:28
+msgid "Widget Title"
+msgstr "Título del Widget"
+
+#: src/components/AdminSettings.vue:39 src/components/PersonalSettings.vue:39
+msgid "Widget Icon"
+msgstr "Icono del Widget"
+
+#: src/components/AdminSettings.vue:41 src/components/PersonalSettings.vue:41
+msgid "Find icons at"
+msgstr "Encuentra iconos en"
+
+#: src/components/AdminSettings.vue:58 src/components/PersonalSettings.vue:58
+msgid "Reset color"
+msgstr "Restablecer color"
+
+#: src/components/AdminSettings.vue:65 src/components/PersonalSettings.vue:65
+msgid "URL to Display"
+msgstr "URL para mostrar"
+
+#: src/components/AdminSettings.vue:77
+msgid "iFrame Height (px)"
+msgstr "Altura del iFrame (px)"
+
+#: src/components/AdminSettings.vue:87
+msgid "Extra Wide (2 Col)"
+msgstr "Extra ancho (2 columnas)"
+
+#: src/components/AdminSettings.vue:101 src/components/PersonalSettings.vue:101
+msgid "Save"
+msgstr "Guardar"
+
+#: src/components/AdminSettings.vue:133 src/components/PersonalSettings.vue:133
+msgid "No URL configured. Please set a URL in the Settings."
+msgstr "No hay URL configurada. Por favor, establezca una URL en Configuración."
+
+#: src/components/AdminSettings.vue:138 src/components/PersonalSettings.vue:138
+msgid "Failed to load content"
+msgstr "Error al cargar el contenido"
+
+#: src/components/AdminSettings.vue:139 src/components/PersonalSettings.vue:139
+msgid "This might be caused by Content Security Policy (CSP) restrictions."
+msgstr "Esto puede ser causado por restricciones de la Política de Seguridad de Contenido (CSP)."
+
+#: src/components/AdminSettings.vue:142 src/components/PersonalSettings.vue:142
+msgid "View CSP Configuration Guide"
+msgstr "Ver Guía de Configuración CSP"
+
+#: src/components/AdminSettings.vue:574
+msgid "Settings saved"
+msgstr "Configuración guardada"
+
+#: src/components/AdminSettings.vue:578
+msgid "Could not save settings"
+msgstr "No se pudo guardar la configuración"
+
+#: src/components/PersonalSettings.vue:350
+msgid "Settings saved successfully"
+msgstr "Configuración guardada con éxito"
+
+#: src/components/PersonalSettings.vue:353
+msgid "Failed to save settings"
+msgstr "Error al guardar la configuración"
+
+#: src/components/PersonalSettings.vue:275
+#: src/components/AdminSettings.vue:275
+msgid "Icon not found: {name}"
+msgstr "Icono no encontrado: {name}"

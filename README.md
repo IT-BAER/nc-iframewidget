@@ -117,9 +117,9 @@ Some websites explicitly block being embedded in iframes using their own CSP hea
 
 ## FAQ
 
-### Personal widget settings cannot be saved after upgrading to v0.7.0
+### Personal widget settings cannot be saved after upgrading to v0.7.5
 
-If you experience issues with saving personal widget settings after upgrading to v0.7.0, try the following solutions:
+If you experience issues with saving personal widget settings after upgrading to v0.7.5, try the following solutions:
 
 1. **Clear the Nextcloud cache**:
    ```bash
