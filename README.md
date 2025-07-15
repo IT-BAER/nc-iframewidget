@@ -30,7 +30,7 @@
 
 - 📊 3-Column Size
 - 🔄 Refresh Button (or Refresh Timer Option)
-
+- 👥 Widget per Group allocation
 
 ## 📸 Screenshots
 
