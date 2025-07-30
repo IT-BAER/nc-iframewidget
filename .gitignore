@@ -9,6 +9,7 @@ package.json
 release_temp/
 create_release.bat
 create_release.sh
+.clinerules/
 
 # Documentation files not needed for the app store
 nc-iframewidget-dashboard.png
