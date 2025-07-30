@@ -1,3 +1,19 @@
+## 0.7.6 - 2025-07-30
+
+### Security Fixes
+
+- Updated form-data dependency to version >=4.0.4
+- Updated linkifyjs dependency to version >=4.3.2
+- Updated pbkdf2 dependency to version >=3.1.3
+- Updated brace-expansion dependency to version >=2.0.2
+- Updated vue-template-compiler dependency to version >=3.0.0
+- Updated postcss dependency to version >=8.4.31
+
+### Technical Improvements
+
+- Resolved dependency conflicts with webpack configuration
+- Fixed compatibility issues with Nextcloud 30 and 31
+
 ## 0.7.5 - 2025-07-07
 
 ### Enhancements
