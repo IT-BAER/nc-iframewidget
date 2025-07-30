@@ -60,5 +60,8 @@
 	},
 	"browserslist": [
 		"extends @nextcloud/browserslist-config"
-	]
+	],
+	"overrides": {
+		"postcss": ">=8.4.31"
+	}
 }
