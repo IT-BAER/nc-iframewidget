@@ -17,15 +17,12 @@
             {{ t('iframewidget', 'Configure the iFrame Widget for the Dashboard.') }}
         </p>
         
+        <!-- Public iFrame Widget Section -->
+        <div class="iframewidget-public-section">
+            <h3>{{ t('iframewidget', 'Public iFrame Widget') }}</h3>
+        </div>
+        
         <div class="iframewidget-admin-container">
-            <!-- Public iFrame Widget Section -->
-            <div class="iframewidget-public-section">
-                <h3>{{ t('iframewidget', 'Public iFrame Widget') }}</h3>
-                <p class="settings-hint">
-                    {{ t('iframewidget', 'Configure the main iFrame widget visible to all users.') }}
-                </p>
-            </div>
-
             <!-- Left side: Settings form -->
             <div class="iframewidget-admin-form">
                 <div class="iframewidget-grid-form">
@@ -299,7 +296,7 @@
                 <!-- Widget Preview -->
                 <div class="modal-preview-section">
                     <h4 class="preview-title">{{ t('iframewidget', 'Widget Preview') }}</h4>
-                    <div class="preview-container" :style="{ width: groupWidgetForm.extraWide ? '560px' : '320px' }">
+                    <div class="preview-container" :style="{ width: groupWidgetForm.extraWide ? '640px' : '320px' }">
                         <div class="preview-header" :class="{'preview-title-empty': !groupWidgetForm.widgetTitle || groupWidgetForm.widgetTitle.trim() === ''}">
                             <h2>
                                 <span v-if="groupWidgetForm.widgetIcon && groupWidgetForm.widgetTitle && groupWidgetForm.widgetTitle.trim() !== ''"
@@ -1420,6 +1417,8 @@ input[type="color"]::-moz-color-swatch {
 .iframewidget-public-section h3 {
     margin-bottom: 10px;
     color: var(--color-text-maxcontrast);
+    font-size: 16px;
+    font-weight: 600;
 }
 
 .group-widgets-list {
