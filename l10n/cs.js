@@ -52,7 +52,19 @@ OC.L10N.register(
     "Please set a URL in the": "Nastavte prosím URL v",
     "Admin Settings": "Nastavení správce",
     "Please set a URL in your": "Nastavte prosím URL ve vašem",
-    "Personal Settings": "Osobním nastavení"
+    "Personal Settings": "Osobním nastavení",
+    "Hidden": "Hidden",
+    "si:github or si:nextcloud": "si:github or si:nextcloud",
+    "https://example.org": "https://example.org",
+    "Invalid URL format": "Invalid URL format",
+    "URL must start with http:// or https://": "URL must start with http:// or https://",
+    "URL is required": "URL is required",
+    "Title is required": "Title is required",
+    "Icon name is required": "Icon name is required",
+    "Height must be a positive number": "Height must be a positive number",
+    "Height must be between 100 and 2000 pixels": "Height must be between 100 and 2000 pixels",
+    "Failed to validate URL": "Failed to validate URL",
+    "Failed to validate settings": "Failed to validate settings"
 },
-"nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;"
+    "nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;"
 );

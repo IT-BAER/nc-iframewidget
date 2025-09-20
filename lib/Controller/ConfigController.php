@@ -235,6 +235,13 @@ class ConfigController extends Controller
 			return new DataResponse(['status' => 'error', 'message' => 'Group does not exist'], 400);
 		}
 
+		// Check if this is an update (changing group assignment)
+		$oldGroupId = $data['oldGroupId'] ?? null;
+		if ($oldGroupId && $oldGroupId !== $groupId) {
+			// Delete old group configuration
+			$this->deleteGroupWidgetConfig($oldGroupId);
+		}
+
 		// Save group widget configuration
 		$fields = [
 			'widgetTitle',
@@ -262,19 +269,11 @@ class ConfigController extends Controller
 	}
 
 	/**
-	 * Delete a group widget configuration
+	 * Delete a group widget configuration (helper method)
 	 *
-	 * @AdminRequired
 	 * @param string $groupId Group ID
-	 * @return DataResponse
 	 */
-	public function deleteGroupWidget(string $groupId): DataResponse {
-		// Validate that the group exists
-		$groupManager = $this->serverContainer->get(\OCP\IGroupManager::class);
-		if (!$groupManager->groupExists($groupId)) {
-			return new DataResponse(['status' => 'error', 'message' => 'Group does not exist'], 400);
-		}
-
+	private function deleteGroupWidgetConfig(string $groupId): void {
 		// Delete all group widget configuration keys
 		$fields = [
 			'widgetTitle',
@@ -288,6 +287,24 @@ class ConfigController extends Controller
 		foreach ($fields as $field) {
 			$this->config->deleteAppValue(Application::APP_ID, 'group_' . $groupId . '_' . $field);
 		}
+	}
+
+	/**
+	 * Delete a group widget configuration
+	 *
+	 * @AdminRequired
+	 * @param string $groupId Group ID
+	 * @return DataResponse
+	 */
+	public function deleteGroupWidget(string $groupId): DataResponse {
+		// Validate that the group exists
+		$groupManager = $this->serverContainer->get(\OCP\IGroupManager::class);
+		if (!$groupManager->groupExists($groupId)) {
+			return new DataResponse(['status' => 'error', 'message' => 'Group does not exist'], 400);
+		}
+
+		// Delete group widget configuration
+		$this->deleteGroupWidgetConfig($groupId);
 
 		return new DataResponse(['status' => 'success']);
 	}

@@ -28,7 +28,7 @@
                     <input id="personal-iframe-widget-title"
                         v-model="state.widgetTitle"
                         type="text"
-                        placeholder="Hidden">
+                        :placeholder="t('iframewidget', 'Hidden')">
                     
                     <!-- Widget Icon -->
                     <label for="personal-widget-icon">
@@ -48,7 +48,7 @@
                             type="text"
                             @input="debounceIconUpdate"
                             style="max-width: 350px!important;"
-                            placeholder="si:github or si:nextcloud">
+                            :placeholder="t('iframewidget', 'si:github or si:nextcloud')">
                         <input type="color" 
                                :value="colorValue" 
                                @input="updateColor" 
@@ -75,7 +75,7 @@
                         @input="handleUrlInput"
                         type="text"
                         class="iframewidget-input"
-                        placeholder="https://example.org">
+                        :placeholder="t('iframewidget', 'https://example.org')">
 
                     <!-- iFrame Height -->
                     <label for="personal-iframe-height">
@@ -85,7 +85,7 @@
                         v-model="state.iframeHeight"
                         type="number"
                         min="0"
-                        placeholder="100%">
+                        :placeholder="t('iframewidget', '100%')">
 
                     <!-- Extra Wide Toggle -->
                     <label for="personal-extra-wide" class="checkbox-label">

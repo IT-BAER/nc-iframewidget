@@ -50,5 +50,17 @@
     "Please set a URL in the": "以下でURLを設定してください",
     "Admin Settings": "管理者設定",
     "Please set a URL in your": "あなたの以下でURLを設定してください",
-    "Personal Settings": "個人設定"
+    "Personal Settings": "個人設定",
+    "Hidden": "Hidden",
+    "si:github or si:nextcloud": "si:github or si:nextcloud",
+    "https://example.org": "https://example.org",
+    "Invalid URL format": "Invalid URL format",
+    "URL must start with http:// or https://": "URL must start with http:// or https://",
+    "URL is required": "URL is required",
+    "Title is required": "Title is required",
+    "Icon name is required": "Icon name is required",
+    "Height must be a positive number": "Height must be a positive number",
+    "Height must be between 100 and 2000 pixels": "Height must be between 100 and 2000 pixels",
+    "Failed to validate URL": "Failed to validate URL",
+    "Failed to validate settings": "Failed to validate settings"
 }

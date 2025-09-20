@@ -108,3 +108,39 @@ msgstr "Fehler beim Speichern der Einstellungen"
 #: src/components/AdminSettings.vue:275
 msgid "Icon not found: {name}"
 msgstr "Symbol nicht gefunden: {name}"
+
+#: src/components/AdminSettings.vue:34 src/components/PersonalSettings.vue:32
+msgid "Hidden"
+msgstr "Ausgeblendet"
+
+#: src/components/AdminSettings.vue:47 src/components/PersonalSettings.vue:45
+msgid "si:github or si:nextcloud"
+msgstr "si:github oder si:nextcloud"
+
+#: src/components/AdminSettings.vue:79 src/components/AdminSettings.vue:242 src/components/PersonalSettings.vue:58
+msgid "https://example.org"
+msgstr "https://beispiel.org"
+
+#: src/components/AdminSettings.vue:91 src/components/AdminSettings.vue:249 src/components/PersonalSettings.vue:68
+msgid "100%"
+msgstr "100%"
+
+#: src/components/AdminSettings.vue:195
+msgid "Not set"
+msgstr "Nicht festgelegt"
+
+#: src/components/AdminSettings.vue:218
+msgid "Group iFrame Widget"
+msgstr "Gruppen-iFrame-Widget"
+
+#: src/components/AdminSettings.vue:235
+msgid "si:nextcloud"
+msgstr "si:nextcloud"
+
+#: src/components/AdminSettings.vue:267
+msgid "Widget Preview"
+msgstr "Widget-Vorschau"
+
+#: src/components/PersonalSettings.vue:242
+msgid "Failed to load settings"
+msgstr "Fehler beim Laden der Einstellungen"

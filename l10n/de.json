@@ -26,7 +26,19 @@
         "Could not save settings": "Einstellungen konnten nicht gespeichert werden",
         "Settings saved successfully": "Einstellungen erfolgreich gespeichert",
         "Failed to save settings": "Fehler beim Speichern der Einstellungen",
-        "Icon not found: {name}": "Symbol nicht gefunden: {name}"
+        "Icon not found: {name}": "Symbol nicht gefunden: {name}",
+        "Hidden": "Ausgeblendet",
+        "si:github or si:nextcloud": "si:github oder si:nextcloud",
+        "https://example.org": "https://example.org",
+        "Invalid URL format": "Ungültiges URL-Format",
+        "URL must start with http:// or https://": "URL muss mit http:// oder https:// beginnen",
+        "URL is required": "URL ist erforderlich",
+        "Title is required": "Titel ist erforderlich",
+        "Icon name is required": "Symbolname ist erforderlich",
+        "Height must be a positive number": "Höhe muss eine positive Zahl sein",
+        "Height must be between 100 and 2000 pixels": "Höhe muss zwischen 100 und 2000 Pixel liegen",
+        "Failed to validate URL": "URL-Validierung fehlgeschlagen",
+        "Failed to validate settings": "Einstellungsvalidierung fehlgeschlagen"
     },
     "pluralForm": "nplurals=2; plural=(n != 1);"
 }

@@ -228,6 +228,38 @@ msgstr ""
 msgid "Could not delete group widget"
 msgstr ""
 
-#: lib/Dashboard/GroupIframeWidget.php:35
-msgid "Group iFrame"
+#: src/components/AdminSettings.vue:34 src/components/PersonalSettings.vue:32
+msgid "Hidden"
+msgstr ""
+
+#: src/components/AdminSettings.vue:47 src/components/PersonalSettings.vue:45
+msgid "si:github or si:nextcloud"
+msgstr ""
+
+#: src/components/AdminSettings.vue:79 src/components/AdminSettings.vue:242 src/components/PersonalSettings.vue:58
+msgid "https://example.org"
+msgstr ""
+
+#: src/components/AdminSettings.vue:91 src/components/AdminSettings.vue:249 src/components/PersonalSettings.vue:68
+msgid "100%"
+msgstr ""
+
+#: src/components/AdminSettings.vue:195
+msgid "Not set"
+msgstr ""
+
+#: src/components/AdminSettings.vue:218
+msgid "Group iFrame Widget"
+msgstr ""
+
+#: src/components/AdminSettings.vue:235
+msgid "si:nextcloud"
+msgstr ""
+
+#: src/components/AdminSettings.vue:267
+msgid "Widget Preview"
+msgstr ""
+
+#: src/components/PersonalSettings.vue:242
+msgid "Failed to load settings"
 msgstr ""

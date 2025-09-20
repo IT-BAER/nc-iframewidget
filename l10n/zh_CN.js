@@ -52,7 +52,19 @@ OC.L10N.register(
     "Please set a URL in the": "请在以下位置设置 URL",
     "Admin Settings": "管理员设置",
     "Please set a URL in your": "请在您的以下位置设置 URL",
-    "Personal Settings": "个人设置"
+    "Personal Settings": "个人设置",
+    "Hidden": "Hidden",
+    "si:github or si:nextcloud": "si:github or si:nextcloud",
+    "https://example.org": "https://example.org",
+    "Invalid URL format": "Invalid URL format",
+    "URL must start with http:// or https://": "URL must start with http:// or https://",
+    "URL is required": "URL is required",
+    "Title is required": "Title is required",
+    "Icon name is required": "Icon name is required",
+    "Height must be a positive number": "Height must be a positive number",
+    "Height must be between 100 and 2000 pixels": "Height must be between 100 and 2000 pixels",
+    "Failed to validate URL": "Failed to validate URL",
+    "Failed to validate settings": "Failed to validate settings"
 },
-"nplurals=1; plural=0;"
+    "nplurals=1; plural=0;"
 );

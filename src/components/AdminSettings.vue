@@ -36,7 +36,7 @@
                     <input id="iframe-widget-title"
                         v-model="state.widgetTitle"
                         type="text"
-                        placeholder="Hidden">
+                        :placeholder="t('iframewidget', 'Hidden')">
                     
                     <!-- Widget Icon -->
                     <label for="widget-icon">
@@ -55,7 +55,7 @@
     						v-model="typedIcon"
     						type="text"
     						@input="debounceIconUpdate"
-    						placeholder="si:github or si:nextcloud">
+    						:placeholder="t('iframewidget', 'si:github or si:nextcloud')">
 						<input type="color" 
 							   :value="colorValue" 
 							   @input="updateColor" 
@@ -82,7 +82,7 @@
                         id="iframeUrl" 
                         class="iframewidget-input" 
                         name="iframeUrl" 
-                        placeholder="https://example.org">
+                        :placeholder="t('iframewidget', 'https://example.org')">
 
 
                     <!-- iFrame Height -->
@@ -93,7 +93,7 @@
                         v-model="state.iframeHeight"
                         type="number"
                         min="0"
-                        placeholder="100%">
+                        :placeholder="t('iframewidget', '100%')">
 
                     <!-- Extra Wide Toggle -->
                     <label for="extra-wide" class="checkbox-label">
@@ -216,7 +216,7 @@
                     <div class="iframewidget-grid-form">
                         <!-- Group Selection -->
                         <label for="group-select">{{ t('iframewidget', 'Select Group') }}</label>
-                        <select id="group-select" v-model="selectedGroupId" :disabled="isEditing">
+                        <select id="group-select" v-model="selectedGroupId" :disabled="false">
                             <option value="">{{ t('iframewidget', 'Choose a group...') }}</option>
                             <option v-for="group in availableGroups" :key="group.id" :value="group.id">
                                 {{ group.displayName || group.id }}
@@ -396,6 +396,7 @@ export default {
             showGroupDialog: false,
             isEditing: false,
             selectedGroupId: '',
+            originalGroupId: '', // Store original group ID when editing
             groupWidgetForm: {
                 widgetTitle: '',
                 widgetIcon: '',
@@ -887,6 +888,7 @@ export default {
             this.showGroupDialog = false;
             this.isEditing = false;
             this.selectedGroupId = '';
+            this.originalGroupId = ''; // Reset original group ID
         },
         
         /**
@@ -895,6 +897,7 @@ export default {
         editGroupWidget(groupWidget) {
             this.isEditing = true;
             this.selectedGroupId = groupWidget.groupId;
+            this.originalGroupId = groupWidget.groupId; // Store original group ID
             this.groupWidgetForm = {
                 widgetTitle: groupWidget.widgetTitle || '',
                 widgetIcon: groupWidget.widgetIcon || '',
@@ -921,6 +924,11 @@ export default {
                 groupId: this.selectedGroupId,
                 ...this.groupWidgetForm
             };
+            
+            // Include original group ID if editing and group changed
+            if (this.isEditing && this.originalGroupId && this.originalGroupId !== this.selectedGroupId) {
+                data.oldGroupId = this.originalGroupId;
+            }
             
             console.log('Saving group widget:', data);
             console.log('Form data:', this.groupWidgetForm);
