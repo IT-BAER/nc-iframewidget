@@ -1,6 +1,7 @@
 /* Main iFrame widget icons for both widgets */
 .icon-iframewidget,
 .icon-personal-iframewidget,
+.icon-group-iframewidget,
 .icon-iframe {
     background-image: url('../img/iframewidget-dark.svg');
     filter: var(--background-invert-if-dark);
@@ -8,6 +9,7 @@
 
 body.theme--dark .icon-iframewidget,
 body.theme--dark .icon-personal-iframewidget,
+body.theme--dark .icon-group-iframewidget,
 body.theme--dark .icon-iframe {
     background-image: url('../img/iframewidget.svg');
 }
@@ -30,6 +32,24 @@ body.theme--dark .icon-iframe {
     height: calc(424px + 78px);
 }
 
+/* Group widget panel sizing and layout */
+.panel.ifw-widget-extra-wide[data-widget-id="group-iframewidget"] {
+    width: 100% !important;
+}
+
+.panel.ifw-title-empty[data-widget-id="group-iframewidget"] .panel--header {
+    height: 16px;
+    padding: 0;
+}
+
+.panel.ifw-title-empty[data-widget-id="group-iframewidget"] span.icon-group-iframewidget {
+    display: none;
+}
+
+.panel.ifw-title-empty[data-widget-id="group-iframewidget"] .panel--content {
+    height: calc(424px + 78px);
+}
+
 /* iFrame itself */
 .iframewidget-frame {
     width: 100%;
@@ -48,9 +68,10 @@ body.theme--dark .icon-iframe {
     min-height: 100px;
 }
 
-/* Transition effects - apply to both widgets */
+/* Transition effects - apply to all widgets */
 .panel[data-widget-id="iframewidget"],
-.panel[data-widget-id="personal-iframewidget"] {
+.panel[data-widget-id="personal-iframewidget"],
+.panel[data-widget-id="group-iframewidget"] {
     transition: width 0.3s ease-in-out, max-width 0.3s ease-in-out;
     will-change: width, max-width;
     transform: translateZ(0); /* Forces hardware acceleration */
@@ -77,6 +98,7 @@ body.theme--dark .icon-iframe {
 .panel--header h2 span[class*=" si:"],
 .panel--header h2 .widget-icon + .icon-iframewidget,
 .panel--header h2 .widget-icon + .icon-personal-iframewidget,
+.panel--header h2 .widget-icon + .icon-group-iframewidget,
 .panel--header h2 .widget-icon + .icon-iframe {
     display: none !important;
 }
@@ -97,14 +119,16 @@ body.theme--dark .icon-iframe {
 
 /* Add specific styles to ensure header alignment */
 .panel[data-widget-id="iframewidget"] .panel--header h2,
-.panel[data-widget-id="personal-iframewidget"] .panel--header h2 {
+.panel[data-widget-id="personal-iframewidget"] .panel--header h2,
+.panel[data-widget-id="group-iframewidget"] .panel--header h2 {
     justify-content: flex-start !important;
     text-align: left !important;
 }
 
-/* Extra-wide fixed width approach for both widgets - double the standard width */
+/* Extra-wide fixed width approach for all widgets - double the standard width */
 body .app-dashboard .panel.ifw-widget-extra-wide[data-widget-id="iframewidget"],
-body .app-dashboard .panel.ifw-widget-extra-wide[data-widget-id="personal-iframewidget"] {
+body .app-dashboard .panel.ifw-widget-extra-wide[data-widget-id="personal-iframewidget"],
+body .app-dashboard .panel.ifw-widget-extra-wide[data-widget-id="group-iframewidget"] {
     width: 640px !important; /* Double the standard widget width of 320px */
     max-width: 640px !important;
 }
@@ -112,7 +136,8 @@ body .app-dashboard .panel.ifw-widget-extra-wide[data-widget-id="personal-iframe
 /* Ensure widgets remain responsive on smaller screens */
 @media (max-width: 767px) {
     body .app-dashboard .panel.ifw-widget-extra-wide[data-widget-id="iframewidget"],
-    body .app-dashboard .panel.ifw-widget-extra-wide[data-widget-id="personal-iframewidget"] {
+    body .app-dashboard .panel.ifw-widget-extra-wide[data-widget-id="personal-iframewidget"],
+    body .app-dashboard .panel.ifw-widget-extra-wide[data-widget-id="group-iframewidget"] {
         width: 100% !important;
         max-width: 100% !important;
     }
@@ -120,7 +145,8 @@ body .app-dashboard .panel.ifw-widget-extra-wide[data-widget-id="personal-iframe
 
 /* Special case for single-column dashboard layout */
 body.dashboard-grid-1 .app-dashboard .panel.ifw-widget-extra-wide[data-widget-id="iframewidget"],
-body.dashboard-grid-1 .app-dashboard .panel.ifw-widget-extra-wide[data-widget-id="personal-iframewidget"] {
+body.dashboard-grid-1 .app-dashboard .panel.ifw-widget-extra-wide[data-widget-id="personal-iframewidget"],
+body.dashboard-grid-1 .app-dashboard .panel.ifw-widget-extra-wide[data-widget-id="group-iframewidget"] {
     width: 100% !important;
     max-width: 100% !important;
 }
