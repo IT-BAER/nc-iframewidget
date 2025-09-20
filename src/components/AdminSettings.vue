@@ -20,6 +20,9 @@
         <!-- Public iFrame Widget Section -->
         <div class="iframewidget-public-section">
             <h3>{{ t('iframewidget', 'Public iFrame Widget') }}</h3>
+            <p class="settings-hint">
+                {{ t('iframewidget', 'Configure the main iFrame widget visible to all users.') }}
+            </p>
         </div>
         
         <div class="iframewidget-admin-container">
@@ -1417,8 +1420,6 @@ input[type="color"]::-moz-color-swatch {
 .iframewidget-public-section h3 {
     margin-bottom: 10px;
     color: var(--color-text-maxcontrast);
-    font-size: 16px;
-    font-weight: 600;
 }
 
 .group-widgets-list {
