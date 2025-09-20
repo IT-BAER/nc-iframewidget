@@ -309,23 +309,32 @@ import { showSuccess, showError } from '@nextcloud/dialogs'
 export default {
     name: 'AdminSettings',
     data() {
+        const loadedState = loadState('iframewidget', 'admin-config');
+        const defaultState = {
+            widgetTitle: 'iFrame Widget',
+            widgetIcon: 'si:nextcloud',
+            widgetIconColor: '',
+            extraWide: false,
+            maxSize: false,
+            iframeUrl: '',
+            iframeHeight: ''
+        };
+
+        // Ensure we always have a complete reactive state object
+        // Merge loaded state with defaults to prevent undefined properties
+        const state = loadedState && typeof loadedState === 'object'
+            ? { ...defaultState, ...loadedState }
+            : { ...defaultState };
+
         return {
-            state: loadState('iframewidget', 'admin-config') || {
-                widgetTitle: 'iFrame Widget',
-                widgetIcon: 'si:nextcloud',
-                widgetIconColor: '', 
-                extraWide: false,
-                maxSize: false,
-                iframeUrl: '',
-                iframeHeight: ''
-            },
-            typedUrl: '',         // Temporary storage for URL during typing
-        	typedIcon: '',
-            urlUpdateTimer: null,  // Timer for debouncing URL updates
-        	iconUpdateTimer: null,  // Timer for debouncing icon updates
-        	loading: false,
+            state: state,
+            typedUrl: '',
+            typedIcon: '',
+            urlUpdateTimer: null,
+            iconUpdateTimer: null,
+            loading: false,
             isLoading: false,
-        	iframeError: false,     // Track iframe loading errors
+            iframeError: false,
             // Group management data
             groupWidgets: [],
             availableGroups: [],
@@ -339,7 +348,10 @@ export default {
                 iframeUrl: '',
                 iframeHeight: '',
                 extraWide: false
-            }
+            },
+            // Component lifecycle management
+            componentMounted: false,
+            pendingUpdates: []
         }
     },
     computed: {
@@ -348,7 +360,7 @@ export default {
          * @returns {boolean} True if extra-wide
          */
         isExtraWide() {
-            return this.state.extraWide === true || this.state.extraWide === 'true';
+            return this.state && (this.state.extraWide === true || this.state.extraWide === 'true');
         },
         
         /**
@@ -356,7 +368,7 @@ export default {
          * @returns {string} CSS height value
          */
         previewHeight() {
-            if (!this.state.iframeHeight || this.state.iframeHeight === '0') {
+            if (!this.state || !this.state.iframeHeight || this.state.iframeHeight === '0') {
                 return '100%';
             } else {
                 return parseInt(this.state.iframeHeight) + 'px';
@@ -368,48 +380,61 @@ export default {
          */
         extraWideComputed: {
             get() {
-                return this.state.extraWide === 'true';
+                return this.state && this.state.extraWide === 'true';
             },
             set(value) {
-                this.state.extraWide = value ? 'true' : 'false';
-                // Update preview immediately when checkbox changes
-                this.$nextTick(() => {
-                    const container = this.$el.querySelector('.preview-container');
-                    if (container) {
-                        container.style.width = value ? '640px' : '320px';
-                    }
-                });
+                if (this.state) {
+                    this.state.extraWide = value ? 'true' : 'false';
+                    // Update preview immediately when checkbox changes
+                    this.$nextTick(() => {
+                        const container = this.$el.querySelector('.preview-container');
+                        if (container) {
+                            container.style.width = value ? '640px' : '320px';
+                        }
+                    });
+                }
             }
         },
     
 		colorValue() {
 			// Return a default color when empty
-			return this.state.widgetIconColor || "#ffffff";
+			return (this.state && this.state.widgetIconColor) || "#ffffff";
 		}
     },
     mounted() {
-        this.typedUrl = this.state.iframeUrl;
-        this.typedIcon = this.state.widgetIcon;
-        this.updatePreview();
-        
+        // Defer reactive property access until next tick to ensure Vue reactivity is fully initialized
         this.$nextTick(() => {
+            // Safely initialize typed values with state properties
+            this.typedUrl = this.state && this.state.iframeUrl ? this.state.iframeUrl : '';
+            this.typedIcon = this.state && this.state.widgetIcon ? this.state.widgetIcon : '';
+
+            // Only call updatePreview if state is available and reactive
+            if (this.state) {
+                this.updatePreview();
+            }
+
+            // Handle preview container width
             const container = this.$el.querySelector('.preview-container');
-            if (container && (this.state.extraWide === 'true' || this.state.extraWide === true)) {
+            if (container && this.state && (this.state.extraWide === 'true' || this.state.extraWide === true)) {
                 container.style.width = '640px';
             }
-        });
 
-        // Listen for actual CSP errors in the console
-        window.addEventListener('securitypolicyviolation', this.handleCSPViolation);
-          // Check if iframe loads correctly after a timeout
-        if (this.config?.iframeUrl) {
-            setTimeout(() => {
-                this.checkIframeLoaded();
-            }, 3000);
-        }
-        
-        // Load group data
-        this.loadGroupData();
+            // Listen for actual CSP errors in the console
+            window.addEventListener('securitypolicyviolation', this.handleCSPViolation);
+
+            // Check if iframe loads correctly after a timeout
+            if (this.state && this.state.iframeUrl) {
+                setTimeout(() => {
+                    this.checkIframeLoaded();
+                }, 3000);
+            }
+
+            // Load group data
+            this.loadGroupData();
+
+            // Mark component as mounted for safe reactivity updates
+            this.componentMounted = true;
+        });
     },
 	beforeDestroy() {
 		if (this.urlUpdateTimer) {
@@ -423,9 +448,11 @@ export default {
 
     watch: {
         'state.iframeUrl': function(newUrl, oldUrl) {
+            if (!this.state) return;
+
             if (newUrl !== oldUrl) {
                 this.iframeError = false;
-                
+
                 // Attempt to reload iframe with new URL
                 this.$nextTick(() => {
                     const iframe = this.$el.querySelector('iframe');
@@ -658,21 +685,24 @@ export default {
          * Update the preview display
          */
         updatePreview() {
+            // Guard against undefined state
+            if (!this.state) return;
+
             this.$nextTick(() => {
                 const previewHeader = this.$el.querySelector('.preview-header h2');
                 if (previewHeader) {
                     // Remove default icon or hide it when custom icon exists
                     const defaultIcon = previewHeader.querySelector('.icon-iframewidget');
-                    
+
                     if (this.state.widgetIcon) {
                         // Hide default icon when custom icon is used
                         if (defaultIcon) defaultIcon.style.display = 'none';
-                        
+
                         // Create/update custom icon
-                        const iconEl = previewHeader.querySelector('.widget-icon') || 
+                        const iconEl = previewHeader.querySelector('.widget-icon') ||
                                     document.createElement('span');
                         iconEl.className = 'widget-icon';
-                        
+
                         // Get image element
                         let imgEl = iconEl.querySelector('img');
                         if (!imgEl) {
@@ -680,22 +710,22 @@ export default {
                             imgEl.addEventListener('error', this.handleIconError);
                             iconEl.appendChild(imgEl);
                         }
-                        
+
                         // Update src with color parameter
                         imgEl.src = this.getIconUrl(
-                            this.state.widgetIcon, 
+                            this.state.widgetIcon,
                             this.state.widgetIconColor
                         );
                         imgEl.alt = this.state.widgetIcon;
-                        
+
                         // Set size
                         imgEl.style.width = '32px';
                         imgEl.style.height = '32px';
-                        
+
                         // Remove all filters since we're using direct color
                         imgEl.classList.remove('icon-dark', 'icon-light');
                         imgEl.style.filter = '';
-                        
+
                         // Insert at beginning if not already present
                         if (!previewHeader.querySelector('.widget-icon')) {
                             previewHeader.insertBefore(iconEl, previewHeader.firstChild);
@@ -703,7 +733,7 @@ export default {
                     } else {
                         // Show default icon when no custom icon
                         if (defaultIcon) defaultIcon.style.display = '';
-                        
+
                         // Remove custom icon
                         const iconEl = previewHeader.querySelector('.widget-icon');
                         if (iconEl) iconEl.remove();
