@@ -1531,6 +1531,7 @@ input[type="color"]::-moz-color-swatch {
 .group-widget-form input,
 .group-widget-form select {
     width: 100%;
+    max-width: 400px;
     padding: 8px 12px;
     border: 1px solid var(--color-border);
     border-radius: var(--border-radius);
@@ -1542,6 +1543,12 @@ input[type="color"]::-moz-color-swatch {
 .group-widget-form select:focus {
     outline: none;
     border-color: var(--color-primary);
+}
+
+/* Specific styling for the group select dropdown */
+#group-select {
+    max-width: 400px;
+    width: 100%;
 }
 
 .icon-input-container {
