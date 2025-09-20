@@ -159,25 +159,28 @@ class ConfigController extends Controller
 	 */
 	public function getGroupWidgets(): DataResponse {
 		$groupWidgets = [];
-		$allKeys = $this->config->getAllValuesForApp(Application::APP_ID);
+		$allKeys = $this->config->getAppKeys(Application::APP_ID);
 
-		foreach ($allKeys as $key => $value) {
-			if (str_starts_with($key, 'group_') && str_ends_with($key, '_iframeUrl') && !empty($value)) {
-				// Extract group ID from key like 'group_admins_iframeUrl'
-				$parts = explode('_', $key);
-				if (count($parts) >= 3) {
-					$groupId = $parts[1];
-					if (!isset($groupWidgets[$groupId])) {
-						$groupWidgets[$groupId] = [
-							'groupId' => $groupId,
-							'widgetTitle' => $this->config->getAppValue(Application::APP_ID, 'group_' . $groupId . '_widgetTitle', ''),
-							'widgetIcon' => $this->config->getAppValue(Application::APP_ID, 'group_' . $groupId . '_widgetIcon', ''),
-							'widgetIconColor' => $this->config->getAppValue(Application::APP_ID, 'group_' . $groupId . '_widgetIconColor', ''),
-							'iframeUrl' => $value,
-							'iframeHeight' => $this->config->getAppValue(Application::APP_ID, 'group_' . $groupId . '_iframeHeight', ''),
-							'extraWide' => $this->config->getAppValue(Application::APP_ID, 'group_' . $groupId . '_extraWide', 'false'),
-							'groupDisplayName' => $this->serverContainer->get(\OCP\IGroupManager::class)->getDisplayName($groupId) ?: $groupId
-						];
+		foreach ($allKeys as $key) {
+			if (str_starts_with($key, 'group_') && str_ends_with($key, '_iframeUrl')) {
+				$value = $this->config->getAppValue(Application::APP_ID, $key, '');
+				if (!empty($value)) {
+					// Extract group ID from key like 'group_admins_iframeUrl'
+					$parts = explode('_', $key);
+					if (count($parts) >= 3) {
+						$groupId = $parts[1];
+						if (!isset($groupWidgets[$groupId])) {
+							$groupWidgets[$groupId] = [
+								'groupId' => $groupId,
+								'widgetTitle' => $this->config->getAppValue(Application::APP_ID, 'group_' . $groupId . '_widgetTitle', ''),
+								'widgetIcon' => $this->config->getAppValue(Application::APP_ID, 'group_' . $groupId . '_widgetIcon', ''),
+								'widgetIconColor' => $this->config->getAppValue(Application::APP_ID, 'group_' . $groupId . '_widgetIconColor', ''),
+								'iframeUrl' => $value,
+								'iframeHeight' => $this->config->getAppValue(Application::APP_ID, 'group_' . $groupId . '_iframeHeight', ''),
+								'extraWide' => $this->config->getAppValue(Application::APP_ID, 'group_' . $groupId . '_extraWide', 'false'),
+								'groupDisplayName' => $this->serverContainer->get(\OCP\IGroupManager::class)->getDisplayName($groupId) ?: $groupId
+							];
+						}
 					}
 				}
 			}

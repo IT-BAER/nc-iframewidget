@@ -242,16 +242,19 @@ class GroupIframeWidget implements IWidget
     private function getConfiguredGroups(): array
     {
         $groups = [];
-        $allKeys = $this->config->getAllValuesForApp(Application::APP_ID);
+        $allKeys = $this->config->getAppKeys(Application::APP_ID);
 
-        foreach ($allKeys as $key => $value) {
-            if (str_starts_with($key, 'group_') && str_ends_with($key, '_iframeUrl') && !empty($value)) {
-                // Extract group ID from key like 'group_admins_iframeUrl'
-                $parts = explode('_', $key);
-                if (count($parts) >= 3) {
-                    $groupId = $parts[1];
-                    if (!in_array($groupId, $groups)) {
-                        $groups[] = $groupId;
+        foreach ($allKeys as $key) {
+            if (str_starts_with($key, 'group_') && str_ends_with($key, '_iframeUrl')) {
+                $value = $this->config->getAppValue(Application::APP_ID, $key, '');
+                if (!empty($value)) {
+                    // Extract group ID from key like 'group_admins_iframeUrl'
+                    $parts = explode('_', $key);
+                    if (count($parts) >= 3) {
+                        $groupId = $parts[1];
+                        if (!in_array($groupId, $groups)) {
+                            $groups[] = $groupId;
+                        }
                     }
                 }
             }
