@@ -878,6 +878,18 @@ export default {
         },
         
         /**
+         * Handle group widget color picker changes
+         * 
+         * Updates the group widget icon color when the color picker value changes
+         * 
+         * @param {Event} event - Color input change event
+         */
+        updateGroupColor(event) {
+            this.groupWidgetForm.widgetIconColor = event.target.value;
+            this.$forceUpdate();
+        },
+
+        /**
          * Clear group widget icon color
          */
         clearGroupColor() {
