@@ -27,7 +27,14 @@
 - 🌍 Multi-language support with translations
 
 
-##  Screenshots
+## 🚀 TODO
+
+- 3-Column Size
+- Refresh Button (or Refresh Timer Option)
+- Add missing Translations
+- Enhanced Widget Management (Drag&Drop, modernized UI, Categories)
+
+## 📸 Screenshots
 
 <div align="center">
 
@@ -89,6 +96,16 @@ Administrators can create iFrame widgets that are only visible to specific user 
    - **🖥️ Extra Wide**: Enable for a wider widget view
 
 Group widgets are visible only to users who are members of the selected group. You can create multiple group widgets for different groups, and users can be members of multiple groups to see multiple group widgets.
+
+## ⚠️ Current Limitations
+
+**Important Notes on Group Widget Functionality:**
+
+- **🔸 Single Widget Per Group**: Currently, only **one widget can be shown per group** at a time. If multiple widgets are configured for the same group, only the one marked as "shown" will be visible to group members.
+- **👤 Single Widget Per User**: Each user can only see **one group widget** at a time, even if they belong to multiple groups. The system prioritizes the first group widget they are eligible for.
+- **🔄 No Multi-Group Support**: Users cannot see multiple group widgets simultaneously - only one group widget is displayed per user.
+
+These limitations are planned to be addressed in future updates. See the TODO List.
 
 ## 🎨 Icon System
 
