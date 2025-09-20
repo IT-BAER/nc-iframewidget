@@ -780,7 +780,14 @@ export default {
                 ...this.groupWidgetForm
             };
             
-            axios.post(url, data)
+            axios.post(url, data, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'requesttoken': OC.requestToken,
+                    'OCS-APIRequest': 'true',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
                 .then(() => {
                     showSuccess(t('iframewidget', 'Group widget saved'));
                     this.hideGroupDialog();
