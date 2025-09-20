@@ -108,3 +108,63 @@ msgstr "Error al guardar la configuración"
 #: src/components/AdminSettings.vue:275
 msgid "Icon not found: {name}"
 msgstr "Icono no encontrado: {name}"
+
+#: src/components/AdminSettings.vue:168
+msgid "Group-based iFrame Widgets"
+msgstr "Group-based iFrame Widgets"
+
+#: src/components/AdminSettings.vue:172
+msgid "Create iFrame widgets that are only visible to specific user groups."
+msgstr "Create iFrame widgets that are only visible to specific user groups."
+
+#: src/components/AdminSettings.vue:178
+msgid "Add Group Widget"
+msgstr "Add Group Widget"
+
+#: src/components/AdminSettings.vue:212
+msgid "Edit Group Widget"
+msgstr "Edit Group Widget"
+
+#: src/components/AdminSettings.vue:212
+msgid "Add Group Widget"
+msgstr "Add Group Widget"
+
+#: src/components/AdminSettings.vue:218
+msgid "Select Group"
+msgstr "Select Group"
+
+#: src/components/AdminSettings.vue:220
+msgid "Choose a group..."
+msgstr "Choose a group..."
+
+#: src/components/AdminSettings.vue:231
+msgid "Group iFrame Widget"
+msgstr "Group iFrame Widget"
+
+#: src/components/AdminSettings.vue:204
+msgid "No group widgets configured yet."
+msgstr "No group widgets configured yet."
+
+#: src/components/AdminSettings.vue:966
+msgid "Are you sure you want to delete this group widget?"
+msgstr "Are you sure you want to delete this group widget?"
+
+#: src/components/AdminSettings.vue:918
+msgid "Please select a group"
+msgstr "Please select a group"
+
+#: src/components/AdminSettings.vue:946
+msgid "Group widget saved"
+msgstr "Group widget saved"
+
+#: src/components/AdminSettings.vue:957
+msgid "Could not save group widget"
+msgstr "Could not save group widget"
+
+#: src/components/AdminSettings.vue:973
+msgid "Group widget deleted"
+msgstr "Group widget deleted"
+
+#: src/components/AdminSettings.vue:977
+msgid "Could not delete group widget"
+msgstr "Could not delete group widget"
