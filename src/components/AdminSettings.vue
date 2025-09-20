@@ -1581,4 +1581,19 @@ input[type="color"]::-moz-color-swatch {
     }
 }
 
+/* Modal preview section styling */
+.modal-preview-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--color-border);
+}
+
+.modal-preview-section .preview-title {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
 </style>
