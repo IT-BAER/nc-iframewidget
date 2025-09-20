@@ -193,12 +193,12 @@
                         <div v-for="widget in widgets" :key="widget.id" class="group-widget-item" :class="{ 'is-default': widget.isDefault }">
                             <div class="widget-header">
                                 <div class="widget-title">
-                                    <span v-if="widget.isDefault" class="default-indicator" title="Default widget">★</span>
+                                    <span v-if="widget.isDefault" class="default-indicator" title="Shown widget">★</span>
                                     <span>{{ widget.title || t('iframewidget', 'Untitled Widget') }}</span>
                                 </div>
                                 <div class="widget-actions">
-                                    <button v-if="!widget.isDefault" @click="setAsDefault(widget.id)" class="button small" title="Set as default">
-                                        {{ t('iframewidget', 'Set Default') }}
+                                    <button v-if="!widget.isDefault" @click="setAsDefault(widget.id)" class="button small" title="Show this widget to users">
+                                        {{ t('iframewidget', 'Show') }}
                                     </button>
                                     <button @click="editGroupWidget(widget)" class="button small">
                                         {{ t('iframewidget', 'Edit') }}
@@ -310,9 +310,9 @@
                             </label>
                         </div>
 
-                        <!-- Set as Default -->
+                        <!-- Show Widget -->
                         <label for="group-is-default" class="checkbox-label">
-                            {{ t('iframewidget', 'Set as Default Widget') }}
+                            {{ t('iframewidget', 'Show Widget') }}
                         </label>
                         <div class="checkbox-container">
                             <label>
@@ -1100,11 +1100,11 @@ export default {
                 }
             })
                 .then(() => {
-                    showSuccess(t('iframewidget', 'Widget set as default'));
+                    showSuccess(t('iframewidget', 'Widget shown to users'));
                     this.loadGroupWidgets();
                 })
                 .catch(error => {
-                    showError(t('iframewidget', 'Could not set widget as default'));
+                    showError(t('iframewidget', 'Could not show widget to users'));
                     console.error(error);
                 });
         },
@@ -1301,7 +1301,8 @@ input {
 .iframewidget-logo {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    float: inline-end;
+    text-align: center;
 }
 
 .iframewidget-logo a {

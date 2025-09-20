@@ -263,3 +263,23 @@ msgstr ""
 #: src/components/PersonalSettings.vue:242
 msgid "Failed to load settings"
 msgstr ""
+
+#: src/components/AdminSettings.vue:200
+msgid "Show"
+msgstr ""
+
+#: src/components/AdminSettings.vue:315
+msgid "Show Widget"
+msgstr ""
+
+#: src/components/AdminSettings.vue:1103
+msgid "Widget shown to users"
+msgstr ""
+
+#: src/components/AdminSettings.vue:1105
+msgid "Could not show widget to users"
+msgstr ""
+
+#: src/components/AdminSettings.vue:196
+msgid "Shown widget"
+msgstr ""
