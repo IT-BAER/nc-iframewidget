@@ -287,6 +287,53 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Widget Preview -->
+                <div class="modal-preview-section">
+                    <h4 class="preview-title">{{ t('iframewidget', 'Widget Preview') }}</h4>
+                    <div class="preview-container" :style="{ width: groupWidgetForm.extraWide ? '640px' : '320px' }">
+                        <div class="preview-header" :class="{'preview-title-empty': !groupWidgetForm.widgetTitle || groupWidgetForm.widgetTitle.trim() === ''}">
+                            <h2>
+                                <span v-if="groupWidgetForm.widgetIcon && groupWidgetForm.widgetTitle && groupWidgetForm.widgetTitle.trim() !== ''"
+                                    class="widget-icon">
+                                    <img :src="getIconUrl(groupWidgetForm.widgetIcon, groupWidgetForm.widgetIconColor)" 
+                                        :alt="groupWidgetForm.widgetIcon" 
+                                        @error="handleIconError"
+                                        class="dashboard-icon">
+                                </span>
+                                <span class="icon-iframewidget" v-else-if="groupWidgetForm.widgetTitle && groupWidgetForm.widgetTitle.trim() !== ''"></span>
+                                <span v-if="groupWidgetForm.widgetTitle && groupWidgetForm.widgetTitle.trim() !== ''">{{ groupWidgetForm.widgetTitle }}</span>
+                            </h2>
+                        </div>
+                        <div class="preview-content" :class="{'preview-title-empty': !groupWidgetForm.widgetTitle || groupWidgetForm.widgetTitle.trim() === ''}">
+                            <div v-if="!groupWidgetForm.iframeUrl" class="preview-empty">
+                                {{ t('iframewidget', 'No URL configured. Please set a URL in the Settings.') }}
+                            </div>
+
+                            <!-- CSP Error state - Shows helpful guidance when content is blocked by CSP -->
+                            <div v-else-if="groupIframeError && groupWidgetForm.iframeUrl" class="widget-error csp-error">
+                                <div class="error-title">{{ t('iframewidget', 'Failed to load content') }}</div>
+                                <p>{{ t('iframewidget', 'This might be caused by Content Security Policy (CSP) restrictions.') }}</p>
+                                <div class="error-actions">
+                                    <a href="https://github.com/IT-BAER/nc-iframewidget#csp-configuration" target="_blank" class="button primary">
+                                        {{ t('iframewidget', 'View CSP Configuration Guide') }}
+                                    </a>
+                                </div>
+                            </div>
+                            <iframe v-else
+                                    :src="groupWidgetForm.iframeUrl"
+                                    :style="{ height: groupPreviewHeight }"
+                                    class="preview-frame"
+                                    referrerpolicy="no-referrer"
+                                    allow="fullscreen"
+                                    @error="handleGroupIframeError"
+                                    @load="groupIframeError = false"
+                                    sandbox="allow-same-origin allow-scripts allow-popups allow-forms">
+                            </iframe>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="modal-footer">
                     <button @click="hideGroupDialog" class="button">
                         {{ t('iframewidget', 'Cancel') }}
@@ -351,7 +398,9 @@ export default {
             },
             // Component lifecycle management
             componentMounted: false,
-            pendingUpdates: []
+            pendingUpdates: [],
+            // Group widget preview
+            groupIframeError: false
         }
     },
     computed: {
@@ -372,6 +421,18 @@ export default {
                 return '100%';
             } else {
                 return parseInt(this.state.iframeHeight) + 'px';
+            }
+        },
+
+        /**
+         * Calculate group widget preview iframe height
+         * @returns {string} CSS height value
+         */
+        groupPreviewHeight() {
+            if (!this.groupWidgetForm.iframeHeight || this.groupWidgetForm.iframeHeight === '0') {
+                return '100%';
+            } else {
+                return parseInt(this.groupWidgetForm.iframeHeight) + 'px';
             }
         },
         
@@ -608,6 +669,15 @@ export default {
 			console.warn('Failed to load iframe content: ', event);
 			this.iframeError = true;
 		},
+
+		/**
+		 * Handle errors loading group widget iframe content
+		 * @param {Event} event - Error event from iframe
+		 */
+		handleGroupIframeError(event) {
+			console.warn('Failed to load group widget iframe content: ', event);
+			this.groupIframeError = true;
+		},
     
 		/**
 		 * Checks if iframe content can be accessed
@@ -755,9 +825,13 @@ export default {
          */
         loadGroupWidgets() {
             const url = generateUrl('/apps/iframewidget/group-widgets');
+            console.log('Loading group widgets from:', url);
             axios.get(url)
                 .then(response => {
+                    console.log('Group widgets response:', response.data);
                     this.groupWidgets = response.data || [];
+                    console.log('Group widgets set to:', this.groupWidgets);
+                    this.$forceUpdate(); // Force Vue to re-render
                 })
                 .catch(error => {
                     console.error('Failed to load group widgets:', error);
@@ -794,6 +868,7 @@ export default {
                 iframeHeight: '',
                 extraWide: false
             };
+            this.groupIframeError = false;
             this.showGroupDialog = true;
         },
         
@@ -820,6 +895,7 @@ export default {
                 iframeHeight: groupWidget.iframeHeight || '',
                 extraWide: groupWidget.extraWide === 'true' || groupWidget.extraWide === true
             };
+            this.groupIframeError = false;
             this.showGroupDialog = true;
         },
         
@@ -838,6 +914,9 @@ export default {
                 ...this.groupWidgetForm
             };
             
+            console.log('Saving group widget:', data);
+            console.log('Form data:', this.groupWidgetForm);
+            
             axios.post(url, data, {
                 headers: {
                     'Content-Type': 'application/json',
@@ -846,12 +925,19 @@ export default {
                     'X-Requested-With': 'XMLHttpRequest'
                 }
             })
-                .then(() => {
+                .then(response => {
+                    console.log('Save response:', response);
                     showSuccess(t('iframewidget', 'Group widget saved'));
                     this.hideGroupDialog();
-                    this.loadGroupWidgets();
+                    // Add a small delay before reloading to ensure backend has processed
+                    setTimeout(() => {
+                        console.log('Reloading group widgets...');
+                        this.loadGroupWidgets();
+                    }, 500);
                 })
                 .catch(error => {
+                    console.error('Save error:', error);
+                    console.error('Error response:', error.response);
                     showError(t('iframewidget', 'Could not save group widget'));
                     console.error(error);
                 });

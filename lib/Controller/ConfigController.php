@@ -169,31 +169,47 @@ class ConfigController extends Controller
 		$allKeys = $this->config->getAppKeys(Application::APP_ID);
 
 		foreach ($allKeys as $key) {
-			if (str_starts_with($key, 'group_') && str_ends_with($key, '_iframeUrl')) {
-				$value = $this->config->getAppValue(Application::APP_ID, $key, '');
-				if (!empty($value)) {
-					// Extract group ID from key like 'group_admins_iframeUrl'
-					$parts = explode('_', $key);
-					if (count($parts) >= 3) {
-						$groupId = $parts[1];
-						if (!isset($groupWidgets[$groupId])) {
-							$groupWidgets[$groupId] = [
-								'groupId' => $groupId,
-								'widgetTitle' => $this->config->getAppValue(Application::APP_ID, 'group_' . $groupId . '_widgetTitle', ''),
-								'widgetIcon' => $this->config->getAppValue(Application::APP_ID, 'group_' . $groupId . '_widgetIcon', ''),
-								'widgetIconColor' => $this->config->getAppValue(Application::APP_ID, 'group_' . $groupId . '_widgetIconColor', ''),
-								'iframeUrl' => $value,
-								'iframeHeight' => $this->config->getAppValue(Application::APP_ID, 'group_' . $groupId . '_iframeHeight', ''),
-								'extraWide' => $this->config->getAppValue(Application::APP_ID, 'group_' . $groupId . '_extraWide', 'false'),
-								'groupDisplayName' => $this->serverContainer->get(\OCP\IGroupManager::class)->getDisplayName($groupId) ?: $groupId
-							];
-						}
+			if (str_starts_with($key, 'group_') && str_contains($key, '_')) {
+				// Extract group ID and field from key like 'group_admins_widgetTitle'
+				$parts = explode('_', $key, 3);
+				if (count($parts) >= 3) {
+					$groupId = $parts[1];
+					$field = $parts[2];
+					
+					if (!isset($groupWidgets[$groupId])) {
+						$groupWidgets[$groupId] = [
+							'groupId' => $groupId,
+							'widgetTitle' => '',
+							'widgetIcon' => '',
+							'widgetIconColor' => '',
+							'iframeUrl' => '',
+							'iframeHeight' => '',
+							'extraWide' => 'false',
+							'groupDisplayName' => $this->serverContainer->get(\OCP\IGroupManager::class)->getDisplayName($groupId) ?: $groupId
+						];
 					}
+					
+					// Set the field value
+					$value = $this->config->getAppValue(Application::APP_ID, $key, '');
+					if ($field === 'extraWide' && ($value === true || $value === 'true')) {
+						$value = 'true';
+					} elseif ($field === 'extraWide' && ($value === false || $value === 'false')) {
+						$value = 'false';
+					}
+					$groupWidgets[$groupId][$field] = $value;
 				}
 			}
 		}
 
-		return new DataResponse(array_values($groupWidgets));
+		// Filter out widgets that have no meaningful data
+		$filteredWidgets = [];
+		foreach ($groupWidgets as $widget) {
+			if (!empty($widget['iframeUrl']) || !empty($widget['widgetTitle']) || !empty($widget['widgetIcon'])) {
+				$filteredWidgets[] = $widget;
+			}
+		}
+
+		return new DataResponse($filteredWidgets);
 	}
 
 	/**
@@ -230,8 +246,8 @@ class ConfigController extends Controller
 		];
 
 		foreach ($fields as $field) {
-			if (isset($data[$field])) {
-				$value = $data[$field];
+			if (isset($data[$field]) || array_key_exists($field, $data)) {
+				$value = $data[$field] ?? '';
 				// For boolean values that come as strings
 				if ($field === 'extraWide' && ($value === true || $value === 'true')) {
 					$value = 'true';
