@@ -280,6 +280,26 @@ msgstr ""
 msgid "Could not show widget to users"
 msgstr ""
 
+#: src/components/AdminSettings.vue:203
+msgid "Hide"
+msgstr ""
+
+#: src/components/AdminSettings.vue:1109
+msgid "Widget shown to users"
+msgstr ""
+
+#: src/components/AdminSettings.vue:1111
+msgid "Widget hidden from users"
+msgstr ""
+
+#: src/components/AdminSettings.vue:1113
+msgid "Could not show widget to users"
+msgstr ""
+
+#: src/components/AdminSettings.vue:1115
+msgid "Could not hide widget from users"
+msgstr ""
+
 #: src/components/AdminSettings.vue:196
 msgid "Shown widget"
 msgstr ""

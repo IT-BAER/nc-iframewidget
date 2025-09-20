@@ -200,6 +200,9 @@
                                     <button v-if="!widget.isDefault" @click="setAsDefault(widget.id)" class="button small" title="Show this widget to users">
                                         {{ t('iframewidget', 'Show') }}
                                     </button>
+                                    <button v-if="widget.isDefault" @click="setAsDefault(widget.id)" class="button small button-secondary" title="Hide this widget from users">
+                                        {{ t('iframewidget', 'Hide') }}
+                                    </button>
                                     <button @click="editGroupWidget(widget)" class="button small">
                                         {{ t('iframewidget', 'Edit') }}
                                     </button>
@@ -1088,7 +1091,7 @@ export default {
                 url: widgetToUpdate.url || '',
                 height: widgetToUpdate.height || '',
                 extraWide: widgetToUpdate.extraWide || false,
-                isDefault: true
+                isDefault: !widgetToUpdate.isDefault // Toggle the current state
             };
 
             axios.post(url, data, {
@@ -1100,11 +1103,13 @@ export default {
                 }
             })
                 .then(() => {
-                    showSuccess(t('iframewidget', 'Widget shown to users'));
+                    const action = !widgetToUpdate.isDefault ? 'shown' : 'hidden';
+                    showSuccess(t('iframewidget', `Widget ${action} from users`));
                     this.loadGroupWidgets();
                 })
                 .catch(error => {
-                    showError(t('iframewidget', 'Could not show widget to users'));
+                    const action = !widgetToUpdate.isDefault ? 'show' : 'hide';
+                    showError(t('iframewidget', `Could not ${action} widget from users`));
                     console.error(error);
                 });
         },
