@@ -138,17 +138,35 @@ class ConfigController extends Controller
 	 * @return DataResponse
 	 */
 	public function getGroups(): DataResponse {
-		$groupManager = $this->serverContainer->get(\OCP\IGroupManager::class);
-		$groups = [];
+		try {
+			$groupManager = $this->serverContainer->get(\OCP\IGroupManager::class);
+			$groups = [];
 
-		foreach ($groupManager->getGroups() as $groupId => $group) {
-			$groups[] = [
-				'id' => $groupId,
-				'displayName' => $groupManager->getDisplayName($groupId) ?: $groupId
-			];
+			// Try different methods to get groups based on Nextcloud version
+			$allGroups = $groupManager->getGroups();
+			if (is_array($allGroups)) {
+				foreach ($allGroups as $groupId => $group) {
+					$groups[] = [
+						'id' => $groupId,
+						'displayName' => $groupManager->getDisplayName($groupId) ?: $groupId
+					];
+				}
+			} else {
+				// Fallback: try search method
+				$searchResult = $groupManager->search('');
+				foreach ($searchResult as $group) {
+					$groupId = $group->getGID();
+					$groups[] = [
+						'id' => $groupId,
+						'displayName' => $groupManager->getDisplayName($groupId) ?: $groupId
+					];
+				}
+			}
+
+			return new DataResponse($groups);
+		} catch (\Exception $e) {
+			return new DataResponse(['error' => 'Failed to load groups: ' . $e->getMessage()], 500);
 		}
-
-		return new DataResponse($groups);
 	}
 
 	/**
