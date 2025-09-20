@@ -8,7 +8,7 @@
                     <img src="../../img/baer4-100x100.png" alt="Logo" class="iframewidget-logo-image">
                 </a>
                 <a href="https://github.com/IT-BAER/nc-iframewidget/releases" target="_blank" rel="noopener noreferrer" class="version-link">
-                    <span class="iframewidget-version">v0.7.7</span>
+                    <span class="iframewidget-version">v0.8.0</span>
                 </a>
             </div>
         </div>
@@ -156,6 +156,119 @@
                 </div>
             </div>
         </div>
+
+        <!-- Group-based iFrame Widgets Section -->
+        <div class="iframewidget-group-section">
+            <h3>{{ t('iframewidget', 'Group-based iFrame Widgets') }}</h3>
+            <p class="settings-hint">
+                {{ t('iframewidget', 'Create iFrame widgets that are only visible to specific user groups.') }}
+            </p>
+
+            <!-- Add New Group Widget Button -->
+            <div class="iframewidget-button-group">
+                <button @click="showAddGroupDialog" class="primary">
+                    {{ t('iframewidget', 'Add Group Widget') }}
+                </button>
+            </div>
+
+            <!-- Group Widgets List -->
+            <div v-if="groupWidgets.length > 0" class="group-widgets-list">
+                <div v-for="groupWidget in groupWidgets" :key="groupWidget.groupId" class="group-widget-item">
+                    <div class="group-widget-header">
+                        <h4>{{ groupWidget.groupDisplayName || groupWidget.groupId }}</h4>
+                        <div class="group-widget-actions">
+                            <button @click="editGroupWidget(groupWidget)" class="button">
+                                {{ t('iframewidget', 'Edit') }}
+                            </button>
+                            <button @click="deleteGroupWidget(groupWidget.groupId)" class="button button-danger">
+                                {{ t('iframewidget', 'Delete') }}
+                            </button>
+                        </div>
+                    </div>
+                    <div class="group-widget-details">
+                        <p><strong>{{ t('iframewidget', 'Title:') }}</strong> {{ groupWidget.widgetTitle || t('iframewidget', 'Not set') }}</p>
+                        <p><strong>{{ t('iframewidget', 'URL:') }}</strong> {{ groupWidget.iframeUrl || t('iframewidget', 'Not set') }}</p>
+                        <p><strong>{{ t('iframewidget', 'Icon:') }}</strong> {{ groupWidget.widgetIcon || t('iframewidget', 'Default') }}</p>
+                    </div>
+                </div>
+            </div>
+            <div v-else class="no-group-widgets">
+                <p>{{ t('iframewidget', 'No group widgets configured yet.') }}</p>
+            </div>
+        </div>
+
+        <!-- Group Widget Dialog -->
+        <div v-if="showGroupDialog" class="modal-overlay" @click="hideGroupDialog">
+            <div class="modal-content" @click.stop>
+                <div class="modal-header">
+                    <h3>{{ isEditing ? t('iframewidget', 'Edit Group Widget') : t('iframewidget', 'Add Group Widget') }}</h3>
+                    <button @click="hideGroupDialog" class="modal-close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="group-widget-form">
+                        <!-- Group Selection -->
+                        <label for="group-select">{{ t('iframewidget', 'Select Group') }}</label>
+                        <select id="group-select" v-model="selectedGroupId" :disabled="isEditing">
+                            <option value="">{{ t('iframewidget', 'Choose a group...') }}</option>
+                            <option v-for="group in availableGroups" :key="group.id" :value="group.id">
+                                {{ group.displayName || group.id }}
+                            </option>
+                        </select>
+
+                        <!-- Widget Title -->
+                        <label for="group-widget-title">{{ t('iframewidget', 'Widget Title') }}</label>
+                        <input id="group-widget-title"
+                            v-model="groupWidgetForm.widgetTitle"
+                            type="text"
+                            :placeholder="t('iframewidget', 'Group iFrame Widget')">
+
+                        <!-- Widget Icon -->
+                        <label for="group-widget-icon">{{ t('iframewidget', 'Widget Icon') }}</label>
+                        <div class="icon-input-container">
+                            <input id="group-widget-icon"
+                                v-model="groupWidgetForm.widgetIcon"
+                                type="text"
+                                :placeholder="t('iframewidget', 'si:nextcloud')">
+                            <input type="color"
+                                :value="groupWidgetForm.widgetIconColor || '#ffffff'"
+                                @input="updateGroupColor"
+                                :disabled="!groupWidgetForm.widgetIcon || !groupWidgetForm.widgetIcon.startsWith('si:')"
+                                class="color-picker">
+                        </div>
+
+                        <!-- URL -->
+                        <label for="group-iframe-url">{{ t('iframewidget', 'URL to Display') }}</label>
+                        <input id="group-iframe-url"
+                            v-model="groupWidgetForm.iframeUrl"
+                            type="text"
+                            :placeholder="t('iframewidget', 'https://example.org')">
+
+                        <!-- Height -->
+                        <label for="group-iframe-height">{{ t('iframewidget', 'iFrame Height (px)') }}</label>
+                        <input id="group-iframe-height"
+                            v-model="groupWidgetForm.iframeHeight"
+                            type="number"
+                            min="0"
+                            :placeholder="t('iframewidget', '100%')">
+
+                        <!-- Extra Wide -->
+                        <label class="checkbox-label">
+                            <input v-model="groupWidgetForm.extraWide" type="checkbox" class="checkbox">
+                            <span class="checkbox-icon"></span>
+                            {{ t('iframewidget', 'Extra Wide (2 Col)') }}
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button @click="hideGroupDialog" class="button">
+                        {{ t('iframewidget', 'Cancel') }}
+                    </button>
+                    <button @click="saveGroupWidget" class="button primary" :disabled="!selectedGroupId">
+                        {{ isEditing ? t('iframewidget', 'Update') : t('iframewidget', 'Create') }}
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -184,7 +297,21 @@ export default {
         	iconUpdateTimer: null,  // Timer for debouncing icon updates
         	loading: false,
             isLoading: false,
-        	iframeError: false     // Track iframe loading errors
+        	iframeError: false,     // Track iframe loading errors
+            // Group management data
+            groupWidgets: [],
+            availableGroups: [],
+            showGroupDialog: false,
+            isEditing: false,
+            selectedGroupId: '',
+            groupWidgetForm: {
+                widgetTitle: '',
+                widgetIcon: '',
+                widgetIconColor: '',
+                iframeUrl: '',
+                iframeHeight: '',
+                extraWide: false
+            }
         }
     },
     computed: {
@@ -252,6 +379,9 @@ export default {
                 this.checkIframeLoaded();
             }, 3000);
         }
+        
+        // Load group data
+        this.loadGroupData();
     },
 	beforeDestroy() {
 		if (this.urlUpdateTimer) {
@@ -552,6 +682,141 @@ export default {
                     }
                 }
             });
+        },
+        
+        /**
+         * Load group widgets and available groups
+         */
+        loadGroupData() {
+            this.loadGroupWidgets();
+            this.loadAvailableGroups();
+        },
+        
+        /**
+         * Load configured group widgets
+         */
+        loadGroupWidgets() {
+            const url = generateUrl('/apps/iframewidget/group-widgets');
+            axios.get(url)
+                .then(response => {
+                    this.groupWidgets = response.data || [];
+                })
+                .catch(error => {
+                    console.error('Failed to load group widgets:', error);
+                    this.groupWidgets = [];
+                });
+        },
+        
+        /**
+         * Load available groups
+         */
+        loadAvailableGroups() {
+            const url = generateUrl('/apps/iframewidget/groups');
+            axios.get(url)
+                .then(response => {
+                    this.availableGroups = response.data || [];
+                })
+                .catch(error => {
+                    console.error('Failed to load groups:', error);
+                    this.availableGroups = [];
+                });
+        },
+        
+        /**
+         * Show add group widget dialog
+         */
+        showAddGroupDialog() {
+            this.isEditing = false;
+            this.selectedGroupId = '';
+            this.groupWidgetForm = {
+                widgetTitle: '',
+                widgetIcon: '',
+                widgetIconColor: '',
+                iframeUrl: '',
+                iframeHeight: '',
+                extraWide: false
+            };
+            this.showGroupDialog = true;
+        },
+        
+        /**
+         * Hide group widget dialog
+         */
+        hideGroupDialog() {
+            this.showGroupDialog = false;
+            this.isEditing = false;
+            this.selectedGroupId = '';
+        },
+        
+        /**
+         * Edit existing group widget
+         */
+        editGroupWidget(groupWidget) {
+            this.isEditing = true;
+            this.selectedGroupId = groupWidget.groupId;
+            this.groupWidgetForm = {
+                widgetTitle: groupWidget.widgetTitle || '',
+                widgetIcon: groupWidget.widgetIcon || '',
+                widgetIconColor: groupWidget.widgetIconColor || '',
+                iframeUrl: groupWidget.iframeUrl || '',
+                iframeHeight: groupWidget.iframeHeight || '',
+                extraWide: groupWidget.extraWide === 'true' || groupWidget.extraWide === true
+            };
+            this.showGroupDialog = true;
+        },
+        
+        /**
+         * Save group widget
+         */
+        saveGroupWidget() {
+            if (!this.selectedGroupId) {
+                showError(t('iframewidget', 'Please select a group'));
+                return;
+            }
+            
+            const url = generateUrl('/apps/iframewidget/group-widgets');
+            const data = {
+                groupId: this.selectedGroupId,
+                ...this.groupWidgetForm
+            };
+            
+            axios.post(url, data)
+                .then(() => {
+                    showSuccess(t('iframewidget', 'Group widget saved'));
+                    this.hideGroupDialog();
+                    this.loadGroupWidgets();
+                })
+                .catch(error => {
+                    showError(t('iframewidget', 'Could not save group widget'));
+                    console.error(error);
+                });
+        },
+        
+        /**
+         * Delete group widget
+         */
+        deleteGroupWidget(groupId) {
+            if (!confirm(t('iframewidget', 'Are you sure you want to delete this group widget?'))) {
+                return;
+            }
+            
+            const url = generateUrl('/apps/iframewidget/group-widgets/' + encodeURIComponent(groupId));
+            axios.delete(url)
+                .then(() => {
+                    showSuccess(t('iframewidget', 'Group widget deleted'));
+                    this.loadGroupWidgets();
+                })
+                .catch(error => {
+                    showError(t('iframewidget', 'Could not delete group widget'));
+                    console.error(error);
+                });
+        },
+        
+        /**
+         * Update group widget icon color
+         */
+        updateGroupColor(event) {
+            this.groupWidgetForm.widgetIconColor = event.target.value;
         },
         
         /**
@@ -961,6 +1226,195 @@ input[type="color"]::-moz-color-swatch {
 /* Hover state for action buttons */
 .error-actions .button:hover {
     background-color: var(--color-primary-element-hover);
+}
+
+/* Group Management Styles */
+.iframewidget-group-section {
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 1px solid var(--color-border);
+}
+
+.iframewidget-group-section h3 {
+    margin-bottom: 10px;
+    color: var(--color-text-maxcontrast);
+}
+
+.group-widgets-list {
+    margin-top: 20px;
+}
+
+.group-widget-item {
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: 15px;
+    margin-bottom: 15px;
+    background-color: var(--color-main-background);
+}
+
+.group-widget-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.group-widget-header h4 {
+    margin: 0;
+    color: var(--color-text-maxcontrast);
+}
+
+.group-widget-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.group-widget-actions .button {
+    padding: 5px 10px;
+    font-size: 12px;
+}
+
+.group-widget-details p {
+    margin: 5px 0;
+    color: var(--color-text-light);
+}
+
+.no-group-widgets {
+    text-align: center;
+    padding: 30px;
+    color: var(--color-text-light);
+    border: 2px dashed var(--color-border);
+    border-radius: var(--border-radius);
+}
+
+/* Modal Styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: var(--color-main-background);
+    border-radius: var(--border-radius);
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.modal-header h3 {
+    margin: 0;
+    color: var(--color-text-maxcontrast);
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--color-text-light);
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-close:hover {
+    color: var(--color-text-maxcontrast);
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 20px;
+    border-top: 1px solid var(--color-border);
+}
+
+.group-widget-form {
+    display: grid;
+    gap: 15px;
+}
+
+.group-widget-form label {
+    font-weight: 600;
+    color: var(--color-text-maxcontrast);
+}
+
+.group-widget-form input,
+.group-widget-form select {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    background-color: var(--color-background-dark);
+    color: var(--color-text-light);
+}
+
+.group-widget-form input:focus,
+.group-widget-form select:focus {
+    outline: none;
+    border-color: var(--color-primary);
+}
+
+.icon-input-container {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.icon-input-container input[type="text"] {
+    flex: 1;
+}
+
+.color-picker {
+    width: 50px;
+    height: 36px;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .modal-content {
+        width: 95%;
+        margin: 20px;
+    }
+    
+    .group-widget-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .group-widget-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
 }
 
 </style>

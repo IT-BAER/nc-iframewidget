@@ -8,7 +8,7 @@
                     <img src="../../img/baer4-100x100.png" alt="Logo" class="iframewidget-logo-image">
                 </a>
                 <a href="https://github.com/IT-BAER/nc-iframewidget/releases" target="_blank" rel="noopener noreferrer" class="version-link">
-                    <span class="iframewidget-version">v0.7.7</span>
+                    <span class="iframewidget-version">v0.8.0</span>
                 </a>
             </div>
         </div>

@@ -123,7 +123,111 @@ msgstr ""
 msgid "Failed to save settings"
 msgstr ""
 
-#: src/components/PersonalSettings.vue:275
+#: src/components/AdminSettings.vue:275
 #: src/components/AdminSettings.vue:275
 msgid "Icon not found: {name}"
+msgstr ""
+
+#: src/components/AdminSettings.vue:165
+msgid "Group-based iFrame Widgets"
+msgstr ""
+
+#: src/components/AdminSettings.vue:168
+msgid "Create iFrame widgets that are only visible to specific user groups."
+msgstr ""
+
+#: src/components/AdminSettings.vue:173
+msgid "Add Group Widget"
+msgstr ""
+
+#: src/components/AdminSettings.vue:179
+msgid "Edit Group Widget"
+msgstr ""
+
+#: src/components/AdminSettings.vue:180
+msgid "Add Group Widget"
+msgstr ""
+
+#: src/components/AdminSettings.vue:185
+msgid "Select Group"
+msgstr ""
+
+#: src/components/AdminSettings.vue:186
+msgid "Choose a group..."
+msgstr ""
+
+#: src/components/AdminSettings.vue:191
+msgid "Group iFrame Widget"
+msgstr ""
+
+#: src/components/AdminSettings.vue:210
+msgid "Extra Wide (2 Col)"
+msgstr ""
+
+#: src/components/AdminSettings.vue:217
+msgid "Cancel"
+msgstr ""
+
+#: src/components/AdminSettings.vue:218
+msgid "Update"
+msgstr ""
+
+#: src/components/AdminSettings.vue:219
+msgid "Create"
+msgstr ""
+
+#: src/components/AdminSettings.vue:225
+msgid "Title:"
+msgstr ""
+
+#: src/components/AdminSettings.vue:226
+msgid "URL:"
+msgstr ""
+
+#: src/components/AdminSettings.vue:227
+msgid "Icon:"
+msgstr ""
+
+#: src/components/AdminSettings.vue:228
+msgid "Default"
+msgstr ""
+
+#: src/components/AdminSettings.vue:229
+msgid "Edit"
+msgstr ""
+
+#: src/components/AdminSettings.vue:230
+msgid "Delete"
+msgstr ""
+
+#: src/components/AdminSettings.vue:233
+msgid "No group widgets configured yet."
+msgstr ""
+
+#: src/components/AdminSettings.vue:237
+msgid "Are you sure you want to delete this group widget?"
+msgstr ""
+
+#: src/components/AdminSettings.vue:241
+msgid "Please select a group"
+msgstr ""
+
+#: src/components/AdminSettings.vue:245
+msgid "Group widget saved"
+msgstr ""
+
+#: src/components/AdminSettings.vue:248
+msgid "Could not save group widget"
+msgstr ""
+
+#: src/components/AdminSettings.vue:252
+msgid "Group widget deleted"
+msgstr ""
+
+#: src/components/AdminSettings.vue:255
+msgid "Could not delete group widget"
+msgstr ""
+
+#: lib/Dashboard/GroupIframeWidget.php:35
+msgid "Group iFrame"
 msgstr ""

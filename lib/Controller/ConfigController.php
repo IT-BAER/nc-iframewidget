@@ -131,5 +131,140 @@ class ConfigController extends Controller
 		}
 	}
 
+	/**
+	 * Get available groups for group widget assignment
+	 *
+	 * @AdminRequired
+	 * @return DataResponse
+	 */
+	public function getGroups(): DataResponse {
+		$groupManager = $this->serverContainer->get(\OCP\IGroupManager::class);
+		$groups = [];
+
+		foreach ($groupManager->getGroups() as $groupId => $group) {
+			$groups[] = [
+				'id' => $groupId,
+				'displayName' => $groupManager->getDisplayName($groupId) ?: $groupId
+			];
+		}
+
+		return new DataResponse($groups);
+	}
+
+	/**
+	 * Get configured group widgets
+	 *
+	 * @AdminRequired
+	 * @return DataResponse
+	 */
+	public function getGroupWidgets(): DataResponse {
+		$groupWidgets = [];
+		$allKeys = $this->config->getAllValuesForApp(Application::APP_ID);
+
+		foreach ($allKeys as $key => $value) {
+			if (str_starts_with($key, 'group_') && str_ends_with($key, '_iframeUrl') && !empty($value)) {
+				// Extract group ID from key like 'group_admins_iframeUrl'
+				$parts = explode('_', $key);
+				if (count($parts) >= 3) {
+					$groupId = $parts[1];
+					if (!isset($groupWidgets[$groupId])) {
+						$groupWidgets[$groupId] = [
+							'groupId' => $groupId,
+							'widgetTitle' => $this->config->getAppValue(Application::APP_ID, 'group_' . $groupId . '_widgetTitle', ''),
+							'widgetIcon' => $this->config->getAppValue(Application::APP_ID, 'group_' . $groupId . '_widgetIcon', ''),
+							'widgetIconColor' => $this->config->getAppValue(Application::APP_ID, 'group_' . $groupId . '_widgetIconColor', ''),
+							'iframeUrl' => $value,
+							'iframeHeight' => $this->config->getAppValue(Application::APP_ID, 'group_' . $groupId . '_iframeHeight', ''),
+							'extraWide' => $this->config->getAppValue(Application::APP_ID, 'group_' . $groupId . '_extraWide', 'false'),
+							'groupDisplayName' => $this->serverContainer->get(\OCP\IGroupManager::class)->getDisplayName($groupId) ?: $groupId
+						];
+					}
+				}
+			}
+		}
+
+		return new DataResponse(array_values($groupWidgets));
+	}
+
+	/**
+	 * Save or update a group widget configuration
+	 *
+	 * @AdminRequired
+	 * @return DataResponse
+	 */
+	public function setGroupWidget(): DataResponse {
+		// Get the request body and decode it
+		$request = file_get_contents('php://input');
+		$data = json_decode($request, true);
+
+		if (!is_array($data) || !isset($data['groupId'])) {
+			return new DataResponse(['status' => 'error', 'message' => 'Invalid input or missing groupId'], 400);
+		}
+
+		$groupId = $data['groupId'];
+
+		// Validate that the group exists
+		$groupManager = $this->serverContainer->get(\OCP\IGroupManager::class);
+		if (!$groupManager->groupExists($groupId)) {
+			return new DataResponse(['status' => 'error', 'message' => 'Group does not exist'], 400);
+		}
+
+		// Save group widget configuration
+		$fields = [
+			'widgetTitle',
+			'widgetIcon',
+			'widgetIconColor',
+			'iframeUrl',
+			'iframeHeight',
+			'extraWide'
+		];
+
+		foreach ($fields as $field) {
+			if (isset($data[$field])) {
+				$value = $data[$field];
+				// For boolean values that come as strings
+				if ($field === 'extraWide' && ($value === true || $value === 'true')) {
+					$value = 'true';
+				} elseif ($field === 'extraWide' && ($value === false || $value === 'false')) {
+					$value = 'false';
+				}
+				$this->config->setAppValue(Application::APP_ID, 'group_' . $groupId . '_' . $field, $value);
+			}
+		}
+
+		return new DataResponse(['status' => 'success']);
+	}
+
+	/**
+	 * Delete a group widget configuration
+	 *
+	 * @AdminRequired
+	 * @param string $groupId Group ID
+	 * @return DataResponse
+	 */
+	public function deleteGroupWidget(string $groupId): DataResponse {
+		// Validate that the group exists
+		$groupManager = $this->serverContainer->get(\OCP\IGroupManager::class);
+		if (!$groupManager->groupExists($groupId)) {
+			return new DataResponse(['status' => 'error', 'message' => 'Group does not exist'], 400);
+		}
+
+		// Delete all group widget configuration keys
+		$fields = [
+			'widgetTitle',
+			'widgetIcon',
+			'widgetIconColor',
+			'iframeUrl',
+			'iframeHeight',
+			'extraWide'
+		];
+
+		foreach ($fields as $field) {
+			$this->config->deleteAppValue(Application::APP_ID, 'group_' . $groupId . '_' . $field);
+		}
+
+		return new DataResponse(['status' => 'success']);
+	}
+
 
 }

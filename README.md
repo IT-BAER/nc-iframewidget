@@ -23,16 +23,11 @@
 - 🖥️ Extra-wide display option (2 columns)
 - 🎯 Clean, responsive design that integrates with Nextcloud themes
 - 👤 Separate Personal and Public iFrame Widgets
+- 👥 **NEW:** Group-based iFrame Widgets (admin-configured, group-specific)
 - 🌍 Multi-language support with translations
 
 
-## 🚀 Upcoming Features
-
-- 📊 3-Column Size
-- 🔄 Refresh Button (or Refresh Timer Option)
-- 👥 Widget per Group allocation
-
-## 📸 Screenshots
+##  Screenshots
 
 <div align="center">
 
@@ -42,7 +37,7 @@
 
 </div>
 
-The iFrame Widget provides both admin/public and personal configuration options, allowing administrators to set up shared widgets for all users while enabling individual users to create their own personalized widgets.
+The iFrame Widget provides three types of widgets: admin/public, personal, and group-based configuration options, allowing administrators to set up shared widgets for all users, enable individual users to create their own personalized widgets, and create group-specific widgets that are only visible to members of selected user groups.
 
 
 ## ⚙️ Configuration
@@ -76,6 +71,24 @@ Each user can configure their own personal iFrame widget:
    - **🖥️ Extra Wide**: Enable for a wider widget view
 
 Personal widgets are visible only to the user who configured them and don't affect other users.
+
+### 👥 Group-based Widget Settings
+
+Administrators can create iFrame widgets that are only visible to specific user groups:
+
+1. Settings → Administration → iFrame Widget
+2. Scroll down to the "Group-based iFrame Widgets" section
+3. Click "Add Group Widget" to create a new group-specific widget
+4. Configure the following options:
+   - **👥 Select Group**: Choose which user group should see this widget
+   - **🔤 Widget Title**: Set a custom title for the group widget
+   - **🎨 Widget Icon**: Choose an icon with `si:` prefix
+   - **🎭 Icon Color**: Set a custom color for the widget icon
+   - **🌐 URL to Display**: Add the website URL to embed for this group
+   - **📏 iFrame Height**: Adjust the height for the group widget
+   - **🖥️ Extra Wide**: Enable for a wider widget view
+
+Group widgets are visible only to users who are members of the selected group. You can create multiple group widgets for different groups, and users can be members of multiple groups to see multiple group widgets.
 
 ## 🎨 Icon System
 
@@ -201,13 +214,14 @@ If the widget doesn't appear on your dashboard after installation:
 2. Verify that there are no JavaScript errors in your browser console
 3. Check that the app is properly enabled: `php occ app:list | grep iframe`
 
-### ❓ What's the difference between admin and personal widgets?
+### ❓ What's the difference between admin, personal, and group widgets?
 
 - **Admin/Public Widget**: Configured by administrators and appears on all users' dashboards with the same content
 - **Personal Widget**: Each user can configure their own widget that's visible only to them
-- You can use both simultaneously - users can have the admin-configured widget and their own personal widget
+- **Group Widget**: Configured by administrators and appears only on dashboards of users who are members of the selected group
+- You can use all three simultaneously - users can have the admin-configured widget, their own personal widget, and any group widgets they're eligible for
 
-Both widgets need to be added to your dashboard using the "+" button in dashboard customization.
+All widgets need to be added to your dashboard using the "+" button in dashboard customization.
 
 ## 💜 Support Development
 

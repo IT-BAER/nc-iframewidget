@@ -10,6 +10,7 @@ use OCP\AppFramework\Bootstrap\IBootstrap;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
 use OCA\IframeWidget\Dashboard\IframeWidget;
 use OCA\IframeWidget\Dashboard\PersonalIframeWidget;
+use OCA\IframeWidget\Dashboard\GroupIframeWidget;
 use OCA\IframeWidget\Settings\Personal;
 use OCA\IframeWidget\Settings\PersonalSection;
 use OCP\Settings\ISettingsManager;
@@ -28,6 +29,7 @@ class Application extends App implements IBootstrap
         // Register dashboard widgets
         $context->registerDashboardWidget(IframeWidget::class);
         $context->registerDashboardWidget(PersonalIframeWidget::class);
+        $context->registerDashboardWidget(GroupIframeWidget::class);
 
         // Register settings
         $context->registerService(Personal::class, function($c) {
