@@ -1066,9 +1066,28 @@ export default {
          * Set a widget as the default for its group
          */
         setAsDefault(widgetId) {
+            // Find the widget in the groupWidgets array
+            let widgetToUpdate = null;
+            for (const groupWidgets of Object.values(this.groupedWidgets)) {
+                widgetToUpdate = groupWidgets.find(widget => widget.id === widgetId);
+                if (widgetToUpdate) break;
+            }
+
+            if (!widgetToUpdate) {
+                showError(t('iframewidget', 'Widget not found'));
+                return;
+            }
+
             const url = generateUrl('/apps/iframewidget/group-widgets');
             const data = {
                 id: widgetId,
+                groupId: widgetToUpdate.groupId,
+                title: widgetToUpdate.title || '',
+                icon: widgetToUpdate.icon || '',
+                iconColor: widgetToUpdate.iconColor || '',
+                url: widgetToUpdate.url || '',
+                height: widgetToUpdate.height || '',
+                extraWide: widgetToUpdate.extraWide || false,
                 isDefault: true
             };
 
