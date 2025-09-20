@@ -18,6 +18,14 @@
         </p>
         
         <div class="iframewidget-admin-container">
+            <!-- Public iFrame Widget Section -->
+            <div class="iframewidget-public-section">
+                <h3>{{ t('iframewidget', 'Public iFrame Widget') }}</h3>
+                <p class="settings-hint">
+                    {{ t('iframewidget', 'Configure the main iFrame widget visible to all users.') }}
+                </p>
+            </div>
+
             <!-- Left side: Settings form -->
             <div class="iframewidget-admin-form">
                 <div class="iframewidget-grid-form">
@@ -1404,6 +1412,16 @@ input[type="color"]::-moz-color-swatch {
     color: var(--color-text-maxcontrast);
 }
 
+/* Public Widget Section Styles */
+.iframewidget-public-section {
+    margin-bottom: 20px;
+}
+
+.iframewidget-public-section h3 {
+    margin-bottom: 10px;
+    color: var(--color-text-maxcontrast);
+}
+
 .group-widgets-list {
     margin-top: 20px;
 }
@@ -1469,7 +1487,7 @@ input[type="color"]::-moz-color-swatch {
     background-color: var(--color-main-background);
     border-radius: var(--border-radius);
     width: 90%;
-    max-width: 600px;
+    max-width: 800px;
     max-height: 90vh;
     overflow-y: auto;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
@@ -1507,7 +1525,7 @@ input[type="color"]::-moz-color-swatch {
 }
 
 .modal-body {
-    padding: 20px;
+    padding: 15px 20px;
 }
 
 .modal-footer {
