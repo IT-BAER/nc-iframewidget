@@ -2,6 +2,7 @@
 import Vue from 'vue'
 import DashboardWidget from './components/DashboardWidget.vue'
 import PersonalDashboardWidget from './components/PersonalDashboardWidget.vue'
+import GroupDashboardWidget from './components/GroupDashboardWidget.vue'
 import { generateFilePath } from '@nextcloud/router'
 import { getRequestToken } from '@nextcloud/auth'
 
@@ -19,7 +20,7 @@ Vue.prototype.n = n
 Vue.prototype.OC = OC
 Vue.prototype.OCA = OCA
 
-// Register both widgets when DOM is ready
+// Register all widgets when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
     // Register admin/public widget
     OCA.Dashboard.register('iframewidget', (el) => {
@@ -30,6 +31,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // Register personal widget
     OCA.Dashboard.register('personal-iframewidget', (el) => {
         const Widget = Vue.extend(PersonalDashboardWidget)
+        return new Widget({}).$mount(el)
+    })
+
+    // Register group widget
+    OCA.Dashboard.register('group-iframewidget', (el) => {
+        const Widget = Vue.extend(GroupDashboardWidget)
         return new Widget({}).$mount(el)
     })
 })
