@@ -291,7 +291,7 @@
                 <!-- Widget Preview -->
                 <div class="modal-preview-section">
                     <h4 class="preview-title">{{ t('iframewidget', 'Widget Preview') }}</h4>
-                    <div class="preview-container" :style="{ width: groupWidgetForm.extraWide ? '640px' : '320px' }">
+                    <div class="preview-container" :style="{ width: groupWidgetForm.extraWide ? '560px' : '320px' }">
                         <div class="preview-header" :class="{'preview-title-empty': !groupWidgetForm.widgetTitle || groupWidgetForm.widgetTitle.trim() === ''}">
                             <h2>
                                 <span v-if="groupWidgetForm.widgetIcon && groupWidgetForm.widgetTitle && groupWidgetForm.widgetTitle.trim() !== ''"
@@ -1587,13 +1587,25 @@ input[type="color"]::-moz-color-swatch {
     flex-direction: column;
     align-items: center;
     margin-top: 20px;
-    padding-top: 20px;
+    padding: 20px 0 30px 0;
     border-top: 1px solid var(--color-border);
 }
 
 .modal-preview-section .preview-title {
     text-align: center;
     margin-bottom: 15px;
+}
+
+/* Responsive preview adjustments */
+@media (max-width: 768px) {
+    .modal-preview-section {
+        padding: 15px 0 20px 0;
+    }
+    
+    .modal-preview-section .preview-container {
+        width: 100% !important;
+        max-width: 320px;
+    }
 }
 
 </style>
