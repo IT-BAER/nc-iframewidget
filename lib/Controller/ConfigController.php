@@ -142,25 +142,14 @@ class ConfigController extends Controller
 			$groupManager = $this->serverContainer->get(\OCP\IGroupManager::class);
 			$groups = [];
 
-			// Try different methods to get groups based on Nextcloud version
-			$allGroups = $groupManager->getGroups();
-			if (is_array($allGroups)) {
-				foreach ($allGroups as $groupId => $group) {
-					$groups[] = [
-						'id' => $groupId,
-						'displayName' => $groupManager->getDisplayName($groupId) ?: $groupId
-					];
-				}
-			} else {
-				// Fallback: try search method
-				$searchResult = $groupManager->search('');
-				foreach ($searchResult as $group) {
-					$groupId = $group->getGID();
-					$groups[] = [
-						'id' => $groupId,
-						'displayName' => $groupManager->getDisplayName($groupId) ?: $groupId
-					];
-				}
+			// Try to get all groups using search method (works in Nextcloud 31)
+			$searchResult = $groupManager->search('');
+			foreach ($searchResult as $group) {
+				$groupId = $group->getGID();
+				$groups[] = [
+					'id' => $groupId,
+					'displayName' => $groupManager->getDisplayName($groupId) ?: $groupId
+				];
 			}
 
 			return new DataResponse($groups);
