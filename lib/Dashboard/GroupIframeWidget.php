@@ -69,19 +69,13 @@ class GroupIframeWidget implements IWidget
     public function getTitle(): string
     {
         $userId = $this->userSession->getUser()->getUID();
-        $userGroup = $this->getUserGroup($userId);
+        $widgetConfig = $this->getUserWidgetConfig($userId);
 
-        if (!$userGroup) {
+        if (!$widgetConfig) {
             return '';
         }
 
-        $widgetTitle = $this->config->getAppValue(
-            Application::APP_ID,
-            'group_' . $userGroup . '_widgetTitle',
-            ''
-        );
-
-        return empty(trim($widgetTitle)) ? '' : $widgetTitle;
+        return empty(trim($widgetConfig['title'])) ? '' : $widgetConfig['title'];
     }
 
     /**
@@ -98,17 +92,13 @@ class GroupIframeWidget implements IWidget
     public function getIconClass(): string
     {
         $userId = $this->userSession->getUser()->getUID();
-        $userGroup = $this->getUserGroup($userId);
+        $widgetConfig = $this->getUserWidgetConfig($userId);
 
-        if (!$userGroup) {
+        if (!$widgetConfig) {
             return '';
         }
 
-        $icon = $this->config->getAppValue(
-            Application::APP_ID,
-            'group_' . $userGroup . '_widgetIcon',
-            ''
-        );
+        $icon = $widgetConfig['icon'];
 
         // Use default icon if none set
         if (empty($icon)) {
@@ -143,62 +133,29 @@ class GroupIframeWidget implements IWidget
     public function load(): void
     {
         $userId = $this->userSession->getUser()->getUID();
-        $userGroup = $this->getUserGroup($userId);
+        $widgetConfig = $this->getUserWidgetConfig($userId);
 
         // Always provide initial state, even if user is not in a configured group
         $config = [
-            'extraWide' => 'false',
+            'extraWide' => false,
             'widgetTitle' => '',
             'widgetIcon' => '',
             'widgetIconColor' => '',
             'iframeHeight' => '',
             'iframeUrl' => '',
-            'userGroup' => $userGroup ?: ''
+            'userGroup' => ''
         ];
 
-        // If user is in a configured group, load their actual settings
-        if ($userGroup) {
-            // Get widget settings for this group
-            $extraWide = $this->config->getAppValue(
-                Application::APP_ID,
-                'group_' . $userGroup . '_extraWide',
-                'false'
-            );
-            $widgetTitle = $this->config->getAppValue(
-                Application::APP_ID,
-                'group_' . $userGroup . '_widgetTitle',
-                ''
-            );
-            $widgetIcon = $this->config->getAppValue(
-                Application::APP_ID,
-                'group_' . $userGroup . '_widgetIcon',
-                ''
-            );
-            $widgetIconColor = $this->config->getAppValue(
-                Application::APP_ID,
-                'group_' . $userGroup . '_widgetIconColor',
-                ''
-            );
-            $iframeHeight = $this->config->getAppValue(
-                Application::APP_ID,
-                'group_' . $userGroup . '_iframeHeight',
-                ''
-            );
-            $iframeUrl = $this->config->getAppValue(
-                Application::APP_ID,
-                'group_' . $userGroup . '_iframeUrl',
-                ''
-            );
-
-            // Update config with actual values
+        // If user has a configured widget, load their actual settings
+        if ($widgetConfig) {
             $config = [
-                'extraWide' => $extraWide,
-                'widgetTitle' => $widgetTitle,
-                'widgetIcon' => $widgetIcon,
-                'widgetIconColor' => $widgetIconColor,
-                'iframeHeight' => $iframeHeight,
-                'iframeUrl' => $iframeUrl,
-                'userGroup' => $userGroup
+                'extraWide' => $widgetConfig['extraWide'],
+                'widgetTitle' => $widgetConfig['title'],
+                'widgetIcon' => $widgetConfig['icon'],
+                'widgetIconColor' => $widgetConfig['iconColor'],
+                'iframeHeight' => $widgetConfig['height'],
+                'iframeUrl' => $widgetConfig['url'],
+                'userGroup' => $widgetConfig['groupId']
             ];
         }
 
@@ -217,25 +174,93 @@ class GroupIframeWidget implements IWidget
     }
 
     /**
-     * Get the user's group for widget configuration
-     * Returns the first configured group the user belongs to
+     * Get the user's widget configuration for their group
+     * Returns the default widget configuration for the first configured group the user belongs to
      *
      * @param string $userId
-     * @return string|null
+     * @return array|null
      */
-    private function getUserGroup(string $userId): ?string
+    private function getUserWidgetConfig(string $userId): ?array
     {
-        if ($this->userGroup !== null) {
-            return $this->userGroup;
+        // Check if we have the new JSON-based storage
+        $jsonWidgets = $this->config->getAppValue(Application::APP_ID, 'groupWidgetsJson', '');
+        if (!empty($jsonWidgets)) {
+            $widgets = json_decode($jsonWidgets, true);
+            if (is_array($widgets)) {
+                // Find user's groups
+                $userGroups = $this->groupManager->getUserGroupIds($this->userSession->getUser());
+
+                // Look for default widget in user's groups
+                foreach ($userGroups as $groupId) {
+                    foreach ($widgets as $widget) {
+                        if ($widget['groupId'] === $groupId && $widget['isDefault']) {
+                            return $widget;
+                        }
+                    }
+                }
+
+                // If no default found, return first widget for user's group
+                foreach ($userGroups as $groupId) {
+                    foreach ($widgets as $widget) {
+                        if ($widget['groupId'] === $groupId) {
+                            return $widget;
+                        }
+                    }
+                }
+            }
         }
 
-        // Get all configured groups
+        // Fallback to old individual key storage for backward compatibility
         $configuredGroups = $this->getConfiguredGroups();
 
         foreach ($configuredGroups as $groupId) {
             if ($this->groupManager->isInGroup($userId, $groupId)) {
-                $this->userGroup = $groupId;
-                return $groupId;
+                // Get widget settings for this group
+                $widgetTitle = $this->config->getAppValue(
+                    Application::APP_ID,
+                    'group_' . $groupId . '_widgetTitle',
+                    ''
+                );
+                $widgetIcon = $this->config->getAppValue(
+                    Application::APP_ID,
+                    'group_' . $groupId . '_widgetIcon',
+                    ''
+                );
+                $widgetIconColor = $this->config->getAppValue(
+                    Application::APP_ID,
+                    'group_' . $groupId . '_widgetIconColor',
+                    ''
+                );
+                $iframeUrl = $this->config->getAppValue(
+                    Application::APP_ID,
+                    'group_' . $groupId . '_iframeUrl',
+                    ''
+                );
+                $iframeHeight = $this->config->getAppValue(
+                    Application::APP_ID,
+                    'group_' . $groupId . '_iframeHeight',
+                    ''
+                );
+                $extraWide = $this->config->getAppValue(
+                    Application::APP_ID,
+                    'group_' . $groupId . '_extraWide',
+                    'false'
+                );
+
+                // Return widget config if it has meaningful data
+                if (!empty($iframeUrl) || !empty($widgetTitle) || !empty($widgetIcon)) {
+                    return [
+                        'id' => $groupId . '_default',
+                        'groupId' => $groupId,
+                        'title' => $widgetTitle,
+                        'icon' => $widgetIcon,
+                        'iconColor' => $widgetIconColor,
+                        'url' => $iframeUrl,
+                        'height' => $iframeHeight,
+                        'extraWide' => $extraWide === 'true',
+                        'isDefault' => true
+                    ];
+                }
             }
         }
 

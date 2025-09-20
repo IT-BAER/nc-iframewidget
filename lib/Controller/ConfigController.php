@@ -168,6 +168,20 @@ class ConfigController extends Controller
 		$groupWidgets = [];
 		$allKeys = $this->config->getAppKeys(Application::APP_ID);
 
+		// Check if we have the new JSON-based storage
+		$jsonWidgets = $this->config->getAppValue(Application::APP_ID, 'groupWidgetsJson', '');
+		if (!empty($jsonWidgets)) {
+			$parsedWidgets = json_decode($jsonWidgets, true);
+			if (is_array($parsedWidgets)) {
+				$groupManager = $this->serverContainer->get(\OCP\IGroupManager::class);
+				foreach ($parsedWidgets as &$widget) {
+					$widget['groupDisplayName'] = $groupManager->getDisplayName($widget['groupId']) ?: $widget['groupId'];
+				}
+				return new DataResponse(array_values($parsedWidgets));
+			}
+		}
+
+		// Fallback to old individual key storage for backward compatibility
 		foreach ($allKeys as $key) {
 			if (str_starts_with($key, 'group_') && str_contains($key, '_')) {
 				// Extract group ID and field from key like 'group_admins_widgetTitle'
@@ -175,20 +189,22 @@ class ConfigController extends Controller
 				if (count($parts) >= 3) {
 					$groupId = $parts[1];
 					$field = $parts[2];
-					
+
 					if (!isset($groupWidgets[$groupId])) {
 						$groupWidgets[$groupId] = [
+							'id' => $groupId . '_default',
 							'groupId' => $groupId,
-							'widgetTitle' => '',
-							'widgetIcon' => '',
-							'widgetIconColor' => '',
-							'iframeUrl' => '',
-							'iframeHeight' => '',
-							'extraWide' => 'false',
+							'title' => '',
+							'icon' => '',
+							'iconColor' => '',
+							'url' => '',
+							'height' => '',
+							'extraWide' => false,
+							'isDefault' => true,
 							'groupDisplayName' => $this->serverContainer->get(\OCP\IGroupManager::class)->getDisplayName($groupId) ?: $groupId
 						];
 					}
-					
+
 					// Set the field value
 					$value = $this->config->getAppValue(Application::APP_ID, $key, '');
 					if ($field === 'extraWide' && ($value === true || $value === 'true')) {
@@ -196,7 +212,21 @@ class ConfigController extends Controller
 					} elseif ($field === 'extraWide' && ($value === false || $value === 'false')) {
 						$value = 'false';
 					}
-					$groupWidgets[$groupId][$field] = $value;
+
+					// Map old field names to new ones
+					$fieldMap = [
+						'widgetTitle' => 'title',
+						'widgetIcon' => 'icon',
+						'widgetIconColor' => 'iconColor',
+						'iframeUrl' => 'url',
+						'iframeHeight' => 'height'
+					];
+
+					if (isset($fieldMap[$field])) {
+						$groupWidgets[$groupId][$fieldMap[$field]] = $value;
+					} elseif ($field === 'extraWide') {
+						$groupWidgets[$groupId][$field] = $value;
+					}
 				}
 			}
 		}
@@ -204,7 +234,7 @@ class ConfigController extends Controller
 		// Filter out widgets that have no meaningful data
 		$filteredWidgets = [];
 		foreach ($groupWidgets as $widget) {
-			if (!empty($widget['iframeUrl']) || !empty($widget['widgetTitle']) || !empty($widget['widgetIcon'])) {
+			if (!empty($widget['url']) || !empty($widget['title']) || !empty($widget['icon'])) {
 				$filteredWidgets[] = $widget;
 			}
 		}
@@ -235,37 +265,59 @@ class ConfigController extends Controller
 			return new DataResponse(['status' => 'error', 'message' => 'Group does not exist'], 400);
 		}
 
-		// Check if this is an update (changing group assignment)
-		$oldGroupId = $data['oldGroupId'] ?? null;
-		if ($oldGroupId && $oldGroupId !== $groupId) {
-			// Delete old group configuration
-			$this->deleteGroupWidgetConfig($oldGroupId);
+		// Get existing widgets
+		$existingWidgets = [];
+		$jsonWidgets = $this->config->getAppValue(Application::APP_ID, 'groupWidgetsJson', '');
+		if (!empty($jsonWidgets)) {
+			$existingWidgets = json_decode($jsonWidgets, true) ?: [];
 		}
 
-		// Save group widget configuration
-		$fields = [
-			'widgetTitle',
-			'widgetIcon',
-			'widgetIconColor',
-			'iframeUrl',
-			'iframeHeight',
-			'extraWide'
-		];
+		// Find existing widget or create new one
+		$widgetId = $data['id'] ?? null;
+		$widgetIndex = null;
 
-		foreach ($fields as $field) {
-			if (isset($data[$field]) || array_key_exists($field, $data)) {
-				$value = $data[$field] ?? '';
-				// For boolean values that come as strings
-				if ($field === 'extraWide' && ($value === true || $value === 'true')) {
-					$value = 'true';
-				} elseif ($field === 'extraWide' && ($value === false || $value === 'false')) {
-					$value = 'false';
+		if ($widgetId) {
+			foreach ($existingWidgets as $index => $widget) {
+				if ($widget['id'] === $widgetId) {
+					$widgetIndex = $index;
+					break;
 				}
-				$this->config->setAppValue(Application::APP_ID, 'group_' . $groupId . '_' . $field, $value);
 			}
 		}
 
-		return new DataResponse(['status' => 'success']);
+		// Prepare widget data
+		$widgetData = [
+			'id' => $widgetId ?: uniqid($groupId . '_', true),
+			'groupId' => $groupId,
+			'title' => $data['title'] ?? '',
+			'icon' => $data['icon'] ?? '',
+			'iconColor' => $data['iconColor'] ?? '',
+			'url' => $data['url'] ?? '',
+			'height' => $data['height'] ?? '',
+			'extraWide' => $data['extraWide'] ?? false,
+			'isDefault' => $data['isDefault'] ?? false
+		];
+
+		// If this widget is set as default, unset default flag from other widgets in the same group
+		if ($widgetData['isDefault']) {
+			foreach ($existingWidgets as &$widget) {
+				if ($widget['groupId'] === $groupId && $widget['id'] !== $widgetData['id']) {
+					$widget['isDefault'] = false;
+				}
+			}
+		}
+
+		// Update or add widget
+		if ($widgetIndex !== null) {
+			$existingWidgets[$widgetIndex] = $widgetData;
+		} else {
+			$existingWidgets[] = $widgetData;
+		}
+
+		// Save to JSON storage
+		$this->config->setAppValue(Application::APP_ID, 'groupWidgetsJson', json_encode($existingWidgets));
+
+		return new DataResponse(['status' => 'success', 'widgetId' => $widgetData['id']]);
 	}
 
 	/**
@@ -293,18 +345,34 @@ class ConfigController extends Controller
 	 * Delete a group widget configuration
 	 *
 	 * @AdminRequired
-	 * @param string $groupId Group ID
+	 * @param string $widgetId Widget ID
 	 * @return DataResponse
 	 */
-	public function deleteGroupWidget(string $groupId): DataResponse {
-		// Validate that the group exists
-		$groupManager = $this->serverContainer->get(\OCP\IGroupManager::class);
-		if (!$groupManager->groupExists($groupId)) {
-			return new DataResponse(['status' => 'error', 'message' => 'Group does not exist'], 400);
+	public function deleteGroupWidget(string $widgetId): DataResponse {
+		// Get existing widgets
+		$existingWidgets = [];
+		$jsonWidgets = $this->config->getAppValue(Application::APP_ID, 'groupWidgetsJson', '');
+		if (!empty($jsonWidgets)) {
+			$existingWidgets = json_decode($jsonWidgets, true) ?: [];
 		}
 
-		// Delete group widget configuration
-		$this->deleteGroupWidgetConfig($groupId);
+		// Find and remove the widget
+		$found = false;
+		foreach ($existingWidgets as $index => $widget) {
+			if ($widget['id'] === $widgetId) {
+				unset($existingWidgets[$index]);
+				$found = true;
+				break;
+			}
+		}
+
+		if (!$found) {
+			return new DataResponse(['status' => 'error', 'message' => 'Widget not found'], 404);
+		}
+
+		// Re-index array and save
+		$existingWidgets = array_values($existingWidgets);
+		$this->config->setAppValue(Application::APP_ID, 'groupWidgetsJson', json_encode($existingWidgets));
 
 		return new DataResponse(['status' => 'success']);
 	}

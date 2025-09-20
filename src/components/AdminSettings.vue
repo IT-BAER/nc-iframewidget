@@ -181,22 +181,38 @@
 
             <!-- Group Widgets List -->
             <div v-if="groupWidgets.length > 0" class="group-widgets-list">
-                <div v-for="groupWidget in groupWidgets" :key="groupWidget.groupId" class="group-widget-item">
-                    <div class="group-widget-header">
-                        <h4>{{ groupWidget.groupDisplayName || groupWidget.groupId }}</h4>
-                        <div class="group-widget-actions">
-                            <button @click="editGroupWidget(groupWidget)" class="button">
-                                {{ t('iframewidget', 'Edit') }}
-                            </button>
-                            <button @click="deleteGroupWidget(groupWidget.groupId)" class="button button-danger">
-                                {{ t('iframewidget', 'Delete') }}
-                            </button>
-                        </div>
+                <!-- Group widgets by groupId -->
+                <div v-for="(widgets, groupId) in groupedWidgets" :key="groupId" class="group-section">
+                    <div class="group-header">
+                        <h4>{{ getGroupDisplayName(groupId) }}</h4>
+                        <button @click="addWidgetToGroup(groupId)" class="button small">
+                            {{ t('iframewidget', 'Add Widget') }}
+                        </button>
                     </div>
-                    <div class="group-widget-details">
-                        <p><strong>{{ t('iframewidget', 'Title:') }}</strong> {{ groupWidget.widgetTitle || t('iframewidget', 'Not set') }}</p>
-                        <p><strong>{{ t('iframewidget', 'URL:') }}</strong> {{ groupWidget.iframeUrl || t('iframewidget', 'Not set') }}</p>
-                        <p><strong>{{ t('iframewidget', 'Icon:') }}</strong> {{ groupWidget.widgetIcon || t('iframewidget', 'Default') }}</p>
+                    <div class="widgets-in-group">
+                        <div v-for="widget in widgets" :key="widget.id" class="group-widget-item" :class="{ 'is-default': widget.isDefault }">
+                            <div class="widget-header">
+                                <div class="widget-title">
+                                    <span v-if="widget.isDefault" class="default-indicator" title="Default widget">★</span>
+                                    <span>{{ widget.title || t('iframewidget', 'Untitled Widget') }}</span>
+                                </div>
+                                <div class="widget-actions">
+                                    <button v-if="!widget.isDefault" @click="setAsDefault(widget.id)" class="button small" title="Set as default">
+                                        {{ t('iframewidget', 'Set Default') }}
+                                    </button>
+                                    <button @click="editGroupWidget(widget)" class="button small">
+                                        {{ t('iframewidget', 'Edit') }}
+                                    </button>
+                                    <button @click="deleteGroupWidget(widget.id)" class="button small button-danger">
+                                        {{ t('iframewidget', 'Delete') }}
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="widget-details">
+                                <p><strong>{{ t('iframewidget', 'URL:') }}</strong> {{ widget.url || t('iframewidget', 'Not set') }}</p>
+                                <p><strong>{{ t('iframewidget', 'Icon:') }}</strong> {{ widget.icon || t('iframewidget', 'Default') }}</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -216,7 +232,7 @@
                     <div class="iframewidget-grid-form">
                         <!-- Group Selection -->
                         <label for="group-select">{{ t('iframewidget', 'Select Group') }}</label>
-                        <select id="group-select" v-model="selectedGroupId" :disabled="false">
+                        <select id="group-select" v-model="selectedGroupId" :disabled="isEditing">
                             <option value="">{{ t('iframewidget', 'Choose a group...') }}</option>
                             <option v-for="group in availableGroups" :key="group.id" :value="group.id">
                                 {{ group.displayName || group.id }}
@@ -226,7 +242,7 @@
                         <!-- Widget Title -->
                         <label for="group-widget-title">{{ t('iframewidget', 'Widget Title') }}</label>
                         <input id="group-widget-title"
-                            v-model="groupWidgetForm.widgetTitle"
+                            v-model="groupWidgetForm.title"
                             type="text"
                             :placeholder="t('iframewidget', 'Group iFrame Widget')">
 
@@ -243,17 +259,17 @@
                         </label>
                         <div class="icon-input-container">
                             <input id="group-widget-icon"
-                                v-model="groupWidgetForm.widgetIcon"
+                                v-model="groupWidgetForm.icon"
                                 type="text"
                                 :placeholder="t('iframewidget', 'si:nextcloud')">
                             <input type="color"
-                                :value="groupWidgetForm.widgetIconColor || '#ffffff'"
+                                :value="groupWidgetForm.iconColor || '#ffffff'"
                                 @input="updateGroupColor"
-                                :disabled="!groupWidgetForm.widgetIcon || !groupWidgetForm.widgetIcon.startsWith('si:')"
+                                :disabled="!groupWidgetForm.icon || !groupWidgetForm.icon.startsWith('si:')"
                                 class="color-picker">
-                            <div class="color-button-container" :class="{'has-button': groupWidgetForm.widgetIconColor && groupWidgetForm.widgetIconColor !== ''}">
+                            <div class="color-button-container" :class="{'has-button': groupWidgetForm.iconColor && groupWidgetForm.iconColor !== ''}">
                                 <transition name="fade-scale">
-                                    <button v-if="groupWidgetForm.widgetIconColor && groupWidgetForm.widgetIconColor !== ''" 
+                                    <button v-if="groupWidgetForm.iconColor && groupWidgetForm.iconColor !== ''" 
                                             type="button"
                                             class="icon-delete icon-reset-color" 
                                             @click="clearGroupColor"
@@ -266,14 +282,14 @@
                         <!-- URL -->
                         <label for="group-iframe-url">{{ t('iframewidget', 'URL to Display') }}</label>
                         <input id="group-iframe-url"
-                            v-model="groupWidgetForm.iframeUrl"
+                            v-model="groupWidgetForm.url"
                             type="text"
                             :placeholder="t('iframewidget', 'https://example.org')">
 
                         <!-- Height -->
                         <label for="group-iframe-height">{{ t('iframewidget', 'iFrame Height (px)') }}</label>
                         <input id="group-iframe-height"
-                            v-model="groupWidgetForm.iframeHeight"
+                            v-model="groupWidgetForm.height"
                             type="number"
                             min="0"
                             :placeholder="t('iframewidget', '100%')">
@@ -293,6 +309,23 @@
                                 <span class="checkbox-icon"></span>
                             </label>
                         </div>
+
+                        <!-- Set as Default -->
+                        <label for="group-is-default" class="checkbox-label">
+                            {{ t('iframewidget', 'Set as Default Widget') }}
+                        </label>
+                        <div class="checkbox-container">
+                            <label>
+                                <input id="group-is-default"
+                                    v-model="groupWidgetForm.isDefault" 
+                                    type="checkbox" 
+                                    class="checkbox"
+                                    :true-value="true"
+                                    :false-value="false">
+                                <span class="checkbox-icon"></span>
+                            </label>
+                            <small class="help-text">{{ t('iframewidget', 'Users in this group will see this widget by default') }}</small>
+                        </div>
                     </div>
                 </div>
 
@@ -300,26 +333,26 @@
                 <div class="modal-preview-section">
                     <h4 class="preview-title">{{ t('iframewidget', 'Widget Preview') }}</h4>
                     <div class="preview-container" :style="{ width: groupWidgetForm.extraWide ? '640px' : '320px' }">
-                        <div class="preview-header" :class="{'preview-title-empty': !groupWidgetForm.widgetTitle || groupWidgetForm.widgetTitle.trim() === ''}">
+                        <div class="preview-header" :class="{'preview-title-empty': !groupWidgetForm.title || groupWidgetForm.title.trim() === ''}">
                             <h2>
-                                <span v-if="groupWidgetForm.widgetIcon && groupWidgetForm.widgetTitle && groupWidgetForm.widgetTitle.trim() !== ''"
+                                <span v-if="groupWidgetForm.icon && groupWidgetForm.title && groupWidgetForm.title.trim() !== ''"
                                     class="widget-icon">
-                                    <img :src="getIconUrl(groupWidgetForm.widgetIcon, groupWidgetForm.widgetIconColor)" 
-                                        :alt="groupWidgetForm.widgetIcon" 
+                                    <img :src="getIconUrl(groupWidgetForm.icon, groupWidgetForm.iconColor)" 
+                                        :alt="groupWidgetForm.icon" 
                                         @error="handleIconError"
                                         class="dashboard-icon">
                                 </span>
-                                <span class="icon-iframewidget" v-else-if="groupWidgetForm.widgetTitle && groupWidgetForm.widgetTitle.trim() !== ''"></span>
-                                <span v-if="groupWidgetForm.widgetTitle && groupWidgetForm.widgetTitle.trim() !== ''">{{ groupWidgetForm.widgetTitle }}</span>
+                                <span class="icon-iframewidget" v-else-if="groupWidgetForm.title && groupWidgetForm.title.trim() !== ''"></span>
+                                <span v-if="groupWidgetForm.title && groupWidgetForm.title.trim() !== ''">{{ groupWidgetForm.title }}</span>
                             </h2>
                         </div>
-                        <div class="preview-content" :class="{'preview-title-empty': !groupWidgetForm.widgetTitle || groupWidgetForm.widgetTitle.trim() === ''}">
-                            <div v-if="!groupWidgetForm.iframeUrl" class="preview-empty">
+                        <div class="preview-content" :class="{'preview-title-empty': !groupWidgetForm.title || groupWidgetForm.title.trim() === ''}">
+                            <div v-if="!groupWidgetForm.url" class="preview-empty">
                                 {{ t('iframewidget', 'No URL configured. Please set a URL in the Settings.') }}
                             </div>
 
                             <!-- CSP Error state - Shows helpful guidance when content is blocked by CSP -->
-                            <div v-else-if="groupIframeError && groupWidgetForm.iframeUrl" class="widget-error csp-error">
+                            <div v-else-if="groupIframeError && groupWidgetForm.url" class="widget-error csp-error">
                                 <div class="error-title">{{ t('iframewidget', 'Failed to load content') }}</div>
                                 <p>{{ t('iframewidget', 'This might be caused by Content Security Policy (CSP) restrictions.') }}</p>
                                 <div class="error-actions">
@@ -329,7 +362,7 @@
                                 </div>
                             </div>
                             <iframe v-else
-                                    :src="groupWidgetForm.iframeUrl"
+                                    :src="groupWidgetForm.url"
                                     :style="{ height: groupPreviewHeight }"
                                     class="preview-frame"
                                     referrerpolicy="no-referrer"
@@ -396,14 +429,16 @@ export default {
             showGroupDialog: false,
             isEditing: false,
             selectedGroupId: '',
-            originalGroupId: '', // Store original group ID when editing
+            editingWidgetId: '', // Store the widget ID when editing
             groupWidgetForm: {
-                widgetTitle: '',
-                widgetIcon: '',
-                widgetIconColor: '',
-                iframeUrl: '',
-                iframeHeight: '',
-                extraWide: false
+                id: '',
+                title: '',
+                icon: '',
+                iconColor: '',
+                url: '',
+                height: '',
+                extraWide: false,
+                isDefault: false
             },
             // Component lifecycle management
             componentMounted: false,
@@ -438,11 +473,26 @@ export default {
          * @returns {string} CSS height value
          */
         groupPreviewHeight() {
-            if (!this.groupWidgetForm.iframeHeight || this.groupWidgetForm.iframeHeight === '0') {
+            if (!this.groupWidgetForm.height || this.groupWidgetForm.height === '0') {
                 return '100%';
             } else {
-                return parseInt(this.groupWidgetForm.iframeHeight) + 'px';
+                return parseInt(this.groupWidgetForm.height) + 'px';
             }
+        },
+
+        /**
+         * Group widgets by groupId for display
+         * @returns {Object} Grouped widgets
+         */
+        groupedWidgets() {
+            const grouped = {};
+            this.groupWidgets.forEach(widget => {
+                if (!grouped[widget.groupId]) {
+                    grouped[widget.groupId] = [];
+                }
+                grouped[widget.groupId].push(widget);
+            });
+            return grouped;
         },
         
         /**
@@ -869,13 +919,16 @@ export default {
         showAddGroupDialog() {
             this.isEditing = false;
             this.selectedGroupId = '';
+            this.editingWidgetId = '';
             this.groupWidgetForm = {
-                widgetTitle: '',
-                widgetIcon: '',
-                widgetIconColor: '',
-                iframeUrl: '',
-                iframeHeight: '',
-                extraWide: false
+                id: '',
+                title: '',
+                icon: '',
+                iconColor: '',
+                url: '',
+                height: '',
+                extraWide: false,
+                isDefault: false
             };
             this.groupIframeError = false;
             this.showGroupDialog = true;
@@ -888,23 +941,25 @@ export default {
             this.showGroupDialog = false;
             this.isEditing = false;
             this.selectedGroupId = '';
-            this.originalGroupId = ''; // Reset original group ID
+            this.editingWidgetId = '';
         },
         
         /**
          * Edit existing group widget
          */
-        editGroupWidget(groupWidget) {
+        editGroupWidget(widget) {
             this.isEditing = true;
-            this.selectedGroupId = groupWidget.groupId;
-            this.originalGroupId = groupWidget.groupId; // Store original group ID
+            this.selectedGroupId = widget.groupId;
+            this.editingWidgetId = widget.id;
             this.groupWidgetForm = {
-                widgetTitle: groupWidget.widgetTitle || '',
-                widgetIcon: groupWidget.widgetIcon || '',
-                widgetIconColor: groupWidget.widgetIconColor || '',
-                iframeUrl: groupWidget.iframeUrl || '',
-                iframeHeight: groupWidget.iframeHeight || '',
-                extraWide: groupWidget.extraWide === 'true' || groupWidget.extraWide === true
+                id: widget.id,
+                title: widget.title || '',
+                icon: widget.icon || '',
+                iconColor: widget.iconColor || '',
+                url: widget.url || '',
+                height: widget.height || '',
+                extraWide: widget.extraWide === 'true' || widget.extraWide === true,
+                isDefault: widget.isDefault || false
             };
             this.groupIframeError = false;
             this.showGroupDialog = true;
@@ -918,21 +973,16 @@ export default {
                 showError(t('iframewidget', 'Please select a group'));
                 return;
             }
-            
+
             const url = generateUrl('/apps/iframewidget/group-widgets');
             const data = {
+                id: this.editingWidgetId || undefined,
                 groupId: this.selectedGroupId,
                 ...this.groupWidgetForm
             };
-            
-            // Include original group ID if editing and group changed
-            if (this.isEditing && this.originalGroupId && this.originalGroupId !== this.selectedGroupId) {
-                data.oldGroupId = this.originalGroupId;
-            }
-            
+
             console.log('Saving group widget:', data);
-            console.log('Form data:', this.groupWidgetForm);
-            
+
             axios.post(url, data, {
                 headers: {
                     'Content-Type': 'application/json',
@@ -962,12 +1012,12 @@ export default {
         /**
          * Delete group widget
          */
-        deleteGroupWidget(groupId) {
+        deleteGroupWidget(widgetId) {
             if (!confirm(t('iframewidget', 'Are you sure you want to delete this group widget?'))) {
                 return;
             }
-            
-            const url = generateUrl('/apps/iframewidget/group-widgets/' + encodeURIComponent(groupId));
+
+            const url = generateUrl('/apps/iframewidget/group-widgets/' + encodeURIComponent(widgetId));
             axios.delete(url)
                 .then(() => {
                     showSuccess(t('iframewidget', 'Group widget deleted'));
@@ -992,11 +1042,60 @@ export default {
         },
 
         /**
-         * Clear group widget icon color
+         * Add a new widget to an existing group
          */
-        clearGroupColor() {
-            this.groupWidgetForm.widgetIconColor = '';
-            this.$forceUpdate();
+        addWidgetToGroup(groupId) {
+            this.isEditing = false;
+            this.selectedGroupId = groupId;
+            this.editingWidgetId = '';
+            this.groupWidgetForm = {
+                id: '',
+                title: '',
+                icon: '',
+                iconColor: '',
+                url: '',
+                height: '',
+                extraWide: false,
+                isDefault: false
+            };
+            this.groupIframeError = false;
+            this.showGroupDialog = true;
+        },
+
+        /**
+         * Set a widget as the default for its group
+         */
+        setAsDefault(widgetId) {
+            const url = generateUrl('/apps/iframewidget/group-widgets');
+            const data = {
+                id: widgetId,
+                isDefault: true
+            };
+
+            axios.post(url, data, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'requesttoken': OC.requestToken,
+                    'OCS-APIRequest': 'true',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+                .then(() => {
+                    showSuccess(t('iframewidget', 'Widget set as default'));
+                    this.loadGroupWidgets();
+                })
+                .catch(error => {
+                    showError(t('iframewidget', 'Could not set widget as default'));
+                    console.error(error);
+                });
+        },
+
+        /**
+         * Get display name for a group
+         */
+        getGroupDisplayName(groupId) {
+            const group = this.availableGroups.find(g => g.id === groupId);
+            return group ? (group.displayName || group.id) : groupId;
         },
         
         /**
@@ -1070,17 +1169,114 @@ input {
     border-color: var(--color-primary);
 }
 
-/* Button styles */
-.iframewidget-button-group {
+/* Group widget styles */
+.group-widgets-list {
     margin-top: 20px;
 }
 
-/* Header styles */
-.iframewidget-header {
+.group-section {
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    margin-bottom: 20px;
+    padding: 16px;
+    background: var(--color-main-background);
+}
+
+.group-header {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 10px;
+    align-items: center;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.group-header h4 {
+    margin: 0;
+    color: var(--color-text-maxcontrast);
+}
+
+.widgets-in-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.group-widget-item {
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    padding: 12px;
+    background: var(--color-background-dark);
+    transition: border-color 0.2s ease;
+}
+
+.group-widget-item.is-default {
+    border-color: var(--color-primary);
+    background: var(--color-primary-light);
+}
+
+.widget-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.widget-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    color: var(--color-text-maxcontrast);
+}
+
+.default-indicator {
+    color: var(--color-primary);
+    font-size: 16px;
+}
+
+.widget-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.widget-actions .button {
+    padding: 4px 8px;
+    font-size: 12px;
+}
+
+.widget-details {
+    font-size: 14px;
+    color: var(--color-text-light);
+}
+
+.widget-details p {
+    margin: 4px 0;
+}
+
+.help-text {
+    display: block;
+    margin-top: 4px;
+    font-size: 12px;
+    color: var(--color-text-light);
+}
+
+/* Button styles */
+.button.small {
+    padding: 4px 8px;
+    font-size: 12px;
+    min-height: 28px;
+}
+
+.button.button-danger {
+    background-color: var(--color-error);
+    border-color: var(--color-error);
+    color: white;
+}
+
+.button.button-danger:hover {
+    background-color: var(--color-error-hover);
+    border-color: var(--color-error-hover);
 }
 
 .iframewidget-logo {

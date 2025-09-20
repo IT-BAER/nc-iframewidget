@@ -33,7 +33,7 @@ return [
         ],
         [
             'name' => 'config#deleteGroupWidget',
-            'url' => '/group-widgets/{groupId}',
+            'url' => '/group-widgets/{widgetId}',
             'verb' => 'DELETE'
         ],
         [
