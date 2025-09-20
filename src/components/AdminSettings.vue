@@ -205,7 +205,7 @@
                     <button @click="hideGroupDialog" class="modal-close">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <div class="group-widget-form">
+                    <div class="iframewidget-grid-form">
                         <!-- Group Selection -->
                         <label for="group-select">{{ t('iframewidget', 'Select Group') }}</label>
                         <select id="group-select" v-model="selectedGroupId" :disabled="isEditing">
@@ -223,7 +223,16 @@
                             :placeholder="t('iframewidget', 'Group iFrame Widget')">
 
                         <!-- Widget Icon -->
-                        <label for="group-widget-icon">{{ t('iframewidget', 'Widget Icon') }}</label>
+                        <label for="group-widget-icon">{{ t('iframewidget', 'Widget Icon') }}
+							<span class="icon-finder">
+								- {{ t('iframewidget', 'Find icons at') }} 
+								<a href="https://simpleicons.org/" 
+								   target="_blank" 
+								   rel="noopener noreferrer">
+								   simpleicons.org
+								</a>
+							</span>
+                        </label>
                         <div class="icon-input-container">
                             <input id="group-widget-icon"
                                 v-model="groupWidgetForm.widgetIcon"
@@ -234,6 +243,16 @@
                                 @input="updateGroupColor"
                                 :disabled="!groupWidgetForm.widgetIcon || !groupWidgetForm.widgetIcon.startsWith('si:')"
                                 class="color-picker">
+                            <div class="color-button-container" :class="{'has-button': groupWidgetForm.widgetIconColor && groupWidgetForm.widgetIconColor !== ''}">
+                                <transition name="fade-scale">
+                                    <button v-if="groupWidgetForm.widgetIconColor && groupWidgetForm.widgetIconColor !== ''" 
+                                            type="button"
+                                            class="icon-delete icon-reset-color" 
+                                            @click="clearGroupColor"
+                                            :title="t('iframewidget', 'Reset color')">
+                                    </button>
+                                </transition>
+                            </div>
                         </div>
 
                         <!-- URL -->
@@ -252,11 +271,20 @@
                             :placeholder="t('iframewidget', '100%')">
 
                         <!-- Extra Wide -->
-                        <label class="checkbox-label">
-                            <input v-model="groupWidgetForm.extraWide" type="checkbox" class="checkbox">
-                            <span class="checkbox-icon"></span>
+                        <label for="group-extra-wide" class="checkbox-label">
                             {{ t('iframewidget', 'Extra Wide (2 Col)') }}
                         </label>
+                        <div class="checkbox-container">
+                            <label>
+                                <input id="group-extra-wide"
+                                    v-model="groupWidgetForm.extraWide" 
+                                    type="checkbox" 
+                                    class="checkbox"
+                                    :true-value="true"
+                                    :false-value="false">
+                                <span class="checkbox-icon"></span>
+                            </label>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -820,10 +848,11 @@ export default {
         },
         
         /**
-         * Update group widget icon color
+         * Clear group widget icon color
          */
-        updateGroupColor(event) {
-            this.groupWidgetForm.widgetIconColor = event.target.value;
+        clearGroupColor() {
+            this.groupWidgetForm.widgetIconColor = '';
+            this.$forceUpdate();
         },
         
         /**
