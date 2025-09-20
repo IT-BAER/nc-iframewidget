@@ -145,57 +145,65 @@ class GroupIframeWidget implements IWidget
         $userId = $this->userSession->getUser()->getUID();
         $userGroup = $this->getUserGroup($userId);
 
-        if (!$userGroup) {
-            return; // Don't load if user is not in a configured group
+        // Always provide initial state, even if user is not in a configured group
+        $config = [
+            'extraWide' => 'false',
+            'widgetTitle' => '',
+            'widgetIcon' => '',
+            'widgetIconColor' => '',
+            'iframeHeight' => '',
+            'iframeUrl' => '',
+            'userGroup' => $userGroup ?: ''
+        ];
+
+        // If user is in a configured group, load their actual settings
+        if ($userGroup) {
+            // Get widget settings for this group
+            $extraWide = $this->config->getAppValue(
+                Application::APP_ID,
+                'group_' . $userGroup . '_extraWide',
+                'false'
+            );
+            $widgetTitle = $this->config->getAppValue(
+                Application::APP_ID,
+                'group_' . $userGroup . '_widgetTitle',
+                ''
+            );
+            $widgetIcon = $this->config->getAppValue(
+                Application::APP_ID,
+                'group_' . $userGroup . '_widgetIcon',
+                ''
+            );
+            $widgetIconColor = $this->config->getAppValue(
+                Application::APP_ID,
+                'group_' . $userGroup . '_widgetIconColor',
+                ''
+            );
+            $iframeHeight = $this->config->getAppValue(
+                Application::APP_ID,
+                'group_' . $userGroup . '_iframeHeight',
+                ''
+            );
+            $iframeUrl = $this->config->getAppValue(
+                Application::APP_ID,
+                'group_' . $userGroup . '_iframeUrl',
+                ''
+            );
+
+            // Update config with actual values
+            $config = [
+                'extraWide' => $extraWide,
+                'widgetTitle' => $widgetTitle,
+                'widgetIcon' => $widgetIcon,
+                'widgetIconColor' => $widgetIconColor,
+                'iframeHeight' => $iframeHeight,
+                'iframeUrl' => $iframeUrl,
+                'userGroup' => $userGroup
+            ];
         }
 
-        // Get widget settings for this group
-        $extraWide = $this->config->getAppValue(
-            Application::APP_ID,
-            'group_' . $userGroup . '_extraWide',
-            'false'
-        );
-        $widgetTitle = $this->config->getAppValue(
-            Application::APP_ID,
-            'group_' . $userGroup . '_widgetTitle',
-            ''
-        );
-        $widgetIcon = $this->config->getAppValue(
-            Application::APP_ID,
-            'group_' . $userGroup . '_widgetIcon',
-            ''
-        );
-        $widgetIconColor = $this->config->getAppValue(
-            Application::APP_ID,
-            'group_' . $userGroup . '_widgetIconColor',
-            ''
-        );
-        $iframeHeight = $this->config->getAppValue(
-            Application::APP_ID,
-            'group_' . $userGroup . '_iframeHeight',
-            ''
-        );
-        $iframeUrl = $this->config->getAppValue(
-            Application::APP_ID,
-            'group_' . $userGroup . '_iframeUrl',
-            ''
-        );
-
-        // Only load if URL is configured
-        if (empty($iframeUrl)) {
-            return;
-        }
-
-        // Provide initial state directly
-        $this->initialStateService->provideInitialState('group-iframewidget-config', [
-            'extraWide' => $extraWide,
-            'widgetTitle' => $widgetTitle,
-            'widgetIcon' => $widgetIcon,
-            'widgetIconColor' => $widgetIconColor,
-            'iframeHeight' => $iframeHeight,
-            'iframeUrl' => $iframeUrl,
-            'userGroup' => $userGroup
-        ]);
+        // Always provide initial state
+        $this->initialStateService->provideInitialState('group-iframewidget-config', $config);
 
         // Add SimpleIcons to Content Security Policy
         $cspManager = \OC::$server->getContentSecurityPolicyManager();
