@@ -1,3 +1,41 @@
+## 0.8.0 - 2025-09-21
+
+### New Features
+
+- Added group widget support with full feature parity to personal and admin widgets
+- Group widgets now support custom icons, colors, and all display options
+
+### Enhancements
+
+- Removed iframe height settings to fix inconsistent widget heights across different content
+- Added `height: 100%` to iframe elements for proper content fitting without scrollbars
+- Removed explicit width properties to let Nextcloud handle widget width naturally
+- Added `scrolling="no"` attribute to all iframe elements to prevent unwanted scrollbars
+- Improved responsive behavior by allowing Nextcloud's dashboard to control widget dimensions
+- Added mutation observer for dynamic dashboard panel updates
+
+### Bug Fixes
+
+- Fixed GroupIframeWidget.php getIconClass method to properly return default icons
+- Corrected updateGroupColor method property name from iconColor to proper field
+- Added missing clearGroupColor method for color picker functionality
+- Fixed icon display issues in group widgets by implementing applyPanelClasses method
+- Resolved state loading issues for group widget configurations
+
+### Technical Improvements
+
+- Simplified iframe CSS by removing height and width constraints
+- Improved content display consistency across all iframe widget types (public, personal, group)
+
+## 0.7.7 - 2025-09-13
+
+### Security Fixes
+
+- Update axios from 1.11.0 to 1.12.1 to fix CVE vulnerability
+- Update babel-loader to ^10.0.0 and node-polyfill-webpack-plugin to 4.0.0 for compatibility
+- Update package.json, info.xml, and Vue components to version 0.7.7
+- Rebuild all JavaScript bundles with updated dependencies
+
 ## 0.7.6 - 2025-07-30
 
 ### Security Fixes
