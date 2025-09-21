@@ -447,14 +447,12 @@ export default {
 
 <style scoped>
 .iframewidget-container {
-    width: 100%;
     height: 100%;
     min-height: 100px;
     overflow: hidden;
 }
 
 .iframewidget-frame {
-    width: 100%;
     height: 100%;
     border: none;
     overflow: hidden;
