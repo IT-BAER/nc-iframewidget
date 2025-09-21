@@ -26,6 +26,7 @@
         <iframe v-else-if="config.iframeUrl && !iframeError"
                 :src="config.iframeUrl"
                 class="iframewidget-frame"
+                scrolling="no"
                 referrerpolicy="no-referrer"
                 allow="fullscreen"
                 @error="handleIframeError"
