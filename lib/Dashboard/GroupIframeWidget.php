@@ -94,8 +94,9 @@ class GroupIframeWidget implements IWidget
         $userId = $this->userSession->getUser()->getUID();
         $widgetConfig = $this->getUserWidgetConfig($userId);
 
+        // Default icon if no widget configured for user
         if (!$widgetConfig) {
-            return '';
+            return 'icon-iframewidget';
         }
 
         $icon = $widgetConfig['icon'];
