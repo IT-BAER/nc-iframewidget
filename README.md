@@ -10,7 +10,6 @@
 
 <img src="https://github.com/user-attachments/assets/86405272-4543-4f3d-b861-30c49ea0d414"/>
 
-*In this example, I added my Glance Dashboard as an iFrame*
 </div>
 
 ## ✨ Features
@@ -38,13 +37,22 @@
 
 <div align="center">
 
-| 🖥️ Widget in Dashboard | ⚙️ Admin Settings |
-| :--: | :--: |
-| <img src="nc-iframewidget-dashboard.png"/> | <img src="nc-iframewidget-settings.png"/> |
+🖥️ Widget in Dashboard
 
-</div>
+<br>
+
+<img width="1318" height="680" alt="image" src="https://github.com/user-attachments/assets/471d5bb0-9478-41ec-93f1-a6e70aaea351" />
 
 The iFrame Widget provides three types of widgets: admin/public, personal, and group-based configuration options, allowing administrators to set up shared widgets for all users, enable individual users to create their own personalized widgets, and create group-specific widgets that are only visible to members of selected user groups.
+
+<br>
+
+⚙️ Admin Settings
+<br>
+
+<img src="nc-iframewidget-settings.png"/>
+</div>
+
 
 
 ## ⚙️ Configuration
