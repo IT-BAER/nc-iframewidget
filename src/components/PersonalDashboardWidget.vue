@@ -25,7 +25,6 @@
         <!-- Iframe content -->
         <iframe v-else-if="config.iframeUrl && !iframeError"
                 :src="config.iframeUrl"
-                :style="{ height: iframeHeight }"
                 class="iframewidget-frame"
                 referrerpolicy="no-referrer"
                 allow="fullscreen"
@@ -66,8 +65,7 @@ export default {
                 widgetTitle: 'Personal iFrame Widget', // Default title
                 widgetIcon: '',
                 widgetIconColor: '',
-                iframeUrl: '',
-                iframeHeight: '' // Default height, can be '0' for 100%
+                iframeUrl: ''
             },
             observer: null
         }
@@ -79,11 +77,6 @@ export default {
         isExtraWide() {
             // Consistently check against string 'true' or boolean true
             return this.config.extraWide === 'true' || this.config.extraWide === true;
-        },
-        iframeHeight() {
-            return (!this.config.iframeHeight || this.config.iframeHeight === '0') 
-                ? '100%' 
-                : parseInt(this.config.iframeHeight) + 'px';
         },        widgetTitleEmpty() {
             // Use the title from the config for this check
             return !this.config.widgetTitle || this.config.widgetTitle.trim() === '';

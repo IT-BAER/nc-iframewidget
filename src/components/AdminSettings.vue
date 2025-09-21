@@ -85,16 +85,6 @@
                         :placeholder="t('iframewidget', 'https://example.org')">
 
 
-                    <!-- iFrame Height -->
-                    <label for="iframe-height">
-                        {{ t('iframewidget', 'iFrame Height (px)') }}
-                    </label>
-                    <input id="iframe-height"
-                        v-model="state.iframeHeight"
-                        type="number"
-                        min="0"
-                        :placeholder="t('iframewidget', '100%')">
-
                     <!-- Extra Wide Toggle -->
                     <label for="extra-wide" class="checkbox-label">
                         {{ t('iframewidget', 'Extra Wide (2 Col)') }}
@@ -152,7 +142,6 @@
 						</div>
 						<iframe v-else
 								:src="state.iframeUrl"
-								:style="{ height: previewHeight }"
 								class="preview-frame"
 								referrerpolicy="no-referrer"
 								allow="fullscreen"
@@ -289,14 +278,6 @@
                             type="text"
                             :placeholder="t('iframewidget', 'https://example.org')">
 
-                        <!-- Height -->
-                        <label for="group-iframe-height">{{ t('iframewidget', 'iFrame Height (px)') }}</label>
-                        <input id="group-iframe-height"
-                            v-model="groupWidgetForm.height"
-                            type="number"
-                            min="0"
-                            :placeholder="t('iframewidget', '100%')">
-
                         <!-- Extra Wide -->
                         <label for="group-extra-wide" class="checkbox-label">
                             {{ t('iframewidget', 'Extra Wide (2 Col)') }}
@@ -366,7 +347,6 @@
                             </div>
                             <iframe v-else
                                     :src="groupWidgetForm.url"
-                                    :style="{ height: groupPreviewHeight }"
                                     class="preview-frame"
                                     referrerpolicy="no-referrer"
                                     allow="fullscreen"
@@ -407,8 +387,7 @@ export default {
             widgetIconColor: '',
             extraWide: false,
             maxSize: false,
-            iframeUrl: '',
-            iframeHeight: ''
+            iframeUrl: ''
         };
 
         // Ensure we always have a complete reactive state object
@@ -439,7 +418,6 @@ export default {
                 icon: '',
                 iconColor: '',
                 url: '',
-                height: '',
                 extraWide: false,
                 isDefault: false
             },
@@ -457,30 +435,6 @@ export default {
          */
         isExtraWide() {
             return this.state && (this.state.extraWide === true || this.state.extraWide === 'true');
-        },
-        
-        /**
-         * Calculate preview iframe height
-         * @returns {string} CSS height value
-         */
-        previewHeight() {
-            if (!this.state || !this.state.iframeHeight || this.state.iframeHeight === '0') {
-                return '100%';
-            } else {
-                return parseInt(this.state.iframeHeight) + 'px';
-            }
-        },
-
-        /**
-         * Calculate group widget preview iframe height
-         * @returns {string} CSS height value
-         */
-        groupPreviewHeight() {
-            if (!this.groupWidgetForm.height || this.groupWidgetForm.height === '0') {
-                return '100%';
-            } else {
-                return parseInt(this.groupWidgetForm.height) + 'px';
-            }
         },
 
         /**

@@ -25,7 +25,6 @@
 		<!-- Iframe content -->
 		<iframe v-else-if="config.iframeUrl && !iframeError"
 				:src="config.iframeUrl"
-				:style="{ height: iframeHeight }"
 				class="iframewidget-frame"
 				referrerpolicy="no-referrer"
 				allow="fullscreen"
@@ -67,8 +66,7 @@ export default {
                 widgetTitle: 'iFrame Widget',
                 widgetIcon: '',
                 widgetIconColor: '',
-                iframeUrl: 'https://example.org',
-                iframeHeight: ''
+                iframeUrl: 'https://example.org'
             },
             observer: null
         }
@@ -88,16 +86,6 @@ export default {
          */
         isExtraWide() {
             return this.config.extraWide === 'true' || this.config.extraWide === true
-        },
-        
-        /**
-         * Calculate iframe height based on configuration
-         * @returns {string} CSS height value
-         */
-        iframeHeight() {
-            return (!this.config.iframeHeight || this.config.iframeHeight === '0') 
-                ? '100%' 
-                : parseInt(this.config.iframeHeight) + 'px';
         },
         
         /**
