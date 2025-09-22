@@ -367,6 +367,12 @@ class ConfigController extends Controller
 		}
 
 		if (!$found) {
+			// Check if it's an old-style widget (id ends with '_default')
+			if (str_ends_with($widgetId, '_default')) {
+				$groupId = substr($widgetId, 0, -8); // Remove '_default'
+				$this->deleteGroupWidgetConfig($groupId);
+				return new DataResponse(['status' => 'success']);
+			}
 			return new DataResponse(['status' => 'error', 'message' => 'Widget not found'], 404);
 		}
 
