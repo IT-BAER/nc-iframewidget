@@ -700,8 +700,9 @@ export default {
 		 * Detects Content Security Policy (CSP) violations by trying to access iframe DOM
 		 */
         checkIframeLoaded() {
+            if (!this.state || !this.state.iframeUrl) return;
             const iframe = this.$el.querySelector('iframe');
-            if (!iframe || !this.config.iframeUrl) return;
+            if (!iframe) return;
             
             this.isLoading = true;
             
