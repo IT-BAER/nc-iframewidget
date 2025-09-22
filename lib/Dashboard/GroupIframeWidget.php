@@ -72,10 +72,10 @@ class GroupIframeWidget implements IWidget
         $widgetConfig = $this->getUserWidgetConfig($userId);
 
         if (!$widgetConfig) {
-            return '';
+            return 'Group iFrame Widget';
         }
 
-        return empty(trim($widgetConfig['title'])) ? '' : $widgetConfig['title'];
+        return empty(trim($widgetConfig['title'])) ? 'Group iFrame Widget' : $widgetConfig['title'];
     }
 
     /**
@@ -96,14 +96,14 @@ class GroupIframeWidget implements IWidget
 
         // Default icon if no widget configured for user
         if (!$widgetConfig) {
-            return 'icon-iframewidget';
+            return 'icon-group-iframewidget';
         }
 
         $icon = $widgetConfig['icon'];
 
         // Use default icon if none set
         if (empty($icon)) {
-            return 'icon-iframewidget';
+            return 'icon-group-iframewidget';
         }
 
         // For SimpleIcons (si:iconname), we need to use a generic class and handle the icon in JavaScript
@@ -139,8 +139,8 @@ class GroupIframeWidget implements IWidget
         // Always provide initial state, even if user is not in a configured group
         $config = [
             'extraWide' => false,
-            'widgetTitle' => '',
-            'widgetIcon' => '',
+            'widgetTitle' => 'Group iFrame Widget',
+            'widgetIcon' => 'si:nextcloud',
             'widgetIconColor' => '',
             'iframeHeight' => '',
             'iframeUrl' => '',
