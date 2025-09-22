@@ -1,3 +1,13 @@
+## 0.8.1 - 2025-09-22
+
+### Bug Fixes
+
+- Fixed deletion of old-style group widgets from legacy storage system
+- Added support for deleting widgets with IDs ending in '_default' by cleaning up old config keys
+- Fixed JavaScript error in checkIframeLoaded by adding null checks for state and iframeUrl
+- Improved group widget modal to show default title and icon in dashboard selection
+- Enhanced widget cleanup process to handle both JSON and legacy configuration formats
+
 ## 0.8.0 - 2025-09-21
 
 ### New Features
