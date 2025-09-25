@@ -23,16 +23,16 @@
         </div>
 
         <!-- Iframe content -->
-        <iframe v-else-if="config.iframeUrl && !iframeError"
-                :src="config.iframeUrl"
-                class="iframewidget-frame"
-                scrolling="no"
-                referrerpolicy="no-referrer"
-                allow="fullscreen"
-                @error="handleIframeError"
-                @load="iframeError = false"
-                sandbox="allow-same-origin allow-scripts allow-popups allow-forms">
-        </iframe>
+        <div v-else-if="config.iframeUrl && !iframeError" class="iframewidget-scroll-container">
+            <iframe :src="config.iframeUrl"
+                    class="iframewidget-frame"
+                    referrerpolicy="no-referrer"
+                    allow="fullscreen"
+                    @error="handleIframeError"
+                    @load="iframeError = false"
+                    sandbox="allow-same-origin allow-scripts allow-popups allow-forms">
+            </iframe>
+        </div>
 
         <!-- CSP Error state -->
         <div v-else-if="iframeError && config.iframeUrl" class="widget-error csp-error">
