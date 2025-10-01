@@ -1,3 +1,9 @@
+## 0.8.3 - 2025-10-01
+
+### Bug Fixes
+
+- Fixed localization crashes: Updated outdated translation keys in pt_BR, sv, ja, and nb localization files that were causing Nextcloud crashes and OC undefined errors
+
 ## 0.8.2 - 2025-09-25
 
 ### Bug Fixes
