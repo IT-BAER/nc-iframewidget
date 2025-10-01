@@ -1,0 +1,306 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Nextcloud\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-07-07 12:00+0000\n"
+"PO-Revision-Date: 2025-10-01 12:00+0000\n"
+"Last-Translator: GitHub Copilot <>\n"
+"Language-Team: Portuguese (Brazil) <pt_BR@li.org>\n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: lib/Dashboard/IframeWidget.php:48 lib/Dashboard/PersonalIframeWidget.php:52
+msgid "iFrame Widget"
+msgstr "Widget de iFrame"
+
+#: lib/Settings/Admin.php:80 lib/Settings/Section.php:45
+msgid "iFrame Widget"
+msgstr "Widget de iFrame"
+
+#: lib/Settings/PersonalSection.php:27
+msgid "iFrame Widget"
+msgstr ""
+
+#: src/components/AdminSettings.vue:6
+msgid "iFrame Widget Settings"
+msgstr ""
+
+#: src/components/PersonalSettings.vue:6
+msgid "Personal iFrame Widget Settings"
+msgstr ""
+
+#: src/components/AdminSettings.vue:21
+msgid "Configure the iFrame Widget for the Dashboard."
+msgstr ""
+
+#: src/components/PersonalSettings.vue:21
+msgid "Configure your personal iFrame Widget for the Dashboard."
+msgstr ""
+
+#: src/components/AdminSettings.vue:28 src/components/PersonalSettings.vue:28
+msgid "Widget Title"
+msgstr ""
+
+#: src/components/AdminSettings.vue:39 src/components/PersonalSettings.vue:39
+msgid "Widget Icon"
+msgstr ""
+
+#: src/components/AdminSettings.vue:41 src/components/PersonalSettings.vue:41
+msgid "Find icons at"
+msgstr ""
+
+#: src/components/AdminSettings.vue:58 src/components/PersonalSettings.vue:58
+msgid "Reset color"
+msgstr ""
+
+#: src/components/AdminSettings.vue:65 src/components/PersonalSettings.vue:65
+msgid "URL to Display"
+msgstr ""
+
+#: src/components/AdminSettings.vue:77
+msgid "iFrame Height (px)"
+msgstr ""
+
+#: src/components/AdminSettings.vue:87
+msgid "Extra Wide (2 Col)"
+msgstr ""
+
+#: src/components/AdminSettings.vue:101 src/components/PersonalSettings.vue:101
+msgid "Save"
+msgstr ""
+
+#: src/components/AdminSettings.vue:133 src/components/PersonalSettings.vue:133
+msgid "No URL configured. Please set a URL in the Settings."
+msgstr ""
+
+#: src/components/DashboardWidget.vue:16 src/components/PersonalDashboardWidget.vue:16
+msgid "No URL configured."
+msgstr ""
+
+#: src/components/DashboardWidget.vue:18
+msgid "Please set a URL in the"
+msgstr ""
+
+#: src/components/DashboardWidget.vue:19
+msgid "Admin Settings"
+msgstr ""
+
+#: src/components/PersonalDashboardWidget.vue:18
+msgid "Please set a URL in your"
+msgstr ""
+
+#: src/components/PersonalDashboardWidget.vue:19
+msgid "Personal Settings"
+msgstr ""
+
+#: src/components/AdminSettings.vue:138 src/components/PersonalSettings.vue:138
+msgid "Failed to load content"
+msgstr ""
+
+#: src/components/AdminSettings.vue:139 src/components/PersonalSettings.vue:139
+msgid "This might be caused by Content Security Policy (CSP) restrictions."
+msgstr ""
+
+#: src/components/AdminSettings.vue:142 src/components/PersonalSettings.vue:142
+msgid "View CSP Configuration Guide"
+msgstr ""
+
+#: src/components/AdminSettings.vue:574
+msgid "Settings saved"
+msgstr ""
+
+#: src/components/AdminSettings.vue:578
+msgid "Could not save settings"
+msgstr ""
+
+#: src/components/PersonalSettings.vue:350
+msgid "Settings saved successfully"
+msgstr ""
+
+#: src/components/PersonalSettings.vue:353
+msgid "Failed to save settings"
+msgstr ""
+
+#: src/components/AdminSettings.vue:275
+#: src/components/AdminSettings.vue:275
+msgid "Icon not found: {name}"
+msgstr ""
+
+#: src/components/AdminSettings.vue:165
+msgid "Group-based iFrame Widgets"
+msgstr ""
+
+#: src/components/AdminSettings.vue:168
+msgid "Create iFrame widgets that are only visible to specific user groups."
+msgstr ""
+
+#: src/components/AdminSettings.vue:173
+msgid "Add Group Widget"
+msgstr ""
+
+#: src/components/AdminSettings.vue:179
+msgid "Edit Group Widget"
+msgstr ""
+
+#: src/components/AdminSettings.vue:180
+msgid "Add Group Widget"
+msgstr ""
+
+#: src/components/AdminSettings.vue:185
+msgid "Select Group"
+msgstr ""
+
+#: src/components/AdminSettings.vue:186
+msgid "Choose a group..."
+msgstr ""
+
+#: src/components/AdminSettings.vue:191
+msgid "Group iFrame Widget"
+msgstr ""
+
+#: src/components/AdminSettings.vue:210
+msgid "Extra Wide (2 Col)"
+msgstr ""
+
+#: src/components/AdminSettings.vue:217
+msgid "Cancel"
+msgstr ""
+
+#: src/components/AdminSettings.vue:218
+msgid "Update"
+msgstr ""
+
+#: src/components/AdminSettings.vue:219
+msgid "Create"
+msgstr ""
+
+#: src/components/AdminSettings.vue:225
+msgid "Title:"
+msgstr ""
+
+#: src/components/AdminSettings.vue:226
+msgid "URL:"
+msgstr ""
+
+#: src/components/AdminSettings.vue:227
+msgid "Icon:"
+msgstr ""
+
+#: src/components/AdminSettings.vue:228
+msgid "Default"
+msgstr ""
+
+#: src/components/AdminSettings.vue:229
+msgid "Edit"
+msgstr ""
+
+#: src/components/AdminSettings.vue:230
+msgid "Delete"
+msgstr ""
+
+#: src/components/AdminSettings.vue:233
+msgid "No group widgets configured yet."
+msgstr ""
+
+#: src/components/AdminSettings.vue:237
+msgid "Are you sure you want to delete this group widget?"
+msgstr ""
+
+#: src/components/AdminSettings.vue:241
+msgid "Please select a group"
+msgstr ""
+
+#: src/components/AdminSettings.vue:245
+msgid "Group widget saved"
+msgstr ""
+
+#: src/components/AdminSettings.vue:248
+msgid "Could not save group widget"
+msgstr ""
+
+#: src/components/AdminSettings.vue:252
+msgid "Group widget deleted"
+msgstr ""
+
+#: src/components/AdminSettings.vue:255
+msgid "Could not delete group widget"
+msgstr ""
+
+#: src/components/AdminSettings.vue:34 src/components/PersonalSettings.vue:32
+msgid "Hidden"
+msgstr ""
+
+#: src/components/AdminSettings.vue:47 src/components/PersonalSettings.vue:45
+msgid "si:github or si:nextcloud"
+msgstr ""
+
+#: src/components/AdminSettings.vue:79 src/components/AdminSettings.vue:242 src/components/PersonalSettings.vue:58
+msgid "https://example.org"
+msgstr ""
+
+#: src/components/AdminSettings.vue:91 src/components/AdminSettings.vue:249 src/components/PersonalSettings.vue:68
+msgid "100%"
+msgstr ""
+
+#: src/components/AdminSettings.vue:195
+msgid "Not set"
+msgstr ""
+
+#: src/components/AdminSettings.vue:218
+msgid "Group iFrame Widget"
+msgstr ""
+
+#: src/components/AdminSettings.vue:235
+msgid "si:nextcloud"
+msgstr ""
+
+#: src/components/AdminSettings.vue:267
+msgid "Widget Preview"
+msgstr ""
+
+#: src/components/PersonalSettings.vue:242
+msgid "Failed to load settings"
+msgstr ""
+
+#: src/components/AdminSettings.vue:200
+msgid "Show"
+msgstr ""
+
+#: src/components/AdminSettings.vue:315
+msgid "Show Widget"
+msgstr ""
+
+#: src/components/AdminSettings.vue:1103
+msgid "Widget shown to users"
+msgstr ""
+
+#: src/components/AdminSettings.vue:1105
+msgid "Could not show widget to users"
+msgstr ""
+
+#: src/components/AdminSettings.vue:203
+msgid "Hide"
+msgstr ""
+
+#: src/components/AdminSettings.vue:1109
+msgid "Widget shown to users"
+msgstr ""
+
+#: src/components/AdminSettings.vue:1111
+msgid "Widget hidden from users"
+msgstr ""
+
+#: src/components/AdminSettings.vue:1113
+msgid "Could not show widget to users"
+msgstr ""
+
+#: src/components/AdminSettings.vue:1115
+msgid "Could not hide widget from users"
+msgstr ""
+
+#: src/components/AdminSettings.vue:196
+msgid "Shown widget"
+msgstr ""
