@@ -304,3 +304,7 @@ msgstr ""
 #: src/components/AdminSettings.vue:196
 msgid "Shown widget"
 msgstr ""
+
+#: src/components/AdminSettings.vue:XXX
+msgid "Users in this group will see this widget by default"
+msgstr "Usuários neste grupo verão este widget por padrão"

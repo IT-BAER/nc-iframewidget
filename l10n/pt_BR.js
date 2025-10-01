@@ -51,6 +51,7 @@ OC.L10N.register(
     "Could not save group widget": "Não foi possível salvar o widget de grupo",
     "Group widget deleted": "Widget de grupo excluído",
     "Could not delete group widget": "Não foi possível excluir o widget de grupo",
+    "Users in this group will see this widget by default": "Usuários neste grupo verão este widget por padrão",
     "Hidden": "Oculto",
     "si:github or si:nextcloud": "si:github ou si:nextcloud",
     "https://example.org": "https://exemplo.org",
