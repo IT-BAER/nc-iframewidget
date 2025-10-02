@@ -108,11 +108,12 @@ body.theme--dark .icon-iframe {
 
 /* Custom Icon styling */
 .panel--header h2 .widget-icon {
-    float: left !important;
-    display: inline-block !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
     margin-right: 16px !important;
     margin-left: 0 !important;
-    position: relative !important;
+    flex-shrink: 0 !important;
     width: 32px !important;
     height: 32px !important;
 }
