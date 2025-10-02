@@ -5,6 +5,9 @@
 .icon-iframe {
     background-image: url('../img/iframewidget-dark.svg');
     filter: var(--background-invert-if-dark);
+    width: 32px !important;
+    height: 32px !important;
+    background-size: 32px 32px !important;
 }
 
 body.theme--dark .icon-iframewidget,
@@ -145,6 +148,7 @@ body.theme--dark .icon-iframe {
 .panel[data-widget-id="group-iframewidget"] .panel--header h2 {
     justify-content: flex-start !important;
     text-align: left !important;
+    padding: 16px 8px !important;
 }
 
 /* Extra-wide fixed width approach for all widgets - double the standard width */

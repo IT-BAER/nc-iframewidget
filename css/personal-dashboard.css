@@ -3,6 +3,9 @@
 .icon-iframe {
     background-image: url('../img/iframewidget-dark.svg');
     filter: var(--background-invert-if-dark);
+    width: 32px !important;
+    height: 32px !important;
+    background-size: 32px 32px !important;
 }
 
 body.theme--dark .icon-personal-iframewidget,
@@ -98,7 +101,6 @@ body.theme--dark .icon-iframe {
     display: flex !important;
     align-items: center !important;
     text-align: left !important;
-    padding-left: 0 !important;
 }
 
 /* Extra-wide grid column span for personal widget */
