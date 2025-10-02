@@ -54,9 +54,9 @@ class IframeWidget implements IWidget
      */
     public function getTitle(): string
     {
-        // Return a friendly name for widget picker/selection
-        // The actual widget title display is controlled by frontend config and CSS
-        return $this->l10n->t('Public iFrame');
+        // Return configured title if set, otherwise return friendly picker name
+        $widgetTitle = $this->config->getAppValue(Application::APP_ID, 'widgetTitle', '');
+        return empty(trim($widgetTitle)) ? $this->l10n->t('Public iFrame') : $widgetTitle;
     }
 
     /**

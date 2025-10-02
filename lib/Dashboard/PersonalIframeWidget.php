@@ -32,9 +32,10 @@ class PersonalIframeWidget implements IWidget {
     public function getId(): string {
         return 'personal-iframewidget';
     }    public function getTitle(): string {
-        // Return a friendly name for widget picker/selection
-        // The actual widget title display is controlled by frontend config and CSS
-        return $this->l10n->t('Personal iFrame');
+        // Return configured title if set, otherwise return friendly picker name
+        $userId = $this->userSession->getUser()->getUID();
+        $title = $this->config->getUserValue($userId, Application::APP_ID, 'personal_widget_title', '');
+        return empty(trim($title)) ? $this->l10n->t('Personal iFrame') : $title;
     }
 
     public function getOrder(): int {
