@@ -63,7 +63,7 @@ export default {
             iframeError: false,
             config: loadState('iframewidget', 'personal-iframewidget-config') || {
                 extraWide: false,
-                widgetTitle: 'Personal iFrame Widget', // Default title
+                widgetTitle: '', // Empty by default
                 widgetIcon: '',
                 widgetIconColor: '',
                 iframeUrl: ''

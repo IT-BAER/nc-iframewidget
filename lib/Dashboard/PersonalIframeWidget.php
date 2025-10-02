@@ -32,10 +32,9 @@ class PersonalIframeWidget implements IWidget {
     public function getId(): string {
         return 'personal-iframewidget';
     }    public function getTitle(): string {
-        $userId = $this->userSession->getUser()->getUID();
-        $title = $this->config->getUserValue($userId, Application::APP_ID, 'personal_widget_title', '');
-        // For dashboard consistency, return a non-empty default if user hasn't set one
-        return empty(trim($title)) ? $this->l10n->t('Personal iFrame') : $title;
+        // Return a friendly name for widget picker/selection
+        // The actual widget title display is controlled by frontend config and CSS
+        return $this->l10n->t('Personal iFrame');
     }
 
     public function getOrder(): int {
@@ -89,8 +88,8 @@ class PersonalIframeWidget implements IWidget {
         // Initialize config with all required fields
         $config = [
             'extraWide' => $extraWide,
-            // Use the result of getTitle() to ensure default is applied if necessary
-            'widgetTitle' => $this->getTitle(), 
+            // Pass the actual configured title (not the picker name)
+            'widgetTitle' => $widgetTitle,
             'widgetIcon' => $widgetIcon,
             'widgetIconColor' => $widgetIconColor,
             'iframeUrl' => $iframeUrl,

@@ -68,14 +68,9 @@ class GroupIframeWidget implements IWidget
      */
     public function getTitle(): string
     {
-        $userId = $this->userSession->getUser()->getUID();
-        $widgetConfig = $this->getUserWidgetConfig($userId);
-
-        if (!$widgetConfig) {
-            return 'Group iFrame Widget';
-        }
-
-        return empty(trim($widgetConfig['title'])) ? 'Group iFrame Widget' : $widgetConfig['title'];
+        // Return a friendly name for widget picker/selection
+        // The actual widget title display is controlled by frontend config and CSS
+        return $this->l10n->t('Group iFrame');
     }
 
     /**
