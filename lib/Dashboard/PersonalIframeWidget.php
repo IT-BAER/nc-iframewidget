@@ -98,5 +98,15 @@ class PersonalIframeWidget implements IWidget {
         
         // Provide initial state
         $this->initialStateService->provideInitialState('personal-iframewidget-config', $config);
+        
+        // Add SimpleIcons to Content Security Policy
+        $cspManager = \OC::$server->getContentSecurityPolicyManager();
+        $policy = new \OCP\AppFramework\Http\ContentSecurityPolicy();
+        $policy->addAllowedImageDomain('cdn.simpleicons.org');
+        $cspManager->addDefaultPolicy($policy);
+        
+        // Load scripts and styles
+        \OCP\Util::addScript('iframewidget', 'iframewidget-dashboard');
+        \OCP\Util::addStyle('iframewidget', 'personal-dashboard');
     }
 }
