@@ -1,3 +1,14 @@
+## 0.8.4 - 2025-10-02
+
+### Bug Fixes
+
+- hide headers for empty iframe and personal iframe widgets
+- Updated GroupIframeWidget to return a static title 'Group iFrame' for widget picker/selection.
+- Modified IframeWidget to return 'Public iFrame' as the title for widget picker/selection.
+- Changed PersonalIframeWidget to return 'Personal iFrame' for widget picker/selection, removing user-specific title logic.
+- Adjusted default configuration in PersonalDashboardWidget.vue to have an empty widgetTitle by default.
+- widget title retrieval for user-specific configurations
+
 ## 0.8.3 - 2025-10-01
 
 ### Bug Fixes
