@@ -20,6 +20,10 @@ body.theme--dark .icon-iframe {
     padding: 0;
 }
 
+.panel.ifw-title-empty[data-widget-id="personal-iframewidget"] .panel--header h2 {
+    display: none !important;
+}
+
 .panel.ifw-title-empty[data-widget-id="personal-iframewidget"] span.icon-personal-iframewidget,
 .panel.ifw-title-empty[data-widget-id="personal-iframewidget"] span.icon-iframe {
     display: none;

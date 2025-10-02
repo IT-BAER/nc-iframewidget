@@ -24,6 +24,10 @@ body.theme--dark .icon-iframe {
     padding: 0;
 }
 
+.panel.ifw-title-empty[data-widget-id="iframewidget"] .panel--header h2 {
+    display: none !important;
+}
+
 .panel.ifw-title-empty[data-widget-id="iframewidget"] span.icon-iframewidget {
     display: none;
 }
@@ -40,6 +44,10 @@ body.theme--dark .icon-iframe {
 .panel.ifw-title-empty[data-widget-id="group-iframewidget"] .panel--header {
     height: 16px;
     padding: 0;
+}
+
+.panel.ifw-title-empty[data-widget-id="group-iframewidget"] .panel--header h2 {
+    display: none !important;
 }
 
 .panel.ifw-title-empty[data-widget-id="group-iframewidget"] span.icon-group-iframewidget {
