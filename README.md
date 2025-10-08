@@ -161,36 +161,45 @@ If you'd like to contribute translations, please see the [translation guide](doc
 
 ### 🔒 CSP Configuration
 
-By default, Nextcloud restricts which websites can be embedded in iframes for security reasons. To embed external websites in your dashboard widget, you'll need to add them to your server's Content Security Policy configuration:
+By default, Nextcloud restricts which websites can be embedded in iframes for security reasons. To embed external websites in your dashboard widget, you'll need to allow the target domains in your server's Content Security Policy (CSP).
 
-#### For Apache
+Important: Avoid overwriting the entire CSP if your server or Nextcloud already sets other security directives. Instead, extend the existing `frame-src` directive where possible.
 
-Add the following to your Apache configuration or .htaccess file:
+#### Recommended approach for Apache (safe: extend existing frame-src)
+
+If your server or Nextcloud already sets a Content-Security-Policy, use `Header always edit` to safely append additional domains to the existing `frame-src` list without replacing other directives. This is especially useful when running Nextcloud inside containers (e.g., Nextcloud AIO) where the main CSP may be managed by the platform.
+
+Example (append Wikipedia domains):
 
 ```apache
-# Allow specific domain in iframes
-Header set Content-Security-Policy "frame-src 'self' https://example.com;"
+# Safely extend the existing frame-src instead of replacing the whole CSP
+Header always edit Content-Security-Policy "(^|;\\s*)frame-src\\s+([^;]+)" \
+   "$1frame-src \\2 https://*.wikipedia.org https://www.wikipedia.org"
+```
 
-# If you need to allow multiple domains
+If you control the full CSP and prefer to set it directly, you can use:
+
+```apache
+# Allow specific domain(s) in iframes (overwrites/sets the CSP)
 Header set Content-Security-Policy "frame-src 'self' https://example.com https://another-site.org;"
 ```
 
-#### For Nginx
+Note for Nextcloud AIO: Some container images expose Apache configuration as read-only. In that case, editing the Nextcloud instance `.htaccess` (for example, inside the `nextcloud-aio-nextcloud` container at `/var/www/html/.htaccess`) and adding the `Header always edit` line has been reported to work by users — it appends to the existing CSP safely without breaking other policies.
 
-Add the following to your Nginx server block:
+#### Nginx
+
+For Nginx you can set or extend the CSP. If you control the entire header, add the header in your server block:
 
 ```nginx
-# Allow specific domain in iframes
-add_header Content-Security-Policy "frame-src 'self' https://example.com;";
-
-# If you need to allow multiple domains
+# Allow specific domain(s) in iframes
 add_header Content-Security-Policy "frame-src 'self' https://example.com https://another-site.org;";
 ```
 
+If you need to programmatically append to an existing header on Nginx, consider using the `more_set_headers` or `more_clear_headers` directives provided by the `headers-more` module, or adjust the upstream configuration that sets the CSP.
 
 ### ℹ️ Note on External Websites
 
-Some websites explicitly block being embedded in iframes using their own CSP headers (`X-Frame-Options: DENY` or `frame-ancestors: 'none'`). These sites cannot be embedded even if you configure your server correctly. In these cases, consider using the External Sites app with the redirect option instead.
+Some websites explicitly block being embedded in iframes using their own headers (for example `X-Frame-Options: DENY` or a CSP `frame-ancestors: 'none'`). Those sites cannot be embedded even if you allow them in your server's CSP. In such cases consider using the External Sites app with the redirect option instead.
 
 ## 🔐 Security Notes
 
