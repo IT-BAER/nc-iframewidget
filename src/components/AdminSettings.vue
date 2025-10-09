@@ -144,7 +144,6 @@
 								:src="state.iframeUrl"
 								class="preview-frame"
 								referrerpolicy="no-referrer"
-								allow="fullscreen"
 								@error="handleIframeError"
 								@load="iframeError = false"
 								sandbox="allow-same-origin allow-scripts allow-popups allow-forms">
@@ -349,7 +348,6 @@
                                     :src="groupWidgetForm.url"
                                     class="preview-frame"
                                     referrerpolicy="no-referrer"
-                                    allow="fullscreen"
                                     @error="handleGroupIframeError"
                                     @load="groupIframeError = false"
                                     sandbox="allow-same-origin allow-scripts allow-popups allow-forms">

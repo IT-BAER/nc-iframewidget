@@ -150,7 +150,6 @@
                                 :style="{ height: previewHeight }"
                                 class="preview-frame"
                                 referrerpolicy="no-referrer"
-                                allow="fullscreen"
                                 @error="handleIframeError"
                                 @load="iframeError = false"
                                 sandbox="allow-same-origin allow-scripts allow-popups allow-forms">
