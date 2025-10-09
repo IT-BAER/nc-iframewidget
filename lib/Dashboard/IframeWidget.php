@@ -9,6 +9,7 @@ use OCP\Dashboard\IWidget;
 use OCP\IConfig;
 use OCP\IL10N;
 use OCP\AppFramework\Services\IInitialState;
+use OCP\Security\IContentSecurityPolicyManager;
 
 /**
  * IframeWidget implements the dashboard widget functionality
@@ -28,17 +29,22 @@ class IframeWidget implements IWidget
     /** @var IInitialState */
     private IInitialState $initialStateService;
 
+    /** @var IContentSecurityPolicyManager */
+    private IContentSecurityPolicyManager $cspManager;
+
     /**
      * Constructor for IframeWidget
      */
     public function __construct(
         IL10N $l10n,
         IConfig $config,
-        IInitialState $initialStateService
+        IInitialState $initialStateService,
+        IContentSecurityPolicyManager $cspManager
     ) {
         $this->l10n = $l10n;
         $this->config = $config;
         $this->initialStateService = $initialStateService;
+        $this->cspManager = $cspManager;
     }
 
     /**
@@ -107,10 +113,9 @@ class IframeWidget implements IWidget
         ]);
     
     	// Add SimpleIcons to Content Security Policy
-    	$cspManager = \OC::$server->getContentSecurityPolicyManager();
-    	$policy = new \OCP\AppFramework\Http\ContentSecurityPolicy();
-    	$policy->addAllowedImageDomain('cdn.simpleicons.org');
-    	$cspManager->addDefaultPolicy($policy);
+    $policy = new \OCP\AppFramework\Http\ContentSecurityPolicy();
+    $policy->addAllowedImageDomain('cdn.simpleicons.org');
+    $this->cspManager->addDefaultPolicy($policy);
     
         // Load scripts and styles
         \OCP\Util::addScript('iframewidget', 'iframewidget-dashboard');

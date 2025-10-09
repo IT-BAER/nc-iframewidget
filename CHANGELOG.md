@@ -1,3 +1,15 @@
+## 0.8.5 - 2025-10-20
+
+### Enhancements
+
+- Added native compatibility with Nextcloud 32 by injecting the new Content Security Policy manager service across dashboard widgets
+- Refined admin UI metadata to advertise the latest release and updated compatibility information
+
+### Maintenance
+
+- Bumped application metadata and build artifacts to version 0.8.5
+- Regenerated production bundles for the admin and personal settings panels
+
 ## 0.8.4 - 2025-10-02
 
 ### Bug Fixes

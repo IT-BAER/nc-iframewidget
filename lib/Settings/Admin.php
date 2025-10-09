@@ -7,6 +7,7 @@ use OCP\IL10N;
 use OCP\IConfig;
 use OCP\Settings\ISettings;
 use OCP\AppFramework\Services\IInitialState;
+use OCP\Security\IContentSecurityPolicyManager;
 
 use OCA\IframeWidget\AppInfo\Application;
 
@@ -21,17 +22,22 @@ class Admin implements ISettings
     /** @var IInitialState */
     private $initialStateService;
 
+    /** @var IContentSecurityPolicyManager */
+    private IContentSecurityPolicyManager $cspManager;
+
     /**
      * Admin constructor.
      */
     public function __construct(
         IConfig $config,
         IL10N $l,
-        IInitialState $initialStateService
+        IInitialState $initialStateService,
+        IContentSecurityPolicyManager $cspManager
     ) {
         $this->config = $config;
         $this->l = $l;
         $this->initialStateService = $initialStateService;
+        $this->cspManager = $cspManager;
     }
 
     /**
@@ -64,10 +70,9 @@ class Admin implements ISettings
         $this->initialStateService->provideInitialState('admin-config', $adminConfig);
 
     	// Add SimpleIcons to Content Security Policy
-    	$cspManager = \OC::$server->getContentSecurityPolicyManager();
-    	$policy = new \OCP\AppFramework\Http\ContentSecurityPolicy();
-    	$policy->addAllowedImageDomain('cdn.simpleicons.org');
-    	$cspManager->addDefaultPolicy($policy);
+    $policy = new \OCP\AppFramework\Http\ContentSecurityPolicy();
+    $policy->addAllowedImageDomain('cdn.simpleicons.org');
+    $this->cspManager->addDefaultPolicy($policy);
     
         // Add dashboard styles for preview
         \OCP\Util::addStyle('iframewidget', 'dashboard');

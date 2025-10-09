@@ -11,6 +11,7 @@ use OCP\IGroupManager;
 use OCP\IL10N;
 use OCP\IUserSession;
 use OCP\AppFramework\Services\IInitialState;
+use OCP\Security\IContentSecurityPolicyManager;
 
 /**
  * GroupIframeWidget implements group-based dashboard widget functionality
@@ -38,6 +39,9 @@ class GroupIframeWidget implements IWidget
     /** @var string|null */
     private ?string $userGroup = null;
 
+    /** @var IContentSecurityPolicyManager */
+    private IContentSecurityPolicyManager $cspManager;
+
     /**
      * Constructor for GroupIframeWidget
      */
@@ -46,13 +50,15 @@ class GroupIframeWidget implements IWidget
         IConfig $config,
         IInitialState $initialStateService,
         IUserSession $userSession,
-        IGroupManager $groupManager
+        IGroupManager $groupManager,
+        IContentSecurityPolicyManager $cspManager
     ) {
         $this->l10n = $l10n;
         $this->config = $config;
         $this->initialStateService = $initialStateService;
         $this->userSession = $userSession;
         $this->groupManager = $groupManager;
+        $this->cspManager = $cspManager;
     }
 
     /**
@@ -165,10 +171,9 @@ class GroupIframeWidget implements IWidget
         $this->initialStateService->provideInitialState('group-iframewidget-config', $config);
 
         // Add SimpleIcons to Content Security Policy
-        $cspManager = \OC::$server->getContentSecurityPolicyManager();
         $policy = new \OCP\AppFramework\Http\ContentSecurityPolicy();
         $policy->addAllowedImageDomain('cdn.simpleicons.org');
-        $cspManager->addDefaultPolicy($policy);
+    $this->cspManager->addDefaultPolicy($policy);
 
         // Load scripts and styles
         \OCP\Util::addScript('iframewidget', 'iframewidget-dashboard');
