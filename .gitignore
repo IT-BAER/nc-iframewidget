@@ -10,7 +10,7 @@ release_temp/
 create_release.bat
 create_release.sh
 .clinerules/
-
+tasksync
 # Documentation files not needed for the app store
 nc-iframewidget-dashboard.png
 nc-iframewidget-demo.mp4
