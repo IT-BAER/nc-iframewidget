@@ -1,4 +1,14 @@
-## 0.8.5 - 2025-10-20
+## 0.8.6 - 2025-10-21
+
+### Security Fixes
+
+- Fixed node-forge vulnerability (CVE-2025-12816)
+
+### Maintenance
+
+- Bumped version to 0.8.6
+ 
+ ## 0.8.5 - 2025-10-20
 
 ### Enhancements
 

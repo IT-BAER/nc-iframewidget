@@ -1,6 +1,6 @@
 {
 	"name": "iframewidget",
-	"version": "0.8.5",
+	"version": "0.8.6",
 	"description": "iFrame Widget for Nextcloud Dashboard",
 	"main": "index.js",
 	"scripts": {
