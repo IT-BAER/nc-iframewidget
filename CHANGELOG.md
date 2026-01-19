@@ -1,89 +1,184 @@
-## 0.8.6 - 2025-10-21
+# Changelog
 
-### Security Fixes
+All notable changes to the iFrame Widget for Nextcloud will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
+## [0.9.0] - 2026-01-19
+
+### Added
+
+- **Multi-widget slot system**: Support for up to 5 public widgets and 5 group widgets per group
+- **Enable/Disable toggles**: Individual widgets can be enabled or disabled without deleting them
+- **Iframe security settings**: New `sandbox` and `allow` fields for granular iframe permission control
+  - `iframeSandbox`: Configure sandbox permissions (default: `allow-same-origin allow-scripts allow-popups allow-forms`)
+  - `iframeAllow`: Configure feature policy permissions (e.g., `microphone; camera; geolocation`)
+- **Slot-based architecture**: Each widget type now uses dedicated slot classes for better isolation
+  - `PublicWidgetSlot1-5.php` for public widgets
+  - `GroupWidgetSlot1-5.php` for group widgets
+- **Version sync tooling**: Automatic version synchronization between `package.json` and `appinfo/info.xml`
+  - `npm run version:sync` - Sync from package.json to info.xml
+  - `npm run version:bump` - Bump patch version
+  - `npm run version:bump:minor` - Bump minor version
+  - `npm run version:bump:major` - Bump major version
+  - `npm run version:show` - Display current version status
+- **Dynamic version display**: Version shown in admin/personal settings now dynamically reads from package.json at build time
+- **Portuguese (pt) translations**: Added complete Portuguese localization
+- **URL validation**: All widget URLs are now validated to start with `http://` or `https://`
+- **Public widget management UI**: New admin interface for managing multiple public widgets with slot badges
+
+### Changed
+
+- **Widget registration**: Replaced single widget classes with slot-based system in `Application.php`
+- **Admin settings UI**: Complete redesign with public widgets list, slot badges, and enable/disable toggles
+- **Data storage**: Migrated from individual config keys to JSON-based storage (`publicWidgetsJson`, `groupWidgetsJson`)
+- **API endpoints**: Updated `/public-widgets` and `/group-widgets` endpoints for multi-widget support
+- **DashboardWidget component**: Now slot-aware with `slotNumber` prop for proper state management
+- **Backward compatibility**: First slot (slot 1) maintains original widget IDs for seamless upgrades
+
+### Fixed
+
+- **Proper widget isolation**: Each widget slot now has independent configuration and state
+- **Config controller**: Fixed request parameter parsing using `$this->request->getParams()` instead of `php://input`
+- **User session handling**: Improved `IUserSession` injection in controllers
+- **Slot assignment**: Automatic slot number assignment when creating new widgets
+
+### Security
+
+- **URL validation**: Added server-side validation rejecting non-HTTP(S) URLs
+- **Sandbox defaults**: All iframes now have secure default sandbox permissions
+
+### Dependencies
+
+- Updated `webpack` from 5.98.0 to 5.104.0
+- Updated `@nextcloud/vue` from 8.23.1 to 8.35.2
+- Updated `@nextcloud/dialogs` from 5.3.6 to 5.3.8
+- Updated `@nextcloud/axios` to 2.5.2
+- Updated `@nextcloud/router` to 3.1.0
+- Updated various Nextcloud internal packages
+
+### Removed
+
+- **Legacy widget classes**: `IframeWidget.php` and `GroupIframeWidget.php` replaced by slot system
+- **`isDefault` field**: Replaced by `enabled` field for clearer semantics
+- **Single-widget paradigm**: Old single-widget admin interface replaced by multi-widget management
+
+### Migration Notes
+
+- Existing single-widget configurations are automatically migrated to slot 1
+- Legacy config keys are preserved for backward compatibility with slot 1
+- No manual migration required - the app handles upgrades transparently
+
+---
+
+## [0.8.7] - 2025-XX-XX
+
+### Changed
+
+- Version synchronization between package.json and info.xml
+
+---
+
+## [0.8.6] - 2025-10-21
+
+### Security
 
 - Fixed node-forge vulnerability (CVE-2025-12816)
 
-### Maintenance
+### Changed
 
 - Bumped version to 0.8.6
  
- ## 0.8.5 - 2025-10-20
+---
 
-### Enhancements
+## [0.8.5] - 2025-10-20
 
-- Added native compatibility with Nextcloud 32 by injecting the new Content Security Policy manager service across dashboard widgets
-- Refined admin UI metadata to advertise the latest release and updated compatibility information
+### Added
 
-### Maintenance
+- Native compatibility with Nextcloud 32 via Content Security Policy manager service injection
 
+### Changed
+
+- Refined admin UI metadata with latest release info and updated compatibility
 - Bumped application metadata and build artifacts to version 0.8.5
-- Regenerated production bundles for the admin and personal settings panels
+- Regenerated production bundles for admin and personal settings panels
 
-## 0.8.4 - 2025-10-02
+---
 
-### Bug Fixes
+## [0.8.4] - 2025-10-02
 
-- hide headers for empty iframe and personal iframe widgets
-- Updated GroupIframeWidget to return a static title 'Group iFrame' for widget picker/selection.
-- Modified IframeWidget to return 'Public iFrame' as the title for widget picker/selection.
-- Changed PersonalIframeWidget to return 'Personal iFrame' for widget picker/selection, removing user-specific title logic.
-- Adjusted default configuration in PersonalDashboardWidget.vue to have an empty widgetTitle by default.
-- widget title retrieval for user-specific configurations
+### Fixed
 
-## 0.8.3 - 2025-10-01
+- Hidden headers for empty iframe and personal iframe widgets
+- Updated GroupIframeWidget to return static title 'Group iFrame' for widget picker
+- Modified IframeWidget to return 'Public iFrame' as title for widget picker
+- Changed PersonalIframeWidget to return 'Personal iFrame' for widget picker
+- Adjusted default configuration in PersonalDashboardWidget.vue to have empty widgetTitle
+- Widget title retrieval for user-specific configurations
 
-### Bug Fixes
+---
 
-- Fixed localization crashes: Updated outdated translation keys in pt_BR, sv, ja, and nb localization files that were causing Nextcloud crashes and OC undefined errors
+## [0.8.3] - 2025-10-01
 
-## 0.8.2 - 2025-09-25
+### Fixed
 
-### Bug Fixes
+- Localization crashes: Updated outdated translation keys in pt_BR, sv, ja, and nb localization files
 
-- Fixed iframe scrolling: enabled scrolling functionality while hiding scrollbars for cleaner appearance
+---
 
-## 0.8.0 - 2025-09-21
+## [0.8.2] - 2025-09-25
 
-### New Features
+### Fixed
 
-- Added group widget support with full feature parity to personal and admin widgets
-- Group widgets now support custom icons, colors, and all display options
+- Iframe scrolling: Enabled scrolling functionality while hiding scrollbars for cleaner appearance
 
-### Enhancements
+---
 
-- Removed iframe height settings to fix inconsistent widget heights across different content
-- Added `height: 100%` to iframe elements for proper content fitting without scrollbars
+## [0.8.0] - 2025-09-21
+
+### Added
+
+- Group widget support with full feature parity to personal and admin widgets
+- Custom icons and colors support for group widgets
+- Mutation observer for dynamic dashboard panel updates
+
+### Changed
+
+- Removed iframe height settings to fix inconsistent widget heights
+- Added `height: 100%` to iframe elements for proper content fitting
 - Removed explicit width properties to let Nextcloud handle widget width naturally
-- Added `scrolling="no"` attribute to all iframe elements to prevent unwanted scrollbars
+- Added `scrolling="no"` attribute to all iframe elements
 - Improved responsive behavior by allowing Nextcloud's dashboard to control widget dimensions
-- Added mutation observer for dynamic dashboard panel updates
 
-### Bug Fixes
+### Fixed
 
-- Fixed GroupIframeWidget.php getIconClass method to properly return default icons
-- Corrected updateGroupColor method property name from iconColor to proper field
+- GroupIframeWidget.php getIconClass method to properly return default icons
+- updateGroupColor method property name from iconColor to proper field
 - Added missing clearGroupColor method for color picker functionality
-- Fixed icon display issues in group widgets by implementing applyPanelClasses method
-- Resolved state loading issues for group widget configurations
+- Icon display issues in group widgets via applyPanelClasses method
+- State loading issues for group widget configurations
 
-### Technical Improvements
+---
 
-- Simplified iframe CSS by removing height and width constraints
-- Improved content display consistency across all iframe widget types (public, personal, group)
+## [0.7.7] - 2025-09-13
 
-## 0.7.7 - 2025-09-13
+### Security
 
-### Security Fixes
+- Updated axios from 1.11.0 to 1.12.1 to fix CVE vulnerability
 
-- Update axios from 1.11.0 to 1.12.1 to fix CVE vulnerability
-- Update babel-loader to ^10.0.0 and node-polyfill-webpack-plugin to 4.0.0 for compatibility
-- Update package.json, info.xml, and Vue components to version 0.7.7
-- Rebuild all JavaScript bundles with updated dependencies
+### Changed
 
-## 0.7.6 - 2025-07-30
+- Updated babel-loader to ^10.0.0 and node-polyfill-webpack-plugin to 4.0.0
+- Rebuilt all JavaScript bundles with updated dependencies
 
-### Security Fixes
+---
+
+## [0.7.6] - 2025-07-30
+
+### Security
 
 - Updated form-data dependency to version >=4.0.4
 - Updated linkifyjs dependency to version >=4.3.2
@@ -92,103 +187,107 @@
 - Updated vue-template-compiler dependency to version >=3.0.0
 - Updated postcss dependency to version >=8.4.31
 
-### Technical Improvements
+### Fixed
 
 - Resolved dependency conflicts with webpack configuration
 - Fixed compatibility issues with Nextcloud 30 and 31
 
-## 0.7.5 - 2025-07-07
+---
 
-### Enhancements
+## [0.7.5] - 2025-07-07
 
-- Added complete localization support for the 14 most common Nextcloud languages:
-  - English (en)
-  - German (de)
-  - French (fr)
-  - Spanish (es)
-  - Italian (it)
-  - Dutch (nl)
-  - Russian (ru)
-  - Polish (pl)
-  - Portuguese (pt)
-  - Brazilian Portuguese (pt_BR)
-  - Chinese (Simplified) (zh_CN)
-  - Japanese (ja)
-  - Czech (cs)
-  - Swedish (sv)
-  - Norwegian Bokmål (nb)
-- Improved translation file organization and documentation
-- Added translation guide for contributors
+### Added
 
-### Bug Fixes
+- Complete localization support for 14 most common Nextcloud languages:
+  - English (en), German (de), French (fr), Spanish (es), Italian (it)
+  - Dutch (nl), Russian (ru), Polish (pl), Portuguese (pt), Brazilian Portuguese (pt_BR)
+  - Chinese Simplified (zh_CN), Japanese (ja), Czech (cs), Swedish (sv), Norwegian Bokmål (nb)
+- Translation guide for contributors
 
-- Added missing iframe height setting in Personal Widget settings
-- Fixed preview height in Personal Widget settings to properly show iframe height changes
+### Fixed
 
-## 0.7.0 - 2025-07-07
+- Missing iframe height setting in Personal Widget settings
+- Preview height in Personal Widget settings to properly show iframe height changes
 
-### New Features
+---
 
-- Added personal widget support: Users can now configure their own iFrame widget !
-- Admin Widget may now be used as "Public" Widget for all Users
-- Added full localization support with translation capabilities
+## [0.7.0] - 2025-07-07
 
-### Enhancements
+### Added
+
+- Personal widget support: Users can now configure their own iFrame widget
+- Admin Widget may now be used as "Public" Widget for all users
+- Full localization support with translation capabilities
+- Translation infrastructure with sample German translation
+
+### Changed
 
 - Improved widget rendering and styling
-- Added translation infrastructure with sample German translation
 
-## 0.6.3 - 2025-03-13
+---
 
-### Documentation
+## [0.6.3] - 2025-03-13
+
+### Changed
 
 - Optimized Nextcloud App Store Description
 
+### Fixed
 
-### Bug Fixes 
+- Bug which throws false-positive CSP errors
 
-- Fixed a bug which throws false-positive CSP errors
+---
 
+## [0.6.2] - 2025-03-13
 
-## 0.6.2 - 2025-03-13
+### Fixed
 
-### Bug Fixes
+- CSP Check behavior
 
-- Fixed CSP Check behavior
+---
 
+## [0.6.1] - 2025-03-13
 
-## 0.6.1 - 2025-03-13
+### Added
 
-### New Features
+- User-friendly CSP (Content Security Policy) error handling
+- Helpful guidance when iframe content is blocked by CSP restrictions
+- Direct links to documentation for solving CSP-related issues
+- Automatic detection of CSP blocking via content access checks
 
-- Added user-friendly CSP (Content Security Policy) error handling
-- Added helpful guidance when iframe content is blocked by CSP restrictions
-- Added direct links to documentation for solving CSP-related issues
-- Implemented automatic detection of CSP blocking via content access checks
-
-
-### Security Enhancements
+### Security
 
 - Fixed multiple security vulnerabilities in dependencies
 - Updated PostCSS to version 8.4.31 to address moderate severity vulnerabilities
 - Implemented proper Node.js polyfills for webpack 5
 - Enhanced Content Security Policy handling for iframe content
 
+### Changed
 
-### Technical Improvements
-
-- Fixed compatibility with Nextcloud 30 and added 31
-- Fixed webpack configuration to properly handle module resolution
 - Improved error handling and reporting throughout the application
-
-
-### Documentation
-
 - Added comprehensive error messages with links to documentation
 
+### Fixed
 
-### Bug Fixes
+- Compatibility with Nextcloud 30 and added 31
+- Webpack configuration to properly handle module resolution
+- Error state display and fallback mechanisms
 
-- Improved error state display and fallback mechanisms
+---
 
-This update represents a significant improvement in security, stability, and user experience for the iFrame Widget, focusing on providing better guidance when configuration issues arise.
+[Unreleased]: https://github.com/IT-BAER/nc-iframewidget/compare/v0.9.0...HEAD
+[0.9.0]: https://github.com/IT-BAER/nc-iframewidget/compare/v0.8.7...v0.9.0
+[0.8.7]: https://github.com/IT-BAER/nc-iframewidget/compare/v0.8.6...v0.8.7
+[0.8.6]: https://github.com/IT-BAER/nc-iframewidget/compare/v0.8.5...v0.8.6
+[0.8.5]: https://github.com/IT-BAER/nc-iframewidget/compare/v0.8.4...v0.8.5
+[0.8.4]: https://github.com/IT-BAER/nc-iframewidget/compare/v0.8.3...v0.8.4
+[0.8.3]: https://github.com/IT-BAER/nc-iframewidget/compare/v0.8.2...v0.8.3
+[0.8.2]: https://github.com/IT-BAER/nc-iframewidget/compare/v0.8.0...v0.8.2
+[0.8.0]: https://github.com/IT-BAER/nc-iframewidget/compare/v0.7.7...v0.8.0
+[0.7.7]: https://github.com/IT-BAER/nc-iframewidget/compare/v0.7.6...v0.7.7
+[0.7.6]: https://github.com/IT-BAER/nc-iframewidget/compare/v0.7.5...v0.7.6
+[0.7.5]: https://github.com/IT-BAER/nc-iframewidget/compare/v0.7.0...v0.7.5
+[0.7.0]: https://github.com/IT-BAER/nc-iframewidget/compare/v0.6.3...v0.7.0
+[0.6.3]: https://github.com/IT-BAER/nc-iframewidget/compare/v0.6.2...v0.6.3
+[0.6.2]: https://github.com/IT-BAER/nc-iframewidget/compare/v0.6.1...v0.6.2
+[0.6.1]: https://github.com/IT-BAER/nc-iframewidget/releases/tag/v0.6.1

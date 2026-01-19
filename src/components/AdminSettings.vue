@@ -8,7 +8,7 @@
                     <img src="../../img/baer4-100x100.png" alt="Logo" class="iframewidget-logo-image">
                 </a>
                 <a href="https://github.com/IT-BAER/nc-iframewidget/releases" target="_blank" rel="noopener noreferrer" class="version-link">
-                    <span class="iframewidget-version">v0.8.5</span>
+                    <span class="iframewidget-version">v{{ appVersion }}</span>
                 </a>
             </div>
         </div>
@@ -19,137 +19,58 @@
         
         <!-- Public iFrame Widget Section -->
         <div class="iframewidget-public-section">
-            <h3>{{ t('iframewidget', 'Public iFrame Widget') }}</h3>
+            <h3>{{ t('iframewidget', 'Public iFrame Widgets') }}</h3>
             <p class="settings-hint">
-                {{ t('iframewidget', 'Configure the main iFrame widget visible to all users.') }}
+                {{ t('iframewidget', 'Configure public iFrame widgets visible to all users. Maximum 5 widgets.') }}
             </p>
-        </div>
-        
-        <div class="iframewidget-admin-container">
-            <!-- Left side: Settings form -->
-            <div class="iframewidget-admin-form">
-                <div class="iframewidget-grid-form">
-                    <!-- Widget Title -->
-                    <label for="iframe-widget-title">
-                        {{ t('iframewidget', 'Widget Title') }}
-                    </label>
-                    <input id="iframe-widget-title"
-                        v-model="state.widgetTitle"
-                        type="text"
-                        :placeholder="t('iframewidget', 'Hidden')">
-                    
-                    <!-- Widget Icon -->
-                    <label for="widget-icon">
-                        {{ t('iframewidget', 'Widget Icon') }}
-						<span class="icon-finder">
-							- {{ t('iframewidget', 'Find icons at') }} 
-							<a href="https://simpleicons.org/" 
-							   target="_blank" 
-							   rel="noopener noreferrer">
-							   simpleicons.org
-							</a>
-						</span>
-                    </label>
-                    <div class="icon-input-container">
-						<input id="widget-icon"
-    						v-model="typedIcon"
-    						type="text"
-    						@input="debounceIconUpdate"
-    						:placeholder="t('iframewidget', 'si:github or si:nextcloud')">
-						<input type="color" 
-							   :value="colorValue" 
-							   @input="updateColor" 
-							   :disabled="!state.widgetIcon || !state.widgetIcon.startsWith('si:')"
-							   class="color-picker">
-                            
-                        <div class="color-button-container" :class="{'has-button': state.widgetIconColor && state.widgetIconColor !== ''}">
-                            <transition name="fade-scale">
-                                <button v-if="state.widgetIconColor && state.widgetIconColor !== ''" 
-                                        type="button"
-                                        class="icon-delete icon-reset-color" 
-                                        @click="clearColor"
-                                        :title="t('iframewidget', 'Reset color')">
-                                </button>
-                            </transition>
-                        </div>
-                    </div>
 
-                    <!-- URL to Display section -->
-                    <label for="iframeUrl">{{ t('iframewidget', 'URL to Display') }}</label>
-                    <input type="text" 
-                        :value="typedUrl"
-                        @input="handleUrlInput"
-                        id="iframeUrl" 
-                        class="iframewidget-input" 
-                        name="iframeUrl" 
-                        :placeholder="t('iframewidget', 'https://example.org')">
-
-
-                    <!-- Extra Wide Toggle -->
-                    <label for="extra-wide" class="checkbox-label">
-                        {{ t('iframewidget', 'Extra Wide (2 Col)') }}
-                    </label>
-                    <div class="checkbox-container">
-                        <label>
-                            <input id="extra-wide"
-                                v-model="extraWideComputed"
-                                type="checkbox"
-                                class="checkbox">
-                            <span class="checkbox-icon"></span>
-                        </label>
-                    </div>
-                </div>
-
-                <!-- Save Button -->
-                <div class="iframewidget-button-group">
-                    <button @click="saveSettings" class="primary">
-                        {{ t('iframewidget', 'Save') }}
-                    </button>
-                </div>
+            <!-- Add New Public Widget Button -->
+            <div class="iframewidget-button-group">
+                <button @click="showAddPublicDialog" class="primary" :disabled="publicWidgets.length >= 5">
+                    {{ t('iframewidget', 'Add Public Widget') }}
+                </button>
+                <span v-if="publicWidgets.length >= 5" class="limit-warning">
+                    {{ t('iframewidget', 'Maximum 5 widgets reached') }}
+                </span>
             </div>
 
-            <!-- Right side: Widget preview -->
-            <div class="iframewidget-admin-preview">
-                <h4 class="preview-title">{{ t('iframewidget', 'Preview') }}</h4>
-                <div class="preview-container" :style="{ width: isExtraWide ? '640px' : '320px' }">
-                    <div class="preview-header" :class="{'preview-title-empty': !state.widgetTitle || state.widgetTitle.trim() === ''}">
-                        <h2>
-                            <span v-if="state.widgetIcon && state.widgetTitle && state.widgetTitle.trim() !== ''"
-                                class="widget-icon">
-                                <img :src="getIconUrl(state.widgetIcon, state.widgetIconColor)" 
-                                    :alt="state.widgetIcon" 
-                                    @error="handleIconError"
-                                    class="dashboard-icon">
+            <!-- Public Widgets List -->
+            <div v-if="publicWidgets.length > 0" class="public-widgets-list">
+                <div v-for="widget in publicWidgetsSorted" :key="widget.id" class="public-widget-item" :class="{ 'is-disabled': widget.enabled === false }">
+                    <div class="widget-header">
+                        <div class="widget-title">
+                            <span class="slot-badge" :class="{ 'slot-disabled': widget.enabled === false }" :title="'Slot ' + widget.slot">{{ widget.slot }}</span>
+                            <span v-if="widget.icon && widget.icon.startsWith('si:')" class="widget-icon-small">
+                                <img :src="getIconUrl(widget.icon, widget.iconColor)" 
+                                     :alt="widget.icon" 
+                                     @error="handleIconError"
+                                     class="dashboard-icon-small">
                             </span>
-                            <span class="icon-iframewidget" v-else-if="state.widgetTitle && state.widgetTitle.trim() !== ''"></span>
-                            <span v-if="state.widgetTitle && state.widgetTitle.trim() !== ''">{{ state.widgetTitle }}</span>
-                        </h2>
-                    </div>
-                    <div class="preview-content" :class="{'preview-title-empty': !state.widgetTitle || state.widgetTitle.trim() === ''}">
-                        <div v-if="!state.iframeUrl" class="preview-empty">
-                            {{ t('iframewidget', 'No URL configured. Please set a URL in the Settings.') }}
+                            <span>{{ widget.title || t('iframewidget', 'Untitled Widget') }}</span>
                         </div>
-
-						<!-- CSP Error state - Shows helpful guidance when content is blocked by CSP -->
-						<div v-else-if="iframeError && state.iframeUrl" class="widget-error csp-error">
-							<div class="error-title">{{ t('iframewidget', 'Failed to load content') }}</div>
-							<p>{{ t('iframewidget', 'This might be caused by Content Security Policy (CSP) restrictions.') }}</p>
-							<div class="error-actions">
-								<a href="https://github.com/IT-BAER/nc-iframewidget#csp-configuration" target="_blank" class="button primary">
-									{{ t('iframewidget', 'View CSP Configuration Guide') }}
-								</a>
-							</div>
-						</div>
-						<iframe v-else
-								:src="state.iframeUrl"
-								class="preview-frame"
-								referrerpolicy="no-referrer"
-								@error="handleIframeError"
-								@load="iframeError = false"
-								sandbox="allow-same-origin allow-scripts allow-popups allow-forms">
-						</iframe>
+                        <div class="widget-actions">
+                            <button v-if="widget.enabled !== false" @click="togglePublicWidget(widget.id, false)" class="button small" title="Disable this widget">
+                                {{ t('iframewidget', 'Disable') }}
+                            </button>
+                            <button v-else @click="togglePublicWidget(widget.id, true)" class="button small button-success" title="Enable this widget">
+                                {{ t('iframewidget', 'Enable') }}
+                            </button>
+                            <button @click="editPublicWidget(widget)" class="button small">
+                                {{ t('iframewidget', 'Edit') }}
+                            </button>
+                            <button @click="deletePublicWidget(widget.id)" class="button small button-danger">
+                                {{ t('iframewidget', 'Delete') }}
+                            </button>
+                        </div>
+                    </div>
+                    <div class="widget-details">
+                        <p><strong>{{ t('iframewidget', 'URL:') }}</strong> {{ widget.url || t('iframewidget', 'Not set') }}</p>
+                        <p v-if="widget.extraWide"><strong>{{ t('iframewidget', 'Extra Wide') }}</strong></p>
                     </div>
                 </div>
+            </div>
+            <div v-else class="no-widgets-empty">
+                <p>{{ t('iframewidget', 'No public widgets configured yet.') }}</p>
             </div>
         </div>
 
@@ -157,7 +78,7 @@
         <div class="iframewidget-group-section">
             <h3>{{ t('iframewidget', 'Group-based iFrame Widgets') }}</h3>
             <p class="settings-hint">
-                {{ t('iframewidget', 'Create iFrame widgets that are only visible to specific user groups.') }}
+                {{ t('iframewidget', 'Create iFrame widgets that are only visible to specific user groups. Maximum 5 widgets per group.') }}
             </p>
 
             <!-- Add New Group Widget Button -->
@@ -173,23 +94,31 @@
                 <div v-for="(widgets, groupId) in groupedWidgets" :key="groupId" class="group-section">
                     <div class="group-header">
                         <h4>{{ getGroupDisplayName(groupId) }}</h4>
-                        <button @click="addWidgetToGroup(groupId)" class="button small">
+                        <button @click="addWidgetToGroup(groupId)" class="button small" :disabled="widgets.length >= 5">
                             {{ t('iframewidget', 'Add Widget') }}
                         </button>
                     </div>
                     <div class="widgets-in-group">
-                        <div v-for="widget in widgets" :key="widget.id" class="group-widget-item" :class="{ 'is-default': widget.isDefault }">
+                        <div v-for="widget in widgets" :key="widget.id" class="group-widget-item" :class="{ 'is-disabled': widget.enabled === false }">
                             <div class="widget-header">
                                 <div class="widget-title">
-                                    <span v-if="widget.isDefault" class="default-indicator" title="Shown widget">★</span>
+                                    <span class="slot-badge" :class="{ 'slot-disabled': widget.enabled === false }" :title="'Slot ' + widget.slot">
+                                        {{ widget.slot || '?' }}
+                                    </span>
+                                    <span v-if="widget.icon && widget.icon.startsWith('si:')" class="widget-icon-small">
+                                        <img :src="getIconUrl(widget.icon, widget.iconColor)" 
+                                             :alt="widget.icon" 
+                                             @error="handleIconError"
+                                             class="dashboard-icon-small">
+                                    </span>
                                     <span>{{ widget.title || t('iframewidget', 'Untitled Widget') }}</span>
                                 </div>
                                 <div class="widget-actions">
-                                    <button v-if="!widget.isDefault" @click="setAsDefault(widget.id)" class="button small" title="Show this widget to users">
-                                        {{ t('iframewidget', 'Show') }}
+                                    <button v-if="widget.enabled !== false" @click="toggleGroupWidget(widget.id, false)" class="button small" title="Disable this widget">
+                                        {{ t('iframewidget', 'Disable') }}
                                     </button>
-                                    <button v-if="widget.isDefault" @click="setAsDefault(widget.id)" class="button small button-secondary" title="Hide this widget from users">
-                                        {{ t('iframewidget', 'Hide') }}
+                                    <button v-else @click="toggleGroupWidget(widget.id, true)" class="button small button-success" title="Enable this widget">
+                                        {{ t('iframewidget', 'Enable') }}
                                     </button>
                                     <button @click="editGroupWidget(widget)" class="button small">
                                         {{ t('iframewidget', 'Edit') }}
@@ -201,13 +130,13 @@
                             </div>
                             <div class="widget-details">
                                 <p><strong>{{ t('iframewidget', 'URL:') }}</strong> {{ widget.url || t('iframewidget', 'Not set') }}</p>
-                                <p><strong>{{ t('iframewidget', 'Icon:') }}</strong> {{ widget.icon || t('iframewidget', 'Default') }}</p>
+                                <p v-if="widget.extraWide"><strong>{{ t('iframewidget', 'Extra Wide') }}</strong></p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div v-else class="no-group-widgets">
+            <div v-else class="no-widgets-empty">
                 <p>{{ t('iframewidget', 'No group widgets configured yet.') }}</p>
             </div>
         </div>
@@ -225,8 +154,11 @@
                         <label for="group-select">{{ t('iframewidget', 'Select Group') }}</label>
                         <select id="group-select" v-model="selectedGroupId" :disabled="isEditing">
                             <option value="">{{ t('iframewidget', 'Choose a group...') }}</option>
-                            <option v-for="group in availableGroups" :key="group.id" :value="group.id">
-                                {{ group.displayName || group.id }}
+                            <option v-for="group in availableGroups" 
+                                    :key="group.id" 
+                                    :value="group.id"
+                                    :disabled="isGroupFull(group.id)">
+                                {{ group.displayName || group.id }} {{ isGroupFull(group.id) ? t('iframewidget', '(Group Full - Max 5)') : '' }}
                             </option>
                         </select>
 
@@ -293,22 +225,21 @@
                             </label>
                         </div>
 
-                        <!-- Show Widget -->
-                        <label for="group-is-default" class="checkbox-label">
-                            {{ t('iframewidget', 'Show Widget') }}
-                        </label>
-                        <div class="checkbox-container">
-                            <label>
-                                <input id="group-is-default"
-                                    v-model="groupWidgetForm.isDefault" 
-                                    type="checkbox" 
-                                    class="checkbox"
-                                    :true-value="true"
-                                    :false-value="false">
-                                <span class="checkbox-icon"></span>
-                            </label>
-                            <small class="help-text">{{ t('iframewidget', 'Users in this group will see this widget by default') }}</small>
-                        </div>
+                        <!-- Sandbox Permissions -->
+                        <label for="group-iframe-sandbox">{{ t('iframewidget', 'Iframe Sandbox') }}</label>
+                        <input id="group-iframe-sandbox"
+                            v-model="groupWidgetForm.iframeSandbox"
+                            type="text"
+                            :placeholder="t('iframewidget', 'allow-same-origin allow-scripts allow-popups allow-forms')">
+
+                        <!-- Allow Permissions -->
+                        <label for="group-iframe-allow">{{ t('iframewidget', 'Iframe Allow') }}</label>
+                        <input id="group-iframe-allow"
+                            v-model="groupWidgetForm.iframeAllow"
+                            type="text"
+                            :placeholder="t('iframewidget', 'microphone; camera; geolocation')">
+
+                        <!-- Show Widget removed (now handled by Enable/Disable toggle in list) -->
                     </div>
                 </div>
 
@@ -350,7 +281,8 @@
                                     referrerpolicy="no-referrer"
                                     @error="handleGroupIframeError"
                                     @load="groupIframeError = false"
-                                    sandbox="allow-same-origin allow-scripts allow-popups allow-forms">
+                                    :sandbox="groupWidgetForm.iframeSandbox"
+                                    :allow="groupWidgetForm.iframeAllow">
                             </iframe>
                         </div>
                     </div>
@@ -362,6 +294,150 @@
                     </button>
                     <button @click="saveGroupWidget" class="button primary" :disabled="!selectedGroupId">
                         {{ isEditing ? t('iframewidget', 'Update') : t('iframewidget', 'Create') }}
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Public Widget Dialog -->
+        <div v-if="showPublicDialog" class="modal-overlay" @click="hidePublicDialog">
+            <div class="modal-content" @click.stop>
+                <div class="modal-header">
+                    <h3>{{ isEditingPublic ? t('iframewidget', 'Edit Public Widget') : t('iframewidget', 'Add Public Widget') }}</h3>
+                    <button @click="hidePublicDialog" class="modal-close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="iframewidget-grid-form">
+                        <!-- Widget Title -->
+                        <label for="public-widget-title">{{ t('iframewidget', 'Widget Title') }}</label>
+                        <input id="public-widget-title"
+                            v-model="publicWidgetForm.title"
+                            type="text"
+                            :placeholder="t('iframewidget', 'Public iFrame Widget')">
+
+                        <!-- Widget Icon -->
+                        <label for="public-widget-icon">{{ t('iframewidget', 'Widget Icon') }}
+							<span class="icon-finder">
+								- {{ t('iframewidget', 'Find icons at') }} 
+								<a href="https://simpleicons.org/" 
+								   target="_blank" 
+								   rel="noopener noreferrer">
+								   simpleicons.org
+								</a>
+							</span>
+                        </label>
+                        <div class="icon-input-container">
+                            <input id="public-widget-icon"
+                                v-model="publicWidgetForm.icon"
+                                type="text"
+                                :placeholder="t('iframewidget', 'si:nextcloud')">
+                            <input type="color"
+                                :value="publicWidgetForm.iconColor || '#ffffff'"
+                                @input="updatePublicColor"
+                                :disabled="!publicWidgetForm.icon || !publicWidgetForm.icon.startsWith('si:')"
+                                class="color-picker">
+                            <div class="color-button-container" :class="{'has-button': publicWidgetForm.iconColor && publicWidgetForm.iconColor !== ''}">
+                                <transition name="fade-scale">
+                                    <button v-if="publicWidgetForm.iconColor && publicWidgetForm.iconColor !== ''" 
+                                            type="button"
+                                            class="icon-delete icon-reset-color" 
+                                            @click="clearPublicColor"
+                                            :title="t('iframewidget', 'Reset color')">
+                                    </button>
+                                </transition>
+                            </div>
+                        </div>
+
+                        <!-- URL -->
+                        <label for="public-iframe-url">{{ t('iframewidget', 'URL to Display') }}</label>
+                        <input id="public-iframe-url"
+                            v-model="publicWidgetForm.url"
+                            type="text"
+                            :placeholder="t('iframewidget', 'https://example.org')">
+
+                        <!-- Extra Wide -->
+                        <label for="public-extra-wide" class="checkbox-label">
+                            {{ t('iframewidget', 'Extra Wide (2 Col)') }}
+                        </label>
+                        <div class="checkbox-container">
+                            <label>
+                                <input id="public-extra-wide"
+                                    v-model="publicWidgetForm.extraWide" 
+                                    type="checkbox" 
+                                    class="checkbox"
+                                    :true-value="true"
+                                    :false-value="false">
+                                <span class="checkbox-icon"></span>
+                            </label>
+                        </div>
+
+                        <!-- Sandbox Permissions -->
+                        <label for="public-iframe-sandbox">{{ t('iframewidget', 'Iframe Sandbox') }}</label>
+                        <input id="public-iframe-sandbox"
+                            v-model="publicWidgetForm.iframeSandbox"
+                            type="text"
+                            :placeholder="t('iframewidget', 'allow-same-origin allow-scripts allow-popups allow-forms')">
+
+                        <!-- Allow Permissions -->
+                        <label for="public-iframe-allow">{{ t('iframewidget', 'Iframe Allow') }}</label>
+                        <input id="public-iframe-allow"
+                            v-model="publicWidgetForm.iframeAllow"
+                            type="text"
+                            :placeholder="t('iframewidget', 'microphone; camera; geolocation')">
+                    </div>
+                </div>
+
+                <!-- Widget Preview -->
+                <div class="modal-preview-section">
+                    <h4 class="preview-title">{{ t('iframewidget', 'Widget Preview') }}</h4>
+                    <div class="preview-container" :style="{ width: publicWidgetForm.extraWide ? '640px' : '320px' }">
+                        <div class="preview-header" :class="{'preview-title-empty': !publicWidgetForm.title || publicWidgetForm.title.trim() === ''}">
+                            <h2>
+                                <span v-if="publicWidgetForm.icon && publicWidgetForm.title && publicWidgetForm.title.trim() !== ''"
+                                    class="widget-icon">
+                                    <img :src="getIconUrl(publicWidgetForm.icon, publicWidgetForm.iconColor)" 
+                                        :alt="publicWidgetForm.icon" 
+                                        @error="handleIconError"
+                                        class="dashboard-icon">
+                                </span>
+                                <span class="icon-iframewidget" v-else-if="publicWidgetForm.title && publicWidgetForm.title.trim() !== ''"></span>
+                                <span v-if="publicWidgetForm.title && publicWidgetForm.title.trim() !== ''">{{ publicWidgetForm.title }}</span>
+                            </h2>
+                        </div>
+                        <div class="preview-content" :class="{'preview-title-empty': !publicWidgetForm.title || publicWidgetForm.title.trim() === ''}">
+                            <div v-if="!publicWidgetForm.url" class="preview-empty">
+                                {{ t('iframewidget', 'No URL configured. Please set a URL in the Settings.') }}
+                            </div>
+
+                            <!-- CSP Error state -->
+                            <div v-else-if="publicIframeError && publicWidgetForm.url" class="widget-error csp-error">
+                                <div class="error-title">{{ t('iframewidget', 'Failed to load content') }}</div>
+                                <p>{{ t('iframewidget', 'This might be caused by Content Security Policy (CSP) restrictions.') }}</p>
+                                <div class="error-actions">
+                                    <a href="https://github.com/IT-BAER/nc-iframewidget#csp-configuration" target="_blank" class="button primary">
+                                        {{ t('iframewidget', 'View CSP Configuration Guide') }}
+                                    </a>
+                                </div>
+                            </div>
+                            <iframe v-else
+                                    :src="publicWidgetForm.url"
+                                    class="preview-frame"
+                                    referrerpolicy="no-referrer"
+                                    @error="handlePublicIframeError"
+                                    @load="publicIframeError = false"
+                                    :sandbox="publicWidgetForm.iframeSandbox"
+                                    :allow="publicWidgetForm.iframeAllow">
+                            </iframe>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button @click="hidePublicDialog" class="button">
+                        {{ t('iframewidget', 'Cancel') }}
+                    </button>
+                    <button @click="savePublicWidget" class="button primary">
+                        {{ isEditingPublic ? t('iframewidget', 'Update') : t('iframewidget', 'Create') }}
                     </button>
                 </div>
             </div>
@@ -395,6 +471,7 @@ export default {
             : { ...defaultState };
 
         return {
+            appVersion: typeof APP_VERSION !== 'undefined' ? APP_VERSION : '0.0.0',
             state: state,
             typedUrl: '',
             typedIcon: '',
@@ -403,6 +480,20 @@ export default {
             loading: false,
             isLoading: false,
             iframeError: false,
+            // Public widget management data
+            publicWidgets: [],
+            showPublicDialog: false,
+            isEditingPublic: false,
+            editingPublicWidgetId: '',
+            publicWidgetForm: {
+                id: '',
+                title: '',
+                icon: '',
+                iconColor: '',
+                url: '',
+                extraWide: false
+            },
+            publicIframeError: false,
             // Group management data
             groupWidgets: [],
             availableGroups: [],
@@ -416,8 +507,7 @@ export default {
                 icon: '',
                 iconColor: '',
                 url: '',
-                extraWide: false,
-                isDefault: false
+                extraWide: false
             },
             // Component lifecycle management
             componentMounted: false,
@@ -448,6 +538,14 @@ export default {
                 grouped[widget.groupId].push(widget);
             });
             return grouped;
+        },
+
+        /**
+         * Public widgets sorted by slot number
+         * @returns {Array} Sorted public widgets
+         */
+        publicWidgetsSorted() {
+            return [...this.publicWidgets].sort((a, b) => (a.slot || 0) - (b.slot || 0));
         },
         
         /**
@@ -511,15 +609,15 @@ export default {
             this.componentMounted = true;
         });
     },
-	beforeDestroy() {
-		if (this.urlUpdateTimer) {
-			clearTimeout(this.urlUpdateTimer);
-		}
-		if (this.iconUpdateTimer) {
-			clearTimeout(this.iconUpdateTimer);
-		}
+    beforeDestroy() {
+        if (this.urlUpdateTimer) {
+            clearTimeout(this.urlUpdateTimer);
+        }
+        if (this.iconUpdateTimer) {
+            clearTimeout(this.iconUpdateTimer);
+        }
         window.removeEventListener('securitypolicyviolation', this.handleCSPViolation);
-	},
+    },
 
     watch: {
         'state.iframeUrl': function(newUrl, oldUrl) {
@@ -541,6 +639,28 @@ export default {
     },
 
     methods: {
+        /**
+         * Validate if a URL is valid and starts with http:// or https://
+         */
+        isValidUrl(url) {
+            if (!url) return false;
+            const trimmedUrl = url.trim();
+            return trimmedUrl.toLowerCase().startsWith('http://') || trimmedUrl.toLowerCase().startsWith('https://');
+        },
+
+        /**
+         * Check if a group has reached its maximum widget limit (5)
+         * @param {string} groupId Group ID to check
+         * @returns {boolean} True if group is full
+         */
+        isGroupFull(groupId) {
+            // Don't disable the group if we're currently editing a widget from that group
+            if (this.isEditing && this.selectedGroupId === groupId) {
+                return false;
+            }
+            const widgets = this.groupedWidgets[groupId] || [];
+            return widgets.length >= 5;
+        },
     
         /**
         * Handle color picker changes
@@ -831,6 +951,7 @@ export default {
          * Load group widgets and available groups
          */
         loadGroupData() {
+            this.loadPublicWidgets();
             this.loadGroupWidgets();
             this.loadAvailableGroups();
         },
@@ -868,6 +989,188 @@ export default {
                     this.availableGroups = [];
                 });
         },
+
+        // ============ Public Widget Methods ============
+
+        /**
+         * Load configured public widgets
+         */
+        loadPublicWidgets() {
+            const url = generateUrl('/apps/iframewidget/public-widgets');
+            axios.get(url)
+                .then(response => {
+                    this.publicWidgets = response.data || [];
+                    this.$forceUpdate();
+                })
+                .catch(error => {
+                    console.error('Failed to load public widgets:', error);
+                    this.publicWidgets = [];
+                });
+        },
+
+        /**
+         * Show add public widget dialog
+         */
+        showAddPublicDialog() {
+            this.isEditingPublic = false;
+            this.editingPublicWidgetId = '';
+            this.publicWidgetForm = {
+                id: '',
+                title: '',
+                icon: '',
+                iconColor: '',
+                url: '',
+                extraWide: false,
+                iframeSandbox: 'allow-same-origin allow-scripts allow-popups allow-forms',
+                iframeAllow: ''
+            };
+            this.publicIframeError = false;
+            this.showPublicDialog = true;
+        },
+
+        /**
+         * Hide public widget dialog
+         */
+        hidePublicDialog() {
+            this.showPublicDialog = false;
+            this.isEditingPublic = false;
+            this.editingPublicWidgetId = '';
+        },
+
+        /**
+         * Edit existing public widget
+         */
+        editPublicWidget(widget) {
+            this.isEditingPublic = true;
+            this.editingPublicWidgetId = widget.id;
+            this.publicWidgetForm = {
+                id: widget.id,
+                slot: widget.slot,
+                title: widget.title || '',
+                icon: widget.icon || '',
+                iconColor: widget.iconColor || '',
+                url: widget.url || '',
+                extraWide: widget.extraWide === 'true' || widget.extraWide === true,
+                iframeSandbox: widget.iframeSandbox || 'allow-same-origin allow-scripts allow-popups allow-forms',
+                iframeAllow: widget.iframeAllow || ''
+            };
+            this.publicIframeError = false;
+            this.showPublicDialog = true;
+        },
+
+        /**
+         * Save public widget
+         */
+        savePublicWidget() {
+            if (!this.isValidUrl(this.publicWidgetForm.url)) {
+                showError(t('iframewidget', 'Invalid URL. Must start with http:// or https://'));
+                return;
+            }
+
+            const url = generateUrl('/apps/iframewidget/public-widgets');
+            const data = {
+                id: this.editingPublicWidgetId || undefined,
+                slot: this.publicWidgetForm.slot,
+                ...this.publicWidgetForm
+            };
+
+            axios.post(url, data, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'requesttoken': OC.requestToken,
+                    'OCS-APIRequest': 'true',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+                .then(response => {
+                    showSuccess(t('iframewidget', 'Public widget saved'));
+                    this.hidePublicDialog();
+                    setTimeout(() => {
+                        this.loadPublicWidgets();
+                    }, 500);
+                })
+                .catch(error => {
+                    showError(t('iframewidget', 'Could not save public widget'));
+                    console.error(error);
+                });
+        },
+
+        /**
+         * Delete public widget
+         */
+        deletePublicWidget(widgetId) {
+            if (!confirm(t('iframewidget', 'Are you sure you want to delete this public widget?'))) {
+                return;
+            }
+
+            const url = generateUrl('/apps/iframewidget/public-widgets/' + encodeURIComponent(widgetId));
+            axios.delete(url)
+                .then(() => {
+                    showSuccess(t('iframewidget', 'Public widget deleted'));
+                    this.loadPublicWidgets();
+                })
+                .catch(error => {
+                    showError(t('iframewidget', 'Could not delete public widget'));
+                    console.error(error);
+                });
+        },
+
+        /**
+         * Toggle public widget enabled state
+         */
+        togglePublicWidget(widgetId, enabled) {
+            const widget = this.publicWidgets.find(w => w.id === widgetId);
+            if (!widget) return;
+
+            const url = generateUrl('/apps/iframewidget/public-widgets');
+            const data = {
+                ...widget,
+                enabled: enabled
+            };
+
+            axios.post(url, data, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'requesttoken': OC.requestToken,
+                    'OCS-APIRequest': 'true',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+                .then(() => {
+                    showSuccess(t('iframewidget', enabled ? 'Widget enabled' : 'Widget disabled'));
+                    this.loadPublicWidgets();
+                })
+                .catch(error => {
+                    showError(t('iframewidget', 'Could not update widget'));
+                    console.error(error);
+                });
+        },
+
+        /**
+         * Handle public widget color picker changes
+         */
+        updatePublicColor(event) {
+            this.publicWidgetForm.iconColor = event.target.value;
+            this.$forceUpdate();
+        },
+
+        /**
+         * Clear public widget icon color
+         */
+        clearPublicColor() {
+            this.publicWidgetForm.iconColor = '';
+            this.$forceUpdate();
+        },
+
+        /**
+         * Handle errors loading public widget iframe content
+         */
+        handlePublicIframeError(event) {
+            console.warn('Failed to load public widget iframe content: ', event);
+            this.publicIframeError = true;
+        },
+
+        // ============ Group Widget Methods ============
         
         /**
          * Show add group widget dialog
@@ -884,7 +1187,8 @@ export default {
                 url: '',
                 height: '',
                 extraWide: false,
-                isDefault: false
+                iframeSandbox: 'allow-same-origin allow-scripts allow-popups allow-forms',
+                iframeAllow: ''
             };
             this.groupIframeError = false;
             this.showGroupDialog = true;
@@ -915,7 +1219,8 @@ export default {
                 url: widget.url || '',
                 height: widget.height || '',
                 extraWide: widget.extraWide === 'true' || widget.extraWide === true,
-                isDefault: widget.isDefault || false
+                iframeSandbox: widget.iframeSandbox || 'allow-same-origin allow-scripts allow-popups allow-forms',
+                iframeAllow: widget.iframeAllow || ''
             };
             this.groupIframeError = false;
             this.showGroupDialog = true;
@@ -925,6 +1230,11 @@ export default {
          * Save group widget
          */
         saveGroupWidget() {
+            if (!this.isValidUrl(this.groupWidgetForm.url)) {
+                showError(t('iframewidget', 'Invalid URL. Must start with http:// or https://'));
+                return;
+            }
+
             if (!this.selectedGroupId) {
                 showError(t('iframewidget', 'Please select a group'));
                 return;
@@ -984,6 +1294,37 @@ export default {
                     console.error(error);
                 });
         },
+
+        /**
+         * Toggle group widget enabled state
+         */
+        toggleGroupWidget(widgetId, enabled) {
+            const widget = this.groupWidgets.find(w => w.id === widgetId);
+            if (!widget) return;
+
+            const url = generateUrl('/apps/iframewidget/group-widgets');
+            const data = {
+                ...widget,
+                enabled: enabled
+            };
+
+            axios.post(url, data, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'requesttoken': OC.requestToken,
+                    'OCS-APIRequest': 'true',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+                .then(() => {
+                    showSuccess(t('iframewidget', enabled ? 'Widget enabled' : 'Widget disabled'));
+                    this.loadGroupWidgets();
+                })
+                .catch(error => {
+                    showError(t('iframewidget', 'Could not update widget'));
+                    console.error(error);
+                });
+        },
         
         /**
          * Handle group widget color picker changes
@@ -1020,60 +1361,14 @@ export default {
                 url: '',
                 height: '',
                 extraWide: false,
-                isDefault: false
+                iframeSandbox: 'allow-same-origin allow-scripts allow-popups allow-forms',
+                iframeAllow: ''
             };
             this.groupIframeError = false;
             this.showGroupDialog = true;
         },
 
         /**
-         * Set a widget as the default for its group
-         */
-        setAsDefault(widgetId) {
-            // Find the widget in the groupWidgets array
-            let widgetToUpdate = null;
-            for (const groupWidgets of Object.values(this.groupedWidgets)) {
-                widgetToUpdate = groupWidgets.find(widget => widget.id === widgetId);
-                if (widgetToUpdate) break;
-            }
-
-            if (!widgetToUpdate) {
-                showError(t('iframewidget', 'Widget not found'));
-                return;
-            }
-
-            const url = generateUrl('/apps/iframewidget/group-widgets');
-            const data = {
-                id: widgetId,
-                groupId: widgetToUpdate.groupId,
-                title: widgetToUpdate.title || '',
-                icon: widgetToUpdate.icon || '',
-                iconColor: widgetToUpdate.iconColor || '',
-                url: widgetToUpdate.url || '',
-                height: widgetToUpdate.height || '',
-                extraWide: widgetToUpdate.extraWide || false,
-                isDefault: !widgetToUpdate.isDefault // Toggle the current state
-            };
-
-            axios.post(url, data, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'requesttoken': OC.requestToken,
-                    'OCS-APIRequest': 'true',
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-                .then(() => {
-                    const action = !widgetToUpdate.isDefault ? 'shown' : 'hidden';
-                    showSuccess(t('iframewidget', `Widget ${action} from users`));
-                    this.loadGroupWidgets();
-                })
-                .catch(error => {
-                    const action = !widgetToUpdate.isDefault ? 'show' : 'hide';
-                    showError(t('iframewidget', `Could not ${action} widget from users`));
-                    console.error(error);
-                });
-        },
 
         /**
          * Get display name for a group
@@ -1616,13 +1911,7 @@ input[type="color"]::-moz-color-swatch {
     margin-top: 20px;
 }
 
-.group-widget-item {
-    border: 1px solid var(--color-border);
-    border-radius: var(--border-radius);
-    padding: 15px;
-    margin-bottom: 15px;
-    background-color: var(--color-main-background);
-}
+
 
 .group-widget-header {
     display: flex;
@@ -1821,6 +2110,188 @@ input[type="color"]::-moz-color-swatch {
         width: 100% !important;
         max-width: 320px;
     }
+}
+
+/* Public widgets list styles */
+.public-widgets-list {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.public-widget-item {
+    background: var(--color-background-dark);
+    border-radius: var(--border-radius-large);
+    padding: 12px 16px;
+    border: 1px solid var(--color-border);
+}
+
+.public-widget-item .widget-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.public-widget-item .widget-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+}
+
+.public-widget-item .widget-details {
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--color-text-maxcontrast);
+}
+
+.public-widget-item .widget-details p {
+    margin: 4px 0;
+}
+
+.slot-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+    background: var(--color-primary-element);
+    color: var(--color-primary-text);
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.widget-icon-small {
+    display: inline-flex;
+    align-items: center;
+}
+
+.dashboard-icon-small {
+    width: 20px;
+    height: 20px;
+}
+
+.no-widgets-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    text-align: center;
+    color: var(--color-text-maxcontrast);
+    background: var(--color-background-dark);
+    border-radius: var(--border-radius-large);
+    border: 1px dashed var(--color-border);
+    margin: 10px 0;
+}
+
+.no-widgets-empty p {
+    margin: 0;
+    font-size: 15px;
+}
+
+.limit-warning {
+    margin-left: 10px;
+    color: var(--color-warning);
+    font-size: 13px;
+}
+
+/* Group widgets list styles */
+.group-widgets-list {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.group-section {
+    background: transparent;
+    border-radius: var(--border-radius-large);
+    padding: 0;
+    border: none;
+}
+
+.group-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 8px 12px;
+    background: var(--color-background-hover);
+    border-radius: var(--border-radius);
+}
+
+.group-header h4 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.widgets-in-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.group-widget-item {
+    background: var(--color-background-dark);
+    border-radius: var(--border-radius-large);
+    padding: 12px 16px;
+    border: 1px solid var(--color-border);
+}
+
+.group-widget-item.is-disabled {
+    opacity: 0.6;
+}
+
+.group-widget-item .widget-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.group-widget-item .widget-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+}
+
+.group-widget-item .widget-details {
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--color-text-maxcontrast);
+}
+
+.group-widget-item .widget-details p {
+    margin: 4px 0;
+}
+
+/* The .no-group-widgets class is now handled by .no-widgets-empty */
+
+/* Disabled state for widgets */
+.public-widget-item.is-disabled,
+.group-widget-item.is-disabled {
+    opacity: 0.6;
+}
+
+/* Slot badge disabled state */
+.slot-badge.slot-disabled {
+    background: var(--color-text-maxcontrast);
+}
+
+/* Success button for Enable action */
+.button-success {
+    background-color: var(--color-success) !important;
+    border-color: var(--color-success) !important;
+    color: white !important;
+}
+
+.button-success:hover {
+    background-color: var(--color-success-hover) !important;
 }
 
 </style>

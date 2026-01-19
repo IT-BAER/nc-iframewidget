@@ -2,6 +2,7 @@ const path = require('path')
 const webpack = require('webpack')
 const webpackConfig = require('@nextcloud/webpack-vue-config')
 const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
+const packageJson = require('./package.json')
 
 // Define entry points for the application
 webpackConfig.entry = {
@@ -36,6 +37,13 @@ webpackConfig.plugins.push(
     new webpack.ProvidePlugin({
         process: 'process/browser',
         Buffer: ['buffer', 'Buffer']
+    })
+)
+
+// Define app version from package.json (available as APP_VERSION in code)
+webpackConfig.plugins.push(
+    new webpack.DefinePlugin({
+        APP_VERSION: JSON.stringify(packageJson.version)
     })
 )
 

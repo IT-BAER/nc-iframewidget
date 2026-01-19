@@ -1,6 +1,6 @@
 {
 	"name": "iframewidget",
-	"version": "0.8.6",
+	"version": "0.9.0",
 	"description": "iFrame Widget for Nextcloud Dashboard",
 	"main": "index.js",
 	"scripts": {
@@ -10,7 +10,15 @@
 		"lint": "eslint --ext .js,.vue src",
 		"lint:fix": "eslint --ext .js,.vue src --fix",
 		"stylelint": "stylelint src/**/*.vue src/**/*.scss src/**/*.css",
-		"stylelint:fix": "stylelint src/**/*.vue src/**/*.scss src/**/*.css --fix"
+		"stylelint:fix": "stylelint src/**/*.vue src/**/*.scss src/**/*.css --fix",
+		"version:sync": "node scripts/sync-version.js",
+		"version:sync:from-xml": "node scripts/sync-version.js --from-xml",
+		"version:show": "node scripts/sync-version.js --show",
+		"version:bump": "node scripts/sync-version.js --bump-patch",
+		"version:bump:minor": "node scripts/sync-version.js --bump-minor",
+		"version:bump:major": "node scripts/sync-version.js --bump-major",
+		"prebuild": "node scripts/sync-version.js",
+		"predev": "node scripts/sync-version.js"
 	},
 	"repository": {
 		"type": "git",
@@ -28,10 +36,10 @@
 	"homepage": "https://github.com/IT-BAER/nc-iframewidget",
 	"dependencies": {
 		"@nextcloud/axios": "^2.5.1",
-		"@nextcloud/dialogs": "^5.3.6",
+		"@nextcloud/dialogs": "^5.3.8",
 		"@nextcloud/initial-state": "^2.2.0",
 		"@nextcloud/router": "^3.0.1",
-		"@nextcloud/vue": "^8.23.1",
+		"@nextcloud/vue": "^8.35.2",
 		"brace-expansion": ">=2.0.2",
 		"form-data": ">=4.0.4",
 		"pbkdf2": ">=3.1.3",
@@ -53,7 +61,7 @@
 		"style-loader": "^4.0.0",
 		"vue-loader": "^15.10.1",
 		"vue-template-compiler": "^2.7.16",
-		"webpack": "^5.98.0",
+		"webpack": "^5.104.0",
 		"webpack-cli": "^6.0.1",
 		"brace-expansion": ">=2.0.2",
 		"pbkdf2": ">=3.1.3"

@@ -1,7 +1,7 @@
 <template>
     <div class="iframewidget-container" 
          :style="{ visibility: configLoaded ? 'visible' : 'hidden' }"
-         data-widget-id="iframewidget">
+         :data-widget-id="widgetId">
     
         <!-- Loading state -->
         <div v-if="loading" class="widget-loading">
@@ -29,7 +29,8 @@
 					referrerpolicy="no-referrer"
 					@error="handleIframeError"
 					@load="iframeError = false"
-					sandbox="allow-same-origin allow-scripts allow-popups allow-forms">
+					:sandbox="config.iframeSandbox"
+					:allow="config.iframeAllow">
 			</iframe>
 		</div>
 
@@ -54,31 +55,48 @@ import { loadState } from '@nextcloud/initial-state'
 
 export default {
     name: 'DashboardWidget',
+    props: {
+        slotNumber: {
+            type: Number,
+            default: 1
+        }
+    },
     data() {
+        // Load initial state based on slot number
+        const stateKey = this.slotNumber === 1 ? 'widget-config' : `widget-config-${this.slotNumber}`
         return {
             loading: true,
             configLoaded: false,
             isLoading: false,
             error: false,
-        	iframeError: false,
-            config: loadState('iframewidget', 'widget-config') || {
+            iframeError: false,
+            config: loadState('iframewidget', stateKey) || {
+                slotNumber: this.slotNumber,
                 extraWide: false,
                 widgetTitle: 'iFrame Widget',
                 widgetIcon: '',
                 widgetIconColor: '',
-                iframeUrl: 'https://example.org'
+                iframeUrl: '',
+                iframeSandbox: 'allow-same-origin allow-scripts allow-popups allow-forms',
+                iframeAllow: ''
             },
             observer: null
         }
     },
     computed: {
+        /**
+         * Widget ID based on slot number
+         */
+        widgetId() {
+            return this.slotNumber === 1 ? 'iframewidget' : `iframewidget-${this.slotNumber}`
+        },
     
-    	/**
-    	 * Quick link to the Widget Admin Settings
-    	 */
-    	adminSettingsUrl() {
-        	return OC.generateUrl('/settings/admin/iframewidget');
-    	},
+        /**
+         * Quick link to the Widget Admin Settings
+         */
+        adminSettingsUrl() {
+            return OC.generateUrl('/settings/admin/iframewidget');
+        },
     
         /**
          * Determine if widget should be displayed in extra wide mode
@@ -187,7 +205,7 @@ export default {
             const parentPanel = this.$el.closest('.panel');
             if (parentPanel) {
                 // Set the widget ID first before applying any classes
-                parentPanel.setAttribute('data-widget-id', 'iframewidget');
+                parentPanel.setAttribute('data-widget-id', this.widgetId);
                 
                 // Handle extra-wide setting with fixed width of 640px (double the standard 320px)
                 if (this.isExtraWide) {

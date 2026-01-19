@@ -98,7 +98,9 @@ class PersonalIframeWidget implements IWidget {
             'widgetIcon' => $widgetIcon,
             'widgetIconColor' => $widgetIconColor,
             'iframeUrl' => $iframeUrl,
-            'iframeHeight' => $iframeHeight ?: '0' // Use 0 for auto/100% height
+            'iframeHeight' => $iframeHeight ?: '0', // Use 0 for auto/100% height
+            'iframeSandbox' => $this->config->getUserValue($userId, Application::APP_ID, 'personal_iframe_sandbox', 'allow-same-origin allow-scripts allow-popups allow-forms'),
+            'iframeAllow' => $this->config->getUserValue($userId, Application::APP_ID, 'personal_iframe_allow', '')
         ];
         
         // Provide initial state

@@ -8,7 +8,7 @@
                     <img src="../../img/baer4-100x100.png" alt="Logo" class="iframewidget-logo-image">
                 </a>
                 <a href="https://github.com/IT-BAER/nc-iframewidget/releases" target="_blank" rel="noopener noreferrer" class="version-link">
-                    <span class="iframewidget-version">v0.8.5</span>
+                    <span class="iframewidget-version">v{{ appVersion }}</span>
                 </a>
             </div>
         </div>
@@ -88,9 +88,6 @@
                         :placeholder="t('iframewidget', '100%')">
 
                     <!-- Extra Wide Toggle -->
-                    <label for="personal-extra-wide" class="checkbox-label">
-                        {{ t('iframewidget', 'Extra Wide (2 Col)') }}
-                    </label>
                     <div class="checkbox-container">
                         <label>
                             <input id="personal-extra-wide"
@@ -100,6 +97,20 @@
                             <span class="checkbox-icon"></span>
                         </label>
                     </div>
+
+                    <!-- Sandbox Permissions -->
+                    <label for="personal-iframe-sandbox">{{ t('iframewidget', 'Iframe Sandbox') }}</label>
+                    <input id="personal-iframe-sandbox"
+                        v-model="state.iframeSandbox"
+                        type="text"
+                        :placeholder="t('iframewidget', 'allow-same-origin allow-scripts allow-popups allow-forms')">
+
+                    <!-- Allow Permissions -->
+                    <label for="personal-iframe-allow">{{ t('iframewidget', 'Iframe Allow') }}</label>
+                    <input id="personal-iframe-allow"
+                        v-model="state.iframeAllow"
+                        type="text"
+                        :placeholder="t('iframewidget', 'microphone; camera; geolocation')">
                 </div>
 
                 <!-- Save Button -->
@@ -152,7 +163,8 @@
                                 referrerpolicy="no-referrer"
                                 @error="handleIframeError"
                                 @load="iframeError = false"
-                                sandbox="allow-same-origin allow-scripts allow-popups allow-forms">
+                                :sandbox="state.iframeSandbox"
+                                :allow="state.iframeAllow">
                         </iframe>
                     </div>
                 </div>
@@ -172,6 +184,7 @@ export default {
     name: 'PersonalSettings',
     data() {
         return {
+            appVersion: typeof APP_VERSION !== 'undefined' ? APP_VERSION : '0.0.0',
             state: {
                 widgetTitle: '',
                 widgetIcon: '',
@@ -179,6 +192,8 @@ export default {
                 iframeUrl: '',
                 iframeHeight: '',
                 extraWide: false,
+                iframeSandbox: 'allow-same-origin allow-scripts allow-popups allow-forms',
+                iframeAllow: '',
             },
             saving: false,
             typedIcon: '',
@@ -266,6 +281,15 @@ export default {
         window.removeEventListener('securitypolicyviolation', this.handleCSPViolation);
     },
     methods: {
+        /**
+         * Validate if a URL is valid and starts with http:// or https://
+         */
+        isValidUrl(url) {
+            if (!url) return false;
+            const trimmedUrl = url.trim();
+            return trimmedUrl.toLowerCase().startsWith('http://') || trimmedUrl.toLowerCase().startsWith('https://');
+        },
+
         updateColor(event) {
             this.state.widgetIconColor = event.target.value;
             // Update the icon preview immediately
@@ -366,6 +390,11 @@ export default {
             this.$forceUpdate();
         },
         async saveSettings() {
+            if (!this.isValidUrl(this.state.iframeUrl)) {
+                showError(t('iframewidget', 'Invalid URL. Must start with http:// or https://'));
+                return;
+            }
+
             this.saving = true;
             try {
                 await axios.post(generateUrl('/apps/iframewidget/personal-settings'), this.state)

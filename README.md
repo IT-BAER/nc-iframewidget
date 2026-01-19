@@ -6,7 +6,7 @@
 ![License](https://img.shields.io/github/license/it-baer/nc-iframewidget?color=blue)
 ![GitHub stars](https://img.shields.io/github/stars/it-baer/nc-iframewidget?style=social)
 
-**Display external websites directly in your Nextcloud dashboard with this customizable widget**
+**Display external websites directly in your Nextcloud dashboard with customizable widgets**
 
 <img src="https://github.com/user-attachments/assets/86405272-4543-4f3d-b861-30c49ea0d414"/>
 
@@ -14,248 +14,241 @@
 
 ## ✨ Features
 
-- 🌐 Embed any website in your Nextcloud dashboard
-- 🔤 Customizable widget title
-- 🎨 Support for custom icons using [Simple Icons](https://simpleicons.org/) with the `si:` prefix
-- 🎭 Custom icon coloring
-- 📏 Adjustable iframe height
-- 🖥️ Extra-wide display option (2 columns)
-- 🎯 Clean, responsive design that integrates with Nextcloud themes
-- 👤 Separate Personal and Public iFrame Widgets
-- 👥 **NEW:** Group-based iFrame Widgets (admin-configured, group-specific)
-- 🌍 Multi-language support with translations
+- **Embed any website** in your Nextcloud dashboard using iframes
+- **Multiple widget types**: Public (admin-configured), Personal (user-configured), and Group-based widgets
+- **5 public widget slots** for admin-configured widgets visible to all users
+- **5 group widget slots** for group-specific content delivery
+- **1 personal widget** per user for individual customization
+- **Custom icons** via [Simple Icons](https://simpleicons.org/) using `si:` prefix (3000+ brand icons)
+- **Icon color picker** for custom icon colors
+- **Adjustable iframe height** or automatic sizing
+- **Extra-wide display** option (spans 2 dashboard columns)
+- **Configurable iframe security** with sandbox and allow attribute customization
+- **Hide widget header** by leaving title empty
+- **Multi-language support** with 15 translations
 
+## 🚀 Roadmap
 
-## 🚀 TODO
-
-- 3-Column Size
-- Refresh Button (or Refresh Timer Option)
-- Add missing Translations
-- Enhanced Widget Management (Drag&Drop, modernized UI, Categories)
+Future planned features:
+- 3-column widget size option
+- Refresh button and auto-refresh timer
+- Additional language translations
+- Enhanced widget management UI (drag & drop, categories)
 
 ## 📸 Screenshots
 
 <div align="center">
 
-🖥️ Widget in Dashboard
+**Widget in Dashboard**
 
-<br>
+<img width="1318" height="680" alt="Dashboard view with iFrame widgets" src="https://github.com/user-attachments/assets/471d5bb0-9478-41ec-93f1-a6e70aaea351" />
 
-<img width="1318" height="680" alt="image" src="https://github.com/user-attachments/assets/471d5bb0-9478-41ec-93f1-a6e70aaea351" />
+<br><br>
 
-The iFrame Widget provides three types of widgets: admin/public, personal, and group-based configuration options, allowing administrators to set up shared widgets for all users, enable individual users to create their own personalized widgets, and create group-specific widgets that are only visible to members of selected user groups.
-
-<br>
-
-⚙️ Admin Settings
-<br>
+**Admin Settings**
 
 <img src="nc-iframewidget-settings.png"/>
+
 </div>
-
-
 
 ## ⚙️ Configuration
 
-### 👥 Admin/Public Widget Settings
+### Admin/Public Widgets
 
-Access the administrator settings from:
+Configure public widgets from **Settings → Administration → iFrame Widget**:
 
-1. Settings → Administration → iFrame Widget
-2. Configure the following options:
-   - **🔤 Widget Title**: Set a custom title (or leave empty to hide the header)
-   - **🎨 Widget Icon**: Enter an icon name with `si:` prefix (e.g., `si:github`)
-   - **🎭 Icon Color**: Choose a custom color for the icon
-   - **🌐 URL to Display**: The website URL to embed
-   - **📏 iFrame Height**: Set a fixed height or use 100% (default)
-   - **🖥️ Extra Wide**: Toggle to span two dashboard columns
+| Setting | Description |
+|---------|-------------|
+| Widget Title | Display title (leave empty to hide header) |
+| Widget Icon | Icon using `si:` prefix (e.g., `si:github`) |
+| Icon Color | Custom hex color for the icon |
+| URL to Display | The website URL to embed |
+| iFrame Height | Fixed height in pixels or auto (default) |
+| iFrame Sandbox | Security sandbox attributes for the iframe |
+| iFrame Allow | Feature policy (e.g., `microphone camera fullscreen`) |
+| Extra Wide | Span two dashboard columns |
 
-These settings apply to the public widget that appears on all users' dashboards.
+Public widgets appear on all users' dashboards.
 
-### 👤 Personal Widget Settings
+### Personal Widget
 
-Each user can configure their own personal iFrame widget:
+Each user can configure their own widget from **Settings → Personal → iFrame Widget**:
 
-1. Settings → Personal → iFrame Widget
-2. Configure the following options:
-   - **🔤 Widget Title**: Set a custom title for your personal widget
-   - **🎨 Widget Icon**: Choose your preferred icon with `si:` prefix
-   - **🎭 Icon Color**: Set a custom color for your widget icon
-   - **🌐 URL to Display**: Add your personal website URL to embed
-   - **📏 iFrame Height**: Adjust the height to fit your needs
-   - **🖥️ Extra Wide**: Enable for a wider widget view
+- Same configuration options as public widgets
+- Visible only to the user who configured it
+- Independent from admin-configured widgets
 
-Personal widgets are visible only to the user who configured them and don't affect other users.
+### Group Widgets
 
-### 👥 Group-based Widget Settings
+Create widgets for specific user groups from **Settings → Administration → iFrame Widget**:
 
-Administrators can create iFrame widgets that are only visible to specific user groups:
+1. Scroll to "Group-based iFrame Widgets" section
+2. Select a group from the dropdown
+3. Configure widget settings (same options as public widgets)
+4. Save to make the widget visible to group members
 
-1. Settings → Administration → iFrame Widget
-2. Scroll down to the "Group-based iFrame Widgets" section
-3. Click "Add Group Widget" to create a new group-specific widget
-4. Configure the following options:
-   - **👥 Select Group**: Choose which user group should see this widget
-   - **🔤 Widget Title**: Set a custom title for the group widget
-   - **🎨 Widget Icon**: Choose an icon with `si:` prefix
-   - **🎭 Icon Color**: Set a custom color for the widget icon
-   - **🌐 URL to Display**: Add the website URL to embed for this group
-   - **📏 iFrame Height**: Adjust the height for the group widget
-   - **🖥️ Extra Wide**: Enable for a wider widget view
+You can configure up to 5 group widgets. Each widget can target a different user group.
 
-Group widgets are visible only to users who are members of the selected group. You can create multiple group widgets for different groups, and users can be members of multiple groups to see multiple group widgets.
+## 🎰 Widget Slots
 
-## ⚠️ Current Limitations
+The app provides a slot-based architecture:
 
-**Important Notes on Group Widget Functionality:**
+| Widget Type | Slots Available | Visibility |
+|-------------|-----------------|------------|
+| Public | 5 slots | All users |
+| Group | 5 slots | Members of selected group |
+| Personal | 1 slot per user | Individual user only |
 
-- **🔸 Single Widget Per Group**: Currently, only **one widget can be shown per group** at a time. If multiple widgets are configured for the same group, only the one marked as "shown" will be visible to group members.
-- **👤 Single Widget Per User**: Each user can only see **one group widget** at a time, even if they belong to multiple groups. The system prioritizes the first group widget they are eligible for.
-- **🔄 No Multi-Group Support**: Users cannot see multiple group widgets simultaneously - only one group widget is displayed per user.
-
-These limitations are planned to be addressed in future updates. See the TODO List.
+Users can enable any combination of these widgets on their dashboard using the "+" customization button.
 
 ## 🎨 Icon System
 
-This widget uses Simple Icons for custom icons:
+This widget uses [Simple Icons](https://simpleicons.org/) for brand icons:
 
-`si:iconname`
+```
+si:iconname
+```
 
-For example:
+Examples:
+- `si:github` - GitHub icon
+- `si:youtube` - YouTube icon  
+- `si:nextcloud` - Nextcloud icon
+- `si:slack` - Slack icon
 
-- `si:github` - <img src="https://cdn.simpleicons.org/github/grey" width="16" height="16" style="vertical-align: middle"> GitHub icon
-- `si:youtube` - <img src="https://cdn.simpleicons.org/youtube" width="16" height="16" style="vertical-align: middle"> YouTube icon
-- `si:nextcloud` - <img src="https://cdn.simpleicons.org/nextcloud" width="16" height="16" style="vertical-align: middle"> Nextcloud icon
-
-Browse available icons at [SimpleIcons.org](https://simpleicons.org/).
+Browse 3000+ available icons at [simpleicons.org](https://simpleicons.org/).
 
 ## 📋 Requirements
 
-- 📦 Nextcloud 30+
-- 🌐 Website to be embedded must allow iframe embedding (not all sites do)
-- 🔒 Content Security Policy (CSP) configuration to allow external domains in iframes
+- Nextcloud 30, 31, 32, or 33
+- Website must allow iframe embedding (some sites block this)
+- CSP configuration may be required for external domains
 
+## 🌍 Translations
 
-### 🌍 Translations
+Currently supported languages:
 
-iFrame Widget supports multiple languages and can be translated. Currently, the following languages are available:
+| Language | Code | Language | Code |
+|----------|------|----------|------|
+| English | en | Portuguese | pt |
+| German | de | Brazilian Portuguese | pt_BR |
+| French | fr | Chinese (Simplified) | zh_CN |
+| Spanish | es | Japanese | ja |
+| Italian | it | Czech | cs |
+| Dutch | nl | Swedish | sv |
+| Russian | ru | Norwegian Bokmål | nb |
+| Polish | pl | | |
 
-- 🇬🇧 English (en)
-- 🇩🇪 German (de)
-- 🇫🇷 French (fr)
-- 🇪🇸 Spanish (es)
-- 🇮🇹 Italian (it)
-- 🇳🇱 Dutch (nl)
-- 🇷🇺 Russian (ru)
-- 🇵🇱 Polish (pl)
-- 🇵🇹 Portuguese (pt)
-- 🇧🇷 Brazilian Portuguese (pt_BR)
-- 🇨🇳 Chinese (Simplified) (zh_CN)
-- 🇯🇵 Japanese (ja)
-- 🇨🇿 Czech (cs)
-- 🇸🇪 Swedish (sv)
-- 🇳🇴 Norwegian Bokmål (nb)
+Contribute translations via the [translation guide](docs/TRANSLATING.md).
 
-If you'd like to contribute translations, please see the [translation guide](docs/TRANSLATING.md).
+## 🔒 CSP Configuration
 
+Nextcloud restricts iframe embedding by default. To embed external websites, configure your server's Content Security Policy.
 
-### 🔒 CSP Configuration
+> **Important**: Extend the existing CSP rather than replacing it to avoid breaking other security features.
 
-By default, Nextcloud restricts which websites can be embedded in iframes for security reasons. To embed external websites in your dashboard widget, you'll need to allow the target domains in your server's Content Security Policy (CSP).
+### Apache (Recommended: extend existing frame-src)
 
-Important: Avoid overwriting the entire CSP if your server or Nextcloud already sets other security directives. Instead, extend the existing `frame-src` directive where possible.
-
-#### Recommended approach for Apache (safe: extend existing frame-src)
-
-If your server or Nextcloud already sets a Content-Security-Policy, use `Header always edit` to safely append additional domains to the existing `frame-src` list without replacing other directives. This is especially useful when running Nextcloud inside containers (e.g., Nextcloud AIO) where the main CSP may be managed by the platform.
-
-Example (append Wikipedia domains):
+Add to your Apache configuration or `.htaccess`:
 
 ```apache
-# Safely extend the existing frame-src instead of replacing the whole CSP
+# Safely extend existing frame-src
 Header always edit Content-Security-Policy "(^|;\\s*)frame-src\\s+([^;]+)" \
-   "$1frame-src \\2 https://*.wikipedia.org https://www.wikipedia.org"
+   "$1frame-src \\2 https://example.com https://another-site.org"
 ```
 
-If you control the full CSP and prefer to set it directly, you can use:
+Or to set a complete CSP:
 
 ```apache
-# Allow specific domain(s) in iframes (overwrites/sets the CSP)
 Header set Content-Security-Policy "frame-src 'self' https://example.com https://another-site.org;"
 ```
 
-Note for Nextcloud AIO: Some container images expose Apache configuration as read-only. In that case, editing the Nextcloud instance `.htaccess` (for example, inside the `nextcloud-aio-nextcloud` container at `/var/www/html/.htaccess`) and adding the `Header always edit` line has been reported to work by users — it appends to the existing CSP safely without breaking other policies.
-
-#### Nginx
-
-For Nginx you can set or extend the CSP. If you control the entire header, add the header in your server block:
+### Nginx
 
 ```nginx
-# Allow specific domain(s) in iframes
 add_header Content-Security-Policy "frame-src 'self' https://example.com https://another-site.org;";
 ```
 
-If you need to programmatically append to an existing header on Nginx, consider using the `more_set_headers` or `more_clear_headers` directives provided by the `headers-more` module, or adjust the upstream configuration that sets the CSP.
+### Note on External Websites
 
-### ℹ️ Note on External Websites
+Some websites explicitly block iframe embedding using `X-Frame-Options: DENY` or `frame-ancestors: 'none'`. These sites cannot be embedded regardless of your CSP configuration. Consider using the External Sites app with redirect option instead.
 
-Some websites explicitly block being embedded in iframes using their own headers (for example `X-Frame-Options: DENY` or a CSP `frame-ancestors: 'none'`). Those sites cannot be embedded even if you allow them in your server's CSP. In such cases consider using the External Sites app with the redirect option instead.
+## 🛡️ Iframe Security Settings
+
+Version 0.9.0 adds customizable iframe security attributes:
+
+### Sandbox Attribute
+
+Controls iframe restrictions. Default: `allow-same-origin allow-scripts allow-popups allow-forms`
+
+Common values:
+- `allow-same-origin` - Allow same-origin policy
+- `allow-scripts` - Allow JavaScript execution
+- `allow-popups` - Allow popups
+- `allow-forms` - Allow form submission
+- `allow-modals` - Allow modal dialogs
+
+### Allow Attribute (Feature Policy)
+
+Controls browser feature access. Default: empty (no additional permissions)
+
+Common values for VOIP/video apps:
+- `microphone` - Microphone access
+- `camera` - Camera access
+- `fullscreen` - Fullscreen mode
+- `autoplay` - Media autoplay
+- `display-capture` - Screen capture
+
+Example for a VOIP application:
+```
+microphone camera fullscreen
+```
 
 ## 🔐 Security Notes
 
-- 🛡️ Websites embedded through iframes operate within their own security context
-- 🚫 Some websites block embedding using X-Frame-Options headers
-- ✅ Use trusted sources for embedded content
+- Embedded websites operate in their own security context
+- Use trusted sources for embedded content
+- The sandbox attribute provides additional isolation
+- CSP configuration is managed server-side for security
 
 ## ❓ FAQ
 
-### 🔍 Personal widget settings cannot be saved after upgrading to v0.7.0
+### Widget doesn't appear on dashboard
 
-If you experience issues with saving personal widget settings after upgrading to v0.7.0, try the following solutions:
+1. Add the widget using the "+" button in dashboard customization
+2. Check browser console for JavaScript errors
+3. Verify the app is enabled: `php occ app:list | grep iframe`
 
-1. **🗑️ Clear the Nextcloud cache**:
-   ```bash
-   php occ maintenance:mode --on
-   php occ memcache:clear
-   php occ maintenance:mode --off
-   ```
+### Personal widget settings won't save (after upgrade)
 
-2. **🔄 Restart your web server**:
-   For Apache:
-   ```bash
-   sudo systemctl restart apache2
-   ```
-   For Nginx:
-   ```bash
-   sudo systemctl restart nginx
-   sudo systemctl restart php-fpm
-   ```
+Try these solutions:
 
-3. **♻️ Disable and re-enable the app**:
-   ```bash
-   php occ app:disable iframewidget
-   php occ app:enable iframewidget
-   ```
+```bash
+# Clear Nextcloud cache
+php occ maintenance:mode --on
+php occ memcache:clear
+php occ maintenance:mode --off
 
-4. **🔍 Check your browser console for JavaScript errors**:
-   If you see CSRF token errors, clearing your browser cache might help.
+# Restart web server (Apache)
+sudo systemctl restart apache2
 
-### 🔍 Widget doesn't appear on the dashboard
+# Or for Nginx
+sudo systemctl restart nginx
+sudo systemctl restart php-fpm
 
-If the widget doesn't appear on your dashboard after installation:
+# Re-enable the app
+php occ app:disable iframewidget
+php occ app:enable iframewidget
+```
 
-1. Make sure you've added it from the dashboard customization screen (+ button)
-2. Verify that there are no JavaScript errors in your browser console
-3. Check that the app is properly enabled: `php occ app:list | grep iframe`
+### What's the difference between widget types?
 
-### ❓ What's the difference between admin, personal, and group widgets?
+| Type | Configured By | Visible To |
+|------|---------------|------------|
+| Public | Administrator | All users |
+| Personal | Individual user | That user only |
+| Group | Administrator | Members of selected group |
 
-- **Admin/Public Widget**: Configured by administrators and appears on all users' dashboards with the same content
-- **Personal Widget**: Each user can configure their own widget that's visible only to them
-- **Group Widget**: Configured by administrators and appears only on dashboards of users who are members of the selected group
-- You can use all three simultaneously - users can have the admin-configured widget, their own personal widget, and any group widgets they're eligible for
-
-All widgets need to be added to your dashboard using the "+" button in dashboard customization.
+All types can be used simultaneously. Users add widgets to their dashboard via the "+" customization button.
 
 ## 💜 Support Development
 

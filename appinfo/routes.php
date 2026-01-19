@@ -21,6 +21,23 @@ return [
             'url' => '/groups',
             'verb' => 'GET'
         ],
+        // Public widget routes (multiple widgets support)
+        [
+            'name' => 'config#getPublicWidgets',
+            'url' => '/public-widgets',
+            'verb' => 'GET'
+        ],
+        [
+            'name' => 'config#setPublicWidget',
+            'url' => '/public-widgets',
+            'verb' => 'POST'
+        ],
+        [
+            'name' => 'config#deletePublicWidget',
+            'url' => '/public-widgets/{widgetId}',
+            'verb' => 'DELETE'
+        ],
+        // Group widget routes
         [
             'name' => 'config#getGroupWidgets',
             'url' => '/group-widgets',
@@ -36,6 +53,7 @@ return [
             'url' => '/group-widgets/{widgetId}',
             'verb' => 'DELETE'
         ],
+        // Personal settings routes
         [
             'name' => 'personal_settings#getSettings',
             'url' => '/personal-settings',

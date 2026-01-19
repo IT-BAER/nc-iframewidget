@@ -39,7 +39,7 @@ If you encounter Content Security Policy errors, you may need to adjust your Nex
 ## 💻 Compatibility
 - Nextcloud 30 – 32
     ]]></description>
-    <version>0.8.6</version>
+    <version>0.9.0</version>
     <licence>agpl</licence>
     <author mail="admin@it-baer.net" homepage="https://it-baer.net">Bruno Miglar</author>
     <namespace>IframeWidget</namespace>

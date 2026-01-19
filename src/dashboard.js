@@ -22,11 +22,17 @@ Vue.prototype.OCA = OCA
 
 // Register all widgets when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-    // Register admin/public widget
-    OCA.Dashboard.register('iframewidget', (el) => {
-        const Widget = Vue.extend(DashboardWidget)
-        return new Widget({}).$mount(el)
-    })
+    // Register public widget slots (1-5)
+    // Slot 1 uses original ID 'iframewidget' for backward compatibility
+    for (let slot = 1; slot <= 5; slot++) {
+        const widgetId = slot === 1 ? 'iframewidget' : `iframewidget-${slot}`
+        OCA.Dashboard.register(widgetId, (el) => {
+            const Widget = Vue.extend(DashboardWidget)
+            return new Widget({
+                propsData: { slotNumber: slot }
+            }).$mount(el)
+        })
+    }
 
     // Register personal widget
     OCA.Dashboard.register('personal-iframewidget', (el) => {
@@ -34,9 +40,16 @@ document.addEventListener('DOMContentLoaded', () => {
         return new Widget({}).$mount(el)
     })
 
-    // Register group widget
-    OCA.Dashboard.register('group-iframewidget', (el) => {
-        const Widget = Vue.extend(GroupDashboardWidget)
-        return new Widget({}).$mount(el)
-    })
+    // Register group widget slots (1-5)
+    // Slot 1 uses original ID 'group-iframewidget' for backward compatibility
+    for (let slot = 1; slot <= 5; slot++) {
+        const widgetId = slot === 1 ? 'group-iframewidget' : `group-iframewidget-${slot}`
+        OCA.Dashboard.register(widgetId, (el) => {
+            const Widget = Vue.extend(GroupDashboardWidget)
+            return new Widget({
+                propsData: { slotNumber: slot }
+            }).$mount(el)
+        })
+    }
 })
+

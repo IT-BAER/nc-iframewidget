@@ -29,7 +29,8 @@
                     referrerpolicy="no-referrer"
                     @error="handleIframeError"
                     @load="iframeError = false"
-                    sandbox="allow-same-origin allow-scripts allow-popups allow-forms">
+                    :sandbox="config.iframeSandbox"
+                    :allow="config.iframeAllow">
             </iframe>
         </div>
 
@@ -65,7 +66,9 @@ export default {
                 widgetTitle: '', // Empty by default
                 widgetIcon: '',
                 widgetIconColor: '',
-                iframeUrl: ''
+                iframeUrl: '',
+                iframeSandbox: 'allow-same-origin allow-scripts allow-popups allow-forms',
+                iframeAllow: ''
             },
             observer: null
         }

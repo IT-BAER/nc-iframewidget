@@ -8,12 +8,22 @@ use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\Bootstrap\IBootstrap;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
-use OCA\IframeWidget\Dashboard\IframeWidget;
+
+// Import widget slot classes
+use OCA\IframeWidget\Dashboard\PublicWidgetSlot1;
+use OCA\IframeWidget\Dashboard\PublicWidgetSlot2;
+use OCA\IframeWidget\Dashboard\PublicWidgetSlot3;
+use OCA\IframeWidget\Dashboard\PublicWidgetSlot4;
+use OCA\IframeWidget\Dashboard\PublicWidgetSlot5;
+use OCA\IframeWidget\Dashboard\GroupWidgetSlot1;
+use OCA\IframeWidget\Dashboard\GroupWidgetSlot2;
+use OCA\IframeWidget\Dashboard\GroupWidgetSlot3;
+use OCA\IframeWidget\Dashboard\GroupWidgetSlot4;
+use OCA\IframeWidget\Dashboard\GroupWidgetSlot5;
 use OCA\IframeWidget\Dashboard\PersonalIframeWidget;
-use OCA\IframeWidget\Dashboard\GroupIframeWidget;
+
 use OCA\IframeWidget\Settings\Personal;
 use OCA\IframeWidget\Settings\PersonalSection;
-use OCP\Settings\ISettingsManager;
 
 class Application extends App implements IBootstrap
 {
@@ -26,10 +36,24 @@ class Application extends App implements IBootstrap
 
     public function register(IRegistrationContext $context): void
     {
-        // Register dashboard widgets
-        $context->registerDashboardWidget(IframeWidget::class);
+        // Register public iFrame widget slots (1-5)
+        // Slots use IConditionalWidget::isEnabled() to hide when not configured
+        $context->registerDashboardWidget(PublicWidgetSlot1::class);
+        $context->registerDashboardWidget(PublicWidgetSlot2::class);
+        $context->registerDashboardWidget(PublicWidgetSlot3::class);
+        $context->registerDashboardWidget(PublicWidgetSlot4::class);
+        $context->registerDashboardWidget(PublicWidgetSlot5::class);
+
+        // Register personal widget (single, user-configured)
         $context->registerDashboardWidget(PersonalIframeWidget::class);
-        $context->registerDashboardWidget(GroupIframeWidget::class);
+
+        // Register group-based widget slots (1-5)
+        // Slots check user group membership and hide when not applicable
+        $context->registerDashboardWidget(GroupWidgetSlot1::class);
+        $context->registerDashboardWidget(GroupWidgetSlot2::class);
+        $context->registerDashboardWidget(GroupWidgetSlot3::class);
+        $context->registerDashboardWidget(GroupWidgetSlot4::class);
+        $context->registerDashboardWidget(GroupWidgetSlot5::class);
 
         // Register settings
         $context->registerService(Personal::class, function($c) {
@@ -58,3 +82,4 @@ class Application extends App implements IBootstrap
         // No additional CSS needed - all styles in dashboard.css
     }
 }
+
