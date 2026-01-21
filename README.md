@@ -41,7 +41,7 @@ Future planned features:
 
 **Widget in Dashboard**
 
-<img width="1318" height="680" alt="Dashboard view with iFrame widgets" src="https://github.com/user-attachments/assets/471d5bb0-9478-41ec-93f1-a6e70aaea351" />
+<img alt="Dashboard view with multi-widget iFrame widgets" src="nc-iframewidget-dashboard.png" />
 
 <br><br>
 
