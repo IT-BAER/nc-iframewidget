@@ -1,3 +1,0 @@
-github: [IT-BAER]
-buy_me_a_coffee: itbaer
-custom: ["https://www.paypal.com/donate/?hosted_button_id=5XXRC7THMTRRS", Paypal]
