@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.1] - 2026-01-21
+
+### Fixed
+
+- **fetchConfig overwrite bug**: Fixed issue where `fetchConfig()` was overwriting valid slot-based widget configurations loaded from initial state, causing public and group widgets to fail loading their iframe URLs
+
 ## [0.9.0] - 2026-01-19
 
 ### Added
@@ -275,7 +281,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-[Unreleased]: https://github.com/IT-BAER/nc-iframewidget/compare/v0.9.0...HEAD
+[Unreleased]: https://github.com/IT-BAER/nc-iframewidget/compare/v0.9.1...HEAD
+[0.9.1]: https://github.com/IT-BAER/nc-iframewidget/compare/v0.9.0...v0.9.1
 [0.9.0]: https://github.com/IT-BAER/nc-iframewidget/compare/v0.8.7...v0.9.0
 [0.8.7]: https://github.com/IT-BAER/nc-iframewidget/compare/v0.8.6...v0.8.7
 [0.8.6]: https://github.com/IT-BAER/nc-iframewidget/compare/v0.8.5...v0.8.6

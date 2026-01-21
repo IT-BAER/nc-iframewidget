@@ -123,7 +123,14 @@ export default {
             }
         });
     
-        this.fetchConfig();
+        // Only fetch config from backend if initial state didn't provide a valid config
+        // Slot-based widgets get their config from initial state, not from fetchConfig
+        if (!this.config.iframeUrl && this.slotNumber === 1) {
+            this.fetchConfig();
+        } else {
+            this.loading = false;
+            this.configLoaded = true;
+        }
     
         // Setup a mutation observer to watch for dashboard changes
         this.observer = new MutationObserver(() => {
