@@ -9,17 +9,17 @@ This app adds customizable iFrame widgets to your Nextcloud dashboard, allowing 
 
 ## ✨ Features
 
-- **🌐 Embed any website** directly in your Nextcloud dashboard
-- **🎨 Customize appearance** with custom titles and icons
-- **🎭 SimpleIcons integration** using the `si:` prefix for thousands of brand icons
-- **🖌️ Colorize icons** with a built-in color picker
-- **📏 Adjustable height** for perfect layout integration
-- **📱 Responsive design** with extra-wide display option (2 columns)
-- **👤 Personal widgets** for individual user customization
-- **👥 Group-based widgets** for targeted content delivery
-- **🔧 Admin controls** for global and group-specific configurations
-- **🎰 Multiple widget slots** up to 5 public and 5 group widgets
-- **🛡️ Iframe security controls** with sandbox and allow attribute customization
+- **Embed any website** directly in your Nextcloud dashboard
+- **Customize appearance** with custom titles and icons
+- **SimpleIcons integration** using the `si:` prefix for thousands of brand icons
+- **Colorize icons** with a built-in color picker
+- **Adjustable height** for perfect layout integration
+- **Responsive design** with extra-wide display option (2 columns)
+- **Personal widgets** for individual user customization
+- **Group-based widgets** for targeted content delivery
+- **Admin controls** for global and group-specific configurations
+- **Multiple widget slots** up to 5 public and 5 group widgets
+- **Iframe security controls** with sandbox and allow attribute customization
 
 ## 🛠️ Configuration
 
@@ -39,7 +39,7 @@ Create widgets that are only visible to specific user groups.
 If you encounter Content Security Policy errors, you may need to adjust your Nextcloud configuration to allow embedding specific websites. See the full documentation on GitHub for details.
 
 ## 💻 Compatibility
-- Nextcloud 30, 31, 32, 33
+- Nextcloud 30+
     ]]></description>
     <version>0.9.1</version>
     <licence>agpl</licence>
