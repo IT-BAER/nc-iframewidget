@@ -5,6 +5,10 @@ webpack.config.js
 package-lock.json
 package.json
 .nextcloud/
+
+# Signature file - generated during build, should NOT be public
+# Only included in distribution tarball
+appinfo/signature.json
 .vscode/
 release_temp/
 create_release.bat
