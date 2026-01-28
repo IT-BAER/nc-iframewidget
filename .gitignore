@@ -22,8 +22,9 @@ nc-iframewidget-settings.png
 iframewidget_context.txt
 full_config.txt
 
-# GitHub workflow files - can be excluded if not needed for CI/CD
-.github/
+# GitHub files - keep workflows and key config, ignore copilot instructions
+.github/instructions/
+.github/copilot-instructions.md
 
 # Logs
 *.log
@@ -35,3 +36,5 @@ Thumbs.db
 
 # Editor files
 *.swp
+
+.github/RELEASE.md

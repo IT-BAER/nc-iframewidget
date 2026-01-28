@@ -1,0 +1,395 @@
+# SPDX-FileCopyrightText: 2025 Bruno Miglar
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+# =============================================================================
+# Nextcloud App Release Workflow
+# =============================================================================
+# This workflow automatically builds, signs, and publishes your Nextcloud app
+# to the Nextcloud App Store when you push a version tag (v*).
+#
+# SETUP REQUIRED (GitHub Repository → Settings → Secrets and variables → Actions):
+# 
+# 1. APP_PRIVATE_KEY (required)
+#    - Your app's private key for code signing
+#    - Content of: ~/.nextcloud/certificates/iframewidget.key
+#    - Command: cat ~/.nextcloud/certificates/iframewidget.key
+#    - Keep this SECRET - never commit to repository!
+#
+# 2. APP_CERTIFICATE (required)
+#    - Your app's public certificate for code signing
+#    - Content of: ~/.nextcloud/certificates/iframewidget.crt
+#    - Command: cat ~/.nextcloud/certificates/iframewidget.crt
+#    - This is public, but stored as secret for convenience
+#
+# 3. APPSTORE_TOKEN (required)
+#    - Your Nextcloud App Store API token
+#    - Get it from: https://apps.nextcloud.com → My account → API-Token
+#
+# USAGE:
+#   1. Bump version in package.json (use: npm run version:bump)
+#   2. Commit changes: git commit -am "Release v0.9.2"
+#   3. Create and push tag: git tag v0.9.2 && git push origin v0.9.2
+#   4. Workflow runs automatically!
+#
+# The workflow will:
+#   ✓ Build the app (npm ci && npm run build)
+#   ✓ Sign all app files (generates signature.json)
+#   ✓ Create distribution tarball
+#   ✓ Upload tarball to GitHub Release
+#   ✓ Submit to Nextcloud App Store with archive signature
+# =============================================================================
+
+name: 🚀 Release to Nextcloud App Store
+
+on:
+  push:
+    tags:
+      - 'v*'  # Triggers on v0.9.1, v1.0.0, etc.
+
+env:
+  APP_NAME: iframewidget
+
+jobs:
+  release:
+    name: Build, Sign & Publish
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: write  # Required for creating releases
+    
+    steps:
+      # =======================================================================
+      # STEP 1: Checkout code
+      # =======================================================================
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          path: ${{ env.APP_NAME }}
+
+      # =======================================================================
+      # STEP 2: Setup build environment
+      # =======================================================================
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: ${{ env.APP_NAME }}/package-lock.json
+
+      - name: 🐍 Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 📦 Install Python dependencies
+        run: pip install cryptography
+
+      # =======================================================================
+      # STEP 3: Extract version from tag
+      # =======================================================================
+      - name: 🏷️ Get version from tag
+        id: version
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/v}
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "📌 Version: $VERSION"
+
+      # =======================================================================
+      # STEP 4: Build the app
+      # =======================================================================
+      - name: 📦 Install dependencies
+        working-directory: ${{ env.APP_NAME }}
+        run: npm ci
+
+      - name: 🔨 Build production assets
+        working-directory: ${{ env.APP_NAME }}
+        run: npm run build
+
+      # =======================================================================
+      # STEP 5: Prepare distribution directory
+      # =======================================================================
+      - name: 📁 Create distribution directory
+        run: |
+          mkdir -p build/${{ env.APP_NAME }}
+          
+          # Copy only necessary files (exclude dev files)
+          rsync -av --progress ${{ env.APP_NAME }}/ build/${{ env.APP_NAME }}/ \
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='node_modules' \
+            --exclude='.nextcloud' \
+            --exclude='tasksync' \
+            --exclude='docs' \
+            --exclude='*.md' \
+            --exclude='package-lock.json' \
+            --exclude='webpack.config.js' \
+            --exclude='.eslintrc.json' \
+            --exclude='.stylelintrc.json' \
+            --exclude='.gitignore' \
+            --exclude='.editorconfig' \
+            --exclude='src' \
+            --exclude='scripts' \
+            --exclude='translationfiles'
+          
+          echo "📁 Distribution directory contents:"
+          find build/${{ env.APP_NAME }} -type f | head -50
+
+      # =======================================================================
+      # STEP 6: Sign the app (generates signature.json)
+      # =======================================================================
+      - name: 🔐 Create signing script
+        run: |
+          cat > sign-app.py << 'PYTHON_SCRIPT'
+          #!/usr/bin/env python3
+          """
+          Nextcloud App Code Signer - Standalone Edition
+          Signs a Nextcloud app without requiring a Nextcloud server installation.
+          """
+          
+          import os
+          import sys
+          import json
+          import hashlib
+          import base64
+          from pathlib import Path
+          from cryptography.hazmat.primitives import hashes, serialization
+          from cryptography.hazmat.primitives.asymmetric import padding
+          from cryptography.hazmat.backends import default_backend
+          
+          def compute_file_hash(file_path: Path) -> str:
+              """Compute SHA-512 hash of a file."""
+              sha512 = hashlib.sha512()
+              with open(file_path, 'rb') as f:
+                  for chunk in iter(lambda: f.read(8192), b''):
+                      sha512.update(chunk)
+              return sha512.hexdigest()
+          
+          def get_relative_path(file_path: Path, app_dir: Path) -> str:
+              """Get path relative to app directory, with leading slash."""
+              rel = file_path.relative_to(app_dir)
+              return '/' + str(rel).replace('\\', '/')
+          
+          def sign_app(app_dir: str, private_key_path: str, certificate_path: str):
+              """Sign a Nextcloud app and generate signature.json."""
+              app_path = Path(app_dir)
+              
+              # Read private key
+              with open(private_key_path, 'rb') as f:
+                  private_key = serialization.load_pem_private_key(
+                      f.read(), password=None, backend=default_backend()
+                  )
+              
+              # Read certificate
+              with open(certificate_path, 'r') as f:
+                  certificate = f.read().strip()
+              
+              # Collect all file hashes
+              hashes_dict = {}
+              exclude_patterns = [
+                  'appinfo/signature.json',
+                  '.git', '.github', 'node_modules', '.nextcloud',
+                  '__pycache__', '.pyc', '.pyo'
+              ]
+              
+              for file_path in sorted(app_path.rglob('*')):
+                  if not file_path.is_file():
+                      continue
+                  
+                  rel_path = str(file_path.relative_to(app_path)).replace('\\', '/')
+                  
+                  # Skip excluded files
+                  if any(excl in rel_path for excl in exclude_patterns):
+                      continue
+                  
+                  hash_value = compute_file_hash(file_path)
+                  path_key = get_relative_path(file_path, app_path)
+                  hashes_dict[path_key] = hash_value
+              
+              # Create signature data
+              sorted_hashes = json.dumps({"hashes": dict(sorted(hashes_dict.items()))}, separators=(',', ':'))
+              
+              # Sign the hashes
+              signature = private_key.sign(
+                  sorted_hashes.encode('utf-8'),
+                  padding.PKCS1v15(),
+                  hashes.SHA512()
+              )
+              signature_b64 = base64.b64encode(signature).decode('ascii')
+              
+              # Create signature.json
+              signature_json = {
+                  "hashes": dict(sorted(hashes_dict.items())),
+                  "certificate": certificate,
+                  "signature": signature_b64
+              }
+              
+              # Write signature.json
+              sig_path = app_path / 'appinfo' / 'signature.json'
+              with open(sig_path, 'w', encoding='utf-8') as f:
+                  json.dump(signature_json, f, indent=2)
+              
+              print(f"✅ Signed {len(hashes_dict)} files")
+              print(f"📄 Created: {sig_path}")
+          
+          if __name__ == '__main__':
+              if len(sys.argv) != 4:
+                  print("Usage: python sign-app.py <app_dir> <private_key> <certificate>")
+                  sys.exit(1)
+              sign_app(sys.argv[1], sys.argv[2], sys.argv[3])
+          PYTHON_SCRIPT
+
+      - name: 🔐 Sign the app
+        env:
+          APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
+          APP_CERTIFICATE: ${{ secrets.APP_CERTIFICATE }}
+        run: |
+          # Write secrets to temp files
+          echo "$APP_PRIVATE_KEY" > /tmp/app.key
+          echo "$APP_CERTIFICATE" > /tmp/app.crt
+          
+          # Sign the app
+          python sign-app.py build/${{ env.APP_NAME }} /tmp/app.key /tmp/app.crt
+          
+          # Verify signature.json was created
+          if [ ! -f "build/${{ env.APP_NAME }}/appinfo/signature.json" ]; then
+            echo "❌ ERROR: signature.json was not created!"
+            exit 1
+          fi
+          
+          echo "✅ App signed successfully"
+          echo "📊 signature.json size: $(wc -c < build/${{ env.APP_NAME }}/appinfo/signature.json) bytes"
+          
+          # Clean up private key immediately
+          rm -f /tmp/app.key
+
+      # =======================================================================
+      # STEP 7: Create tarball
+      # =======================================================================
+      - name: 📦 Create distribution tarball
+        run: |
+          cd build
+          tar -czf ${{ env.APP_NAME }}.tar.gz ${{ env.APP_NAME }}
+          
+          echo "📦 Tarball created:"
+          ls -lh ${{ env.APP_NAME }}.tar.gz
+          
+          echo "📋 Tarball contents:"
+          tar -tzf ${{ env.APP_NAME }}.tar.gz | head -30
+
+      # =======================================================================
+      # STEP 8: Create archive signature (for App Store)
+      # =======================================================================
+      - name: 🔏 Create archive signature
+        id: signature
+        env:
+          APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
+        run: |
+          echo "$APP_PRIVATE_KEY" > /tmp/app.key
+          
+          # Create signature for the tarball
+          SIGNATURE=$(openssl dgst -sha512 -sign /tmp/app.key build/${{ env.APP_NAME }}.tar.gz | openssl base64 -A)
+          
+          echo "signature=$SIGNATURE" >> $GITHUB_OUTPUT
+          echo "✅ Archive signature created (${#SIGNATURE} chars)"
+          
+          # Clean up
+          rm -f /tmp/app.key
+
+      # =======================================================================
+      # STEP 9: Create GitHub Release and upload tarball
+      # =======================================================================
+      - name: 📝 Generate release notes
+        id: changelog
+        run: |
+          # Extract changelog for this version
+          cd ${{ env.APP_NAME }}
+          VERSION="${{ steps.version.outputs.version }}"
+          
+          # Try to extract from CHANGELOG.md
+          if [ -f "CHANGELOG.md" ]; then
+            # Get content between this version and the next
+            NOTES=$(sed -n "/^## \[*$VERSION\]/,/^## \[*[0-9]/p" CHANGELOG.md | sed '$d' | tail -n +2)
+            if [ -z "$NOTES" ]; then
+              NOTES="Release v$VERSION"
+            fi
+          else
+            NOTES="Release v$VERSION"
+          fi
+          
+          # Save to file (handles multiline)
+          echo "$NOTES" > /tmp/release_notes.md
+          echo "✅ Release notes generated"
+
+      - name: 🚀 Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "v${{ steps.version.outputs.version }}"
+          body_path: /tmp/release_notes.md
+          files: build/${{ env.APP_NAME }}.tar.gz
+          draft: false
+          prerelease: ${{ contains(steps.version.outputs.version, '-') }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # =======================================================================
+      # STEP 10: Submit to Nextcloud App Store
+      # =======================================================================
+      - name: 📤 Submit to Nextcloud App Store
+        env:
+          APPSTORE_TOKEN: ${{ secrets.APPSTORE_TOKEN }}
+          SIGNATURE: ${{ steps.signature.outputs.signature }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          # Construct download URL
+          DOWNLOAD_URL="https://github.com/${{ github.repository }}/releases/download/v${VERSION}/${{ env.APP_NAME }}.tar.gz"
+          
+          echo "📤 Submitting to Nextcloud App Store..."
+          echo "   URL: $DOWNLOAD_URL"
+          echo "   Nightly: false"
+          
+          # Check if this is a pre-release (contains - like v0.9.1-beta)
+          NIGHTLY=false
+          if [[ "$VERSION" == *"-"* ]]; then
+            NIGHTLY=true
+            echo "   Detected pre-release version, setting nightly=true"
+          fi
+          
+          # Submit to App Store
+          RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
+            "https://apps.nextcloud.com/api/v1/apps/releases" \
+            -H "Authorization: Token ${APPSTORE_TOKEN}" \
+            -H "Content-Type: application/json" \
+            -d "{\"download\": \"${DOWNLOAD_URL}\", \"signature\": \"${SIGNATURE}\", \"nightly\": ${NIGHTLY}}")
+          
+          HTTP_CODE=$(echo "$RESPONSE" | tail -1)
+          BODY=$(echo "$RESPONSE" | sed '$d')
+          
+          echo "📡 Response code: $HTTP_CODE"
+          
+          if [ "$HTTP_CODE" -ge 200 ] && [ "$HTTP_CODE" -lt 300 ]; then
+            echo "✅ Successfully submitted to Nextcloud App Store!"
+            echo "🔗 View at: https://apps.nextcloud.com/apps/${{ env.APP_NAME }}"
+          else
+            echo "❌ Failed to submit to App Store"
+            echo "Response: $BODY"
+            exit 1
+          fi
+
+      # =======================================================================
+      # STEP 11: Summary
+      # =======================================================================
+      - name: 📊 Release Summary
+        run: |
+          echo ""
+          echo "╔══════════════════════════════════════════════════════════════╗"
+          echo "║              🎉 RELEASE COMPLETED SUCCESSFULLY! 🎉            ║"
+          echo "╠══════════════════════════════════════════════════════════════╣"
+          echo "║ App:     ${{ env.APP_NAME }}"
+          echo "║ Version: v${{ steps.version.outputs.version }}"
+          echo "║"
+          echo "║ 📦 GitHub Release:"
+          echo "║    https://github.com/${{ github.repository }}/releases/tag/v${{ steps.version.outputs.version }}"
+          echo "║"
+          echo "║ 🏪 Nextcloud App Store:"
+          echo "║    https://apps.nextcloud.com/apps/${{ env.APP_NAME }}"
+          echo "╚══════════════════════════════════════════════════════════════╝"
