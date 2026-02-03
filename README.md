@@ -142,31 +142,9 @@ Contribute translations via the [translation guide](docs/TRANSLATING.md).
 
 ## 🔒 CSP Configuration
 
-Nextcloud restricts iframe embedding by default. To embed external websites, configure your server's Content Security Policy.
+Nextcloud restricts iframe embedding by default. This app now adjusts CSP via the **Nextcloud PHP CSP API** based on the configured widget URLs, which avoids conflicting CSP headers from the web server.
 
-> **Important**: Extend the existing CSP rather than replacing it to avoid breaking other security features.
-
-### Apache (Recommended: extend existing frame-src)
-
-Add to your Apache configuration or `.htaccess`:
-
-```apache
-# Safely extend existing frame-src
-Header always edit Content-Security-Policy "(^|;\\s*)frame-src\\s+([^;]+)" \
-   "$1frame-src \\2 https://example.com https://another-site.org"
-```
-
-Or to set a complete CSP:
-
-```apache
-Header set Content-Security-Policy "frame-src 'self' https://example.com https://another-site.org;"
-```
-
-### Nginx
-
-```nginx
-add_header Content-Security-Policy "frame-src 'self' https://example.com https://another-site.org;";
-```
+> **Important**: Do **not** add a second CSP header in Apache/Nginx for `frame-src`. Browsers apply the most restrictive policy when multiple CSP headers are present, which can still block your iframe.
 
 ### Note on External Websites
 

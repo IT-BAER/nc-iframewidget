@@ -10,6 +10,7 @@ use OCP\AppFramework\Services\IInitialState;
 use OCP\Security\IContentSecurityPolicyManager;
 
 use OCA\IframeWidget\AppInfo\Application;
+use OCA\IframeWidget\Service\CspPolicyHelper;
 
 class Admin implements ISettings
 {
@@ -25,6 +26,9 @@ class Admin implements ISettings
     /** @var IContentSecurityPolicyManager */
     private IContentSecurityPolicyManager $cspManager;
 
+    /** @var CspPolicyHelper */
+    private CspPolicyHelper $cspPolicyHelper;
+
     /**
      * Admin constructor.
      */
@@ -32,12 +36,14 @@ class Admin implements ISettings
         IConfig $config,
         IL10N $l,
         IInitialState $initialStateService,
-        IContentSecurityPolicyManager $cspManager
+        IContentSecurityPolicyManager $cspManager,
+        CspPolicyHelper $cspPolicyHelper
     ) {
         $this->config = $config;
         $this->l = $l;
         $this->initialStateService = $initialStateService;
         $this->cspManager = $cspManager;
+        $this->cspPolicyHelper = $cspPolicyHelper;
     }
 
     /**
@@ -69,10 +75,7 @@ class Admin implements ISettings
         
         $this->initialStateService->provideInitialState('admin-config', $adminConfig);
 
-    	// Add SimpleIcons to Content Security Policy
-    $policy = new \OCP\AppFramework\Http\ContentSecurityPolicy();
-    $policy->addAllowedImageDomain('cdn.simpleicons.org');
-    $this->cspManager->addDefaultPolicy($policy);
+        $this->cspPolicyHelper->addAdminSettingsPolicy($this->cspManager);
     
         // Add dashboard styles for preview
         \OCP\Util::addStyle('iframewidget', 'dashboard');

@@ -24,6 +24,7 @@ use OCA\IframeWidget\Dashboard\PersonalIframeWidget;
 
 use OCA\IframeWidget\Settings\Personal;
 use OCA\IframeWidget\Settings\PersonalSection;
+use OCA\IframeWidget\Service\CspPolicyHelper;
 
 class Application extends App implements IBootstrap
 {
@@ -36,6 +37,14 @@ class Application extends App implements IBootstrap
 
     public function register(IRegistrationContext $context): void
     {
+        $context->registerService(CspPolicyHelper::class, function($c) {
+            return new CspPolicyHelper(
+                $c->get(\OCP\IConfig::class),
+                $c->get(\OCP\IGroupManager::class),
+                $c->get(\OCP\IUserSession::class)
+            );
+        });
+
         // Register public iFrame widget slots (1-5)
         // Slots use IConditionalWidget::isEnabled() to hide when not configured
         $context->registerDashboardWidget(PublicWidgetSlot1::class);
@@ -61,7 +70,9 @@ class Application extends App implements IBootstrap
                 $c->get(\OCP\IConfig::class),
                 $c->get(\OCP\IUserSession::class),
                 $c->get(\OCP\AppFramework\Services\IInitialState::class),
-                $c->get(\OCP\IL10N::class)
+                $c->get(\OCP\IL10N::class),
+                $c->get(\OCP\Security\IContentSecurityPolicyManager::class),
+                $c->get(CspPolicyHelper::class)
             );
         });
 

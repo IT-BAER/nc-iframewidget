@@ -12,23 +12,32 @@ use OCP\Settings\IIconSection;
 use OCP\IUserSession;
 use OCP\IL10N;
 use OCP\Settings\ISettings;
+use OCP\Security\IContentSecurityPolicyManager;
+
+use OCA\IframeWidget\Service\CspPolicyHelper;
 
 class Personal implements ISettings {
     private IConfig $config;
     private IUserSession $userSession;
     private IInitialState $initialStateService;
     private IL10N $l;
+    private IContentSecurityPolicyManager $cspManager;
+    private CspPolicyHelper $cspPolicyHelper;
 
     public function __construct(
         IConfig $config,
         IUserSession $userSession,
         IInitialState $initialStateService,
-        IL10N $l
+        IL10N $l,
+        IContentSecurityPolicyManager $cspManager,
+        CspPolicyHelper $cspPolicyHelper
     ) {
         $this->config = $config;
         $this->userSession = $userSession;
         $this->initialStateService = $initialStateService;
         $this->l = $l;
+        $this->cspManager = $cspManager;
+        $this->cspPolicyHelper = $cspPolicyHelper;
     }
 
     public function getForm(): TemplateResponse {
@@ -42,6 +51,11 @@ class Personal implements ISettings {
             'iframeHeight' => $this->config->getUserValue($userId, Application::APP_ID, 'personal_iframe_height', ''),
             'extraWide' => $this->config->getUserValue($userId, Application::APP_ID, 'personal_extra_wide', '0') === '1',
         ]);
+
+        $user = $this->userSession->getUser();
+        if ($user !== null) {
+            $this->cspPolicyHelper->addPersonalSettingsPolicy($user, $this->cspManager);
+        }
         
         return new TemplateResponse(Application::APP_ID, 'personalSettings', [], 'blank');
     }

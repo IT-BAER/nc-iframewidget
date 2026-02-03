@@ -11,6 +11,7 @@ use OCP\IL10N;
 use OCP\IUserSession;
 use OCP\AppFramework\Services\IInitialState;
 use OCP\Security\IContentSecurityPolicyManager;
+use OCA\IframeWidget\Service\CspPolicyHelper;
 
 class PersonalIframeWidget implements IWidget {
     private IL10N $l10n;
@@ -18,19 +19,22 @@ class PersonalIframeWidget implements IWidget {
     private IInitialState $initialStateService;
     private IUserSession $userSession;
     private IContentSecurityPolicyManager $cspManager;
+    private CspPolicyHelper $cspPolicyHelper;
 
     public function __construct(
         IL10N $l10n,
         IConfig $config,
         IInitialState $initialStateService,
         IUserSession $userSession,
-        IContentSecurityPolicyManager $cspManager
+        IContentSecurityPolicyManager $cspManager,
+        CspPolicyHelper $cspPolicyHelper
     ) {
         $this->l10n = $l10n;
         $this->config = $config;
         $this->initialStateService = $initialStateService;
         $this->userSession = $userSession;
         $this->cspManager = $cspManager;
+        $this->cspPolicyHelper = $cspPolicyHelper;
     }
 
     public function getId(): string {
@@ -106,10 +110,7 @@ class PersonalIframeWidget implements IWidget {
         // Provide initial state
         $this->initialStateService->provideInitialState('personal-iframewidget-config', $config);
         
-        // Add SimpleIcons to Content Security Policy
-        $policy = new \OCP\AppFramework\Http\ContentSecurityPolicy();
-        $policy->addAllowedImageDomain('cdn.simpleicons.org');
-    $this->cspManager->addDefaultPolicy($policy);
+        $this->cspPolicyHelper->addDashboardPolicyForUser($this->userSession->getUser(), $this->cspManager);
         
         // Load scripts and styles
         \OCP\Util::addScript('iframewidget', 'iframewidget-dashboard');

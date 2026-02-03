@@ -13,6 +13,7 @@ use OCP\IL10N;
 use OCP\IUserSession;
 use OCP\AppFramework\Services\IInitialState;
 use OCP\Security\IContentSecurityPolicyManager;
+use OCA\IframeWidget\Service\CspPolicyHelper;
 
 /**
  * Base class for group-based iFrame widget slots
@@ -28,6 +29,7 @@ abstract class GroupWidgetSlot implements IWidget, IConditionalWidget
     protected IUserSession $userSession;
     protected IGroupManager $groupManager;
     protected IContentSecurityPolicyManager $cspManager;
+    protected CspPolicyHelper $cspPolicyHelper;
     
     /** @var int The slot number (1-5) */
     protected int $slotNumber;
@@ -38,7 +40,8 @@ abstract class GroupWidgetSlot implements IWidget, IConditionalWidget
         IInitialState $initialStateService,
         IUserSession $userSession,
         IGroupManager $groupManager,
-        IContentSecurityPolicyManager $cspManager
+        IContentSecurityPolicyManager $cspManager,
+        CspPolicyHelper $cspPolicyHelper
     ) {
         $this->l10n = $l10n;
         $this->config = $config;
@@ -46,6 +49,7 @@ abstract class GroupWidgetSlot implements IWidget, IConditionalWidget
         $this->userSession = $userSession;
         $this->groupManager = $groupManager;
         $this->cspManager = $cspManager;
+        $this->cspPolicyHelper = $cspPolicyHelper;
     }
 
     /**
@@ -169,10 +173,7 @@ abstract class GroupWidgetSlot implements IWidget, IConditionalWidget
             : 'group-iframewidget-config-' . $this->getSlotNumber();
         $this->initialStateService->provideInitialState($stateKey, $config);
 
-        // Add SimpleIcons to Content Security Policy
-        $policy = new \OCP\AppFramework\Http\ContentSecurityPolicy();
-        $policy->addAllowedImageDomain('cdn.simpleicons.org');
-        $this->cspManager->addDefaultPolicy($policy);
+        $this->cspPolicyHelper->addDashboardPolicyForUser($this->userSession->getUser(), $this->cspManager);
 
         // Load scripts and styles
         \OCP\Util::addScript('iframewidget', 'iframewidget-dashboard');
