@@ -178,7 +178,14 @@ import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 import { loadState } from '@nextcloud/initial-state'
 import { showSuccess, showError } from '@nextcloud/dialogs'
-import debounce from 'debounce'
+
+const debounce = (fn, waitMs) => {
+    let timeoutId
+    return function debounced(...args) {
+        clearTimeout(timeoutId)
+        timeoutId = setTimeout(() => fn.apply(this, args), waitMs)
+    }
+}
 
 export default {
     name: 'PersonalSettings',

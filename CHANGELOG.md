@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.3] - 2026-02-17
+
+### Fixed
+
+- **Dashboard infinite loading**: Register dashboard widgets only when they are advertised by the server’s Dashboard widget list (prevents Dashboard crashes across differing Nextcloud widget-list response shapes). Thanks [@elFerZur](https://github.com/elFerZur) for the detailed report in issue [#17](https://github.com/IT-BAER/nc-iframewidget/issues/17).
+- **Subpath installs**: Use webroot-aware OCS URL generation for the Dashboard widget list endpoint (e.g. `/nextcloud`).
+
+### Security
+
+- **Dependency hardening**: Added/extended npm `overrides` and minimum-version constraints to mitigate known advisories in transitive packages (notably `axios`, `qs`, `mdast-util-to-hast`, `ajv`, `brace-expansion`, `form-data`, `pbkdf2`, `postcss`).
+
 ## [0.9.2] - 2026-02-03
 
 ### Fixed

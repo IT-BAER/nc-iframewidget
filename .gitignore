@@ -1,9 +1,5 @@
 # Development files - not included in Git
 node_modules/
-src/
-webpack.config.js
-package-lock.json
-package.json
 .nextcloud/
 
 # Signature file - generated during build, should NOT be public
@@ -14,11 +10,8 @@ release_temp/
 create_release.bat
 create_release.sh
 .clinerules/
-tasksync
-# Documentation files not needed for the app store
-nc-iframewidget-dashboard.png
-nc-iframewidget-demo.mp4
-nc-iframewidget-settings.png
+tasksync/
+# Local debug dumps
 iframewidget_context.txt
 full_config.txt
 
@@ -37,4 +30,9 @@ Thumbs.db
 # Editor files
 *.swp
 
+# Lint caches
+.eslintcache
+.stylelintcache
+
 .github/RELEASE.md
+_tmp_reset_iframewidget.sh
