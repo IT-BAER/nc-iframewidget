@@ -62,27 +62,31 @@ jobs:
       # STEP 1: Checkout code
       # =======================================================================
       - name: 📥 Checkout repository
-        uses: actions/checkout@v4
-        with:
-          path: ${{ env.APP_NAME }}
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          # Repository policy note: this workflow avoids external `uses:` actions.
+          # We do a plain `git clone` of the tag that triggered this workflow.
+          git clone --depth 1 \
+            --branch "${GITHUB_REF_NAME}" \
+            "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" \
+            "${APP_NAME}"
 
       # =======================================================================
       # STEP 2: Setup build environment
       # =======================================================================
-      - name: 🟢 Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: ${{ env.APP_NAME }}/package-lock.json
+      - name: 🟢 Verify Node.js
+        run: |
+          node --version
+          npm --version
 
-      - name: 🐍 Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
+      - name: 🐍 Verify Python
+        run: |
+          python3 --version
+          pip3 --version
 
       - name: 📦 Install Python dependencies
-        run: pip install cryptography
+        run: pip3 install cryptography
 
       # =======================================================================
       # STEP 3: Extract version from tag
@@ -321,15 +325,24 @@ jobs:
           echo "✅ Release notes generated"
 
       - name: 🚀 Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          name: "v${{ steps.version.outputs.version }}"
-          body_path: /tmp/release_notes.md
-          files: build/${{ env.APP_NAME }}.tar.gz
-          draft: false
-          prerelease: ${{ contains(steps.version.outputs.version, '-') }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          TAG="v${VERSION}"
+
+          PRERELEASE_FLAG=""
+          if [[ "$VERSION" == *"-"* ]]; then
+            PRERELEASE_FLAG="--prerelease"
+          fi
+
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "ℹ️ Release $TAG already exists; updating notes and uploading asset"
+            gh release upload "$TAG" "build/${APP_NAME}.tar.gz" --clobber
+            gh release edit "$TAG" --title "$TAG" --notes-file /tmp/release_notes.md $PRERELEASE_FLAG
+          else
+            gh release create "$TAG" "build/${APP_NAME}.tar.gz" --title "$TAG" --notes-file /tmp/release_notes.md $PRERELEASE_FLAG
+          fi
 
       # =======================================================================
       # STEP 10: Submit to Nextcloud App Store
