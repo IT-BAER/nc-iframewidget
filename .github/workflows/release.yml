@@ -410,6 +410,14 @@ jobs:
           SIGNATURE: ${{ steps.signature.outputs.signature }}
           VERSION: ${{ steps.version.outputs.version }}
         run: |
+          if [ -z "${APPSTORE_TOKEN}" ]; then
+            echo "❌ Missing required GitHub Actions secret: APPSTORE_TOKEN"
+            echo "   Set it in: Repo Settings → Secrets and variables → Actions → New repository secret"
+            echo "   Name: APPSTORE_TOKEN"
+            echo "   Value: your Nextcloud App Store API token (apps.nextcloud.com → My account → API-Token)"
+            exit 1
+          fi
+
           # Construct download URL
           DOWNLOAD_URL="https://github.com/${{ github.repository }}/releases/download/v${VERSION}/${{ env.APP_NAME }}.tar.gz"
           
