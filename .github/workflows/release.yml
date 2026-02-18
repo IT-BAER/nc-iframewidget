@@ -247,12 +247,47 @@ jobs:
           APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
           APP_CERTIFICATE: ${{ secrets.APP_CERTIFICATE }}
         run: |
-          # Write secrets to temp files
-          echo "$APP_PRIVATE_KEY" > /tmp/app.key
-          echo "$APP_CERTIFICATE" > /tmp/app.crt
+          # Write secrets to temp files (normalize CRLF + support secrets pasted with literal "\n")
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
+
+          def write_normalized(path: str, value: str) -> None:
+              # Normalize common GitHub Secret formatting pitfalls:
+              # - CRLF newlines
+              # - literal "\n" sequences instead of real newlines
+              # - trailing whitespace/newline issues
+              if value is None:
+                  raise SystemExit(f"Missing secret for {path}")
+
+              raw = value
+              # If the secret seems to be a single line containing literal \n sequences, expand them.
+              if "\\n" in raw and "\n" not in raw:
+                  raw = raw.replace("\\n", "\n")
+
+              raw = raw.replace("\r\n", "\n").replace("\r", "\n")
+              if not raw.endswith("\n"):
+                  raw += "\n"
+
+              Path(path).write_text(raw, encoding="utf-8")
+
+          write_normalized("/tmp/app.key", os.environ.get("APP_PRIVATE_KEY"))
+          write_normalized("/tmp/app.crt", os.environ.get("APP_CERTIFICATE"))
+          PY
+
+          # Quick sanity check without leaking key material
+          echo "Key header: $(head -n 1 /tmp/app.key)"
+          echo "Key footer: $(tail -n 1 /tmp/app.key)"
+
+          # Validate the private key format early (fails fast with a clear error)
+          if ! openssl pkey -in /tmp/app.key -noout >/dev/null 2>&1; then
+            echo "❌ APP_PRIVATE_KEY is not a valid, unencrypted PEM private key (or is an unsupported key type)."
+            echo "   Ensure it starts with '-----BEGIN ... PRIVATE KEY-----' and is not password-protected."
+            exit 1
+          fi
           
           # Sign the app
-          python sign-app.py build/${{ env.APP_NAME }} /tmp/app.key /tmp/app.crt
+          python3 sign-app.py build/${{ env.APP_NAME }} /tmp/app.key /tmp/app.crt
           
           # Verify signature.json was created
           if [ ! -f "build/${{ env.APP_NAME }}/appinfo/signature.json" ]; then
@@ -288,7 +323,29 @@ jobs:
         env:
           APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
         run: |
-          echo "$APP_PRIVATE_KEY" > /tmp/app.key
+          # Normalize and validate the key exactly like the signing step
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
+
+          raw = os.environ.get('APP_PRIVATE_KEY')
+          if raw is None:
+              raise SystemExit('Missing APP_PRIVATE_KEY')
+
+          if "\\n" in raw and "\n" not in raw:
+              raw = raw.replace("\\n", "\n")
+
+          raw = raw.replace("\r\n", "\n").replace("\r", "\n")
+          if not raw.endswith("\n"):
+              raw += "\n"
+
+          Path('/tmp/app.key').write_text(raw, encoding='utf-8')
+          PY
+
+          if ! openssl pkey -in /tmp/app.key -noout >/dev/null 2>&1; then
+            echo "❌ APP_PRIVATE_KEY is not a valid, unencrypted PEM private key (or is an unsupported key type)."
+            exit 1
+          fi
           
           # Create signature for the tarball
           SIGNATURE=$(openssl dgst -sha512 -sign /tmp/app.key build/${{ env.APP_NAME }}.tar.gz | openssl base64 -A)
