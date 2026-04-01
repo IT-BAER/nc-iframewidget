@@ -116,24 +116,34 @@ jobs:
         run: |
           mkdir -p build/${{ env.APP_NAME }}
           
-          # Copy only necessary files (exclude dev files)
+          # Copy only runtime files (exclude dev/build/git artifacts)
           rsync -av --progress ${{ env.APP_NAME }}/ build/${{ env.APP_NAME }}/ \
             --exclude='.git' \
             --exclude='.github' \
-            --exclude='node_modules' \
-            --exclude='.nextcloud' \
-            --exclude='tasksync' \
-            --exclude='docs' \
-            --exclude='*.md' \
-            --exclude='package-lock.json' \
-            --exclude='webpack.config.js' \
-            --exclude='.eslintrc.json' \
-            --exclude='.stylelintrc.json' \
             --exclude='.gitignore' \
+            --exclude='.gitattributes' \
             --exclude='.editorconfig' \
+            --exclude='.eslintrc.*' \
+            --exclude='.stylelintrc.*' \
+            --exclude='.l10nignore' \
+            --exclude='.tx' \
+            --exclude='.vscode' \
+            --exclude='.nextcloud' \
+            --exclude='node_modules' \
             --exclude='src' \
             --exclude='scripts' \
-            --exclude='translationfiles'
+            --exclude='docs' \
+            --exclude='tasksync' \
+            --exclude='translationfiles' \
+            --exclude='*.md' \
+            --exclude='package.json' \
+            --exclude='package-lock.json' \
+            --exclude='webpack.config.js' \
+            --exclude='stylelint.config.js' \
+            --exclude='_tmp_*' \
+            --exclude='/nc-iframewidget-*' \
+            --exclude='/*.mp4' \
+            --exclude='/*.psd'
           
           echo "📁 Distribution directory contents:"
           find build/${{ env.APP_NAME }} -type f | head -50
@@ -189,11 +199,9 @@ jobs:
               
               # Collect all file hashes
               hashes_dict = {}
-              exclude_patterns = [
-                  'appinfo/signature.json',
-                  '.git', '.github', 'node_modules', '.nextcloud',
-                  '__pycache__', '.pyc', '.pyo'
-              ]
+              exclude_files = {'appinfo/signature.json'}
+              exclude_dirs = {'.git', '.github', 'node_modules', '.nextcloud', '__pycache__'}
+              exclude_extensions = ('.pyc', '.pyo')
               
               for file_path in sorted(app_path.rglob('*')):
                   if not file_path.is_file():
@@ -201,8 +209,19 @@ jobs:
                   
                   rel_path = str(file_path.relative_to(app_path)).replace('\\', '/')
                   
-                  # Skip excluded files
-                  if any(excl in rel_path for excl in exclude_patterns):
+                  # Skip exact path matches
+                  if rel_path in exclude_files:
+                      continue
+                  
+                  # Skip files inside excluded directories
+                  # Uses path component matching (not substring) to avoid false
+                  # positives like webpack chunks named "node_modules_..." in js/
+                  path_parts = rel_path.split('/')
+                  if any(part in exclude_dirs for part in path_parts):
+                      continue
+                  
+                  # Skip files with excluded extensions
+                  if rel_path.endswith(exclude_extensions):
                       continue
                   
                   hash_value = compute_file_hash(file_path)
