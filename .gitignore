@@ -36,3 +36,4 @@ Thumbs.db
 
 .github/RELEASE.md
 _tmp_reset_iframewidget.sh
+_tmp_export_signing_secrets.ps1

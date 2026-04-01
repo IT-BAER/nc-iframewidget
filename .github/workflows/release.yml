@@ -169,9 +169,9 @@ jobs:
               return sha512.hexdigest()
           
           def get_relative_path(file_path: Path, app_dir: Path) -> str:
-              """Get path relative to app directory, with leading slash."""
+              """Get path relative to app directory, WITHOUT leading slash (NC convention)."""
               rel = file_path.relative_to(app_dir)
-              return '/' + str(rel).replace('\\', '/')
+              return str(rel).replace('\\', '/')
           
           def sign_app(app_dir: str, private_key_path: str, certificate_path: str):
               """Sign a Nextcloud app and generate signature.json."""
@@ -209,14 +209,28 @@ jobs:
                   path_key = get_relative_path(file_path, app_path)
                   hashes_dict[path_key] = hash_value
               
-              # Create signature data
-              sorted_hashes = json.dumps({"hashes": dict(sorted(hashes_dict.items()))}, separators=(',', ':'))
+              # Create signature data — Nextcloud signs just the sorted hashes dict,
+              # NOT wrapped in {"hashes": ...}. It uses RSA-PSS with MGF1-SHA512, salt=0.
+              # See: lib/private/IntegrityCheck/Checker.php → createSignatureData()
+              sorted_hashes_dict = dict(sorted(hashes_dict.items()))
               
-              # Sign the hashes
+              # IMPORTANT: PHP json_encode() escapes forward slashes as \/ by default.
+              # Nextcloud signs/verifies using json_encode($hashes) which produces \/
+              # in path keys. We must match this exactly.
+              hashes_json = json.dumps(sorted_hashes_dict, separators=(',', ':'))
+              hashes_json = hashes_json.replace('/', '\\/')
+              
+              # Sign the hashes using RSA-PSS (matching Nextcloud's phpseclib settings)
+              # phpseclib 2.x defaults: hash=sha1, mgfHash=sha1, signatureMode=PSS
+              # Checker.php overrides: setMGFHash('sha512'), setSaltLength(0)
+              # but does NOT call setHash(), so signature hash stays at sha1
               signature = private_key.sign(
-                  sorted_hashes.encode('utf-8'),
-                  padding.PKCS1v15(),
-                  hashes.SHA512()
+                  hashes_json.encode('utf-8'),
+                  padding.PSS(
+                      mgf=padding.MGF1(hashes.SHA512()),
+                      salt_length=0
+                  ),
+                  hashes.SHA1()
               )
               signature_b64 = base64.b64encode(signature).decode('ascii')
               
