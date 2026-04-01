@@ -41,7 +41,7 @@ If you encounter Content Security Policy errors, this app now adjusts CSP via th
 ## 💻 Compatibility
 - Nextcloud 30+
     ]]></description>
-    <version>0.9.3</version>
+    <version>0.9.4</version>
     <licence>agpl</licence>
     <author mail="admin@it-baer.net" homepage="https://it-baer.net">Bruno Miglar</author>
     <namespace>IframeWidget</namespace>

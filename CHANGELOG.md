@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.4] - 2026-06-24
+
+### Fixed
+
+- **Widget height not applied**: Admin-configured iframe height was stored but never rendered — public, group, and personal dashboard widgets now apply the `iframeHeight` value as an inline style. Added height input field to admin settings for public and group widget dialogs. Fixes [#19](https://github.com/IT-BAER/nc-iframewidget/issues/19).
+- **Code signing / integrity check**: Fixed 5 bugs in the release workflow's Python signing script that caused `InvalidSignatureException: Signature could not get verified` on Nextcloud instances. The script now matches Nextcloud's `Checker.php` exactly: RSA-PSS (not PKCS1v15), SHA-1 signature hash (phpseclib 2.x default), MGF1-SHA512, salt=0, PHP-compatible JSON encoding with escaped forward slashes, and correct path format without leading slash. Fixes [#18](https://github.com/IT-BAER/nc-iframewidget/issues/18).
+
+### Security
+
+- **Dependency hardening**: Added npm `overrides` for `fast-xml-parser`, `flatted`, `immutable`, `minimatch`, `bn.js`, `dompurify`, `node-forge`, `path-to-regexp`, and `picomatch` to mitigate known CVEs in transitive dependencies (eliminates all critical and high-severity advisories).
+
 ## [0.9.3] - 2026-02-17
 
 ### Fixed
