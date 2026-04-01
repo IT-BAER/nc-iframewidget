@@ -27,6 +27,7 @@
         <div v-else-if="config.iframeUrl && !iframeError" class="iframewidget-scroll-container">
             <iframe :src="config.iframeUrl"
                     class="iframewidget-frame"
+                    :style="{ height: normalizedHeight(config.iframeHeight) }"
                     referrerpolicy="no-referrer"
                     @error="handleIframeError"
                     @load="iframeError = false"

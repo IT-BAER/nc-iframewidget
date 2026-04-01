@@ -225,6 +225,14 @@
                             </label>
                         </div>
 
+                        <!-- iFrame Height -->
+                        <label for="group-iframe-height">{{ t('iframewidget', 'iFrame Height (px)') }}</label>
+                        <input id="group-iframe-height"
+                            v-model="groupWidgetForm.height"
+                            type="number"
+                            min="0"
+                            :placeholder="t('iframewidget', '100%')">
+
                         <!-- Sandbox Permissions -->
                         <label for="group-iframe-sandbox">{{ t('iframewidget', 'Iframe Sandbox') }}</label>
                         <input id="group-iframe-sandbox"
@@ -370,6 +378,14 @@
                                 <span class="checkbox-icon"></span>
                             </label>
                         </div>
+
+                        <!-- iFrame Height -->
+                        <label for="public-iframe-height">{{ t('iframewidget', 'iFrame Height (px)') }}</label>
+                        <input id="public-iframe-height"
+                            v-model="publicWidgetForm.height"
+                            type="number"
+                            min="0"
+                            :placeholder="t('iframewidget', '100%')">
 
                         <!-- Sandbox Permissions -->
                         <label for="public-iframe-sandbox">{{ t('iframewidget', 'Iframe Sandbox') }}</label>
@@ -1020,6 +1036,7 @@ export default {
                 icon: '',
                 iconColor: '',
                 url: '',
+                height: '',
                 extraWide: false,
                 iframeSandbox: 'allow-same-origin allow-scripts allow-popups allow-forms',
                 iframeAllow: ''
@@ -1050,6 +1067,7 @@ export default {
                 icon: widget.icon || '',
                 iconColor: widget.iconColor || '',
                 url: widget.url || '',
+                height: widget.height || '',
                 extraWide: widget.extraWide === 'true' || widget.extraWide === true,
                 iframeSandbox: widget.iframeSandbox || 'allow-same-origin allow-scripts allow-popups allow-forms',
                 iframeAllow: widget.iframeAllow || ''

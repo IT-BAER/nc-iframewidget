@@ -26,6 +26,7 @@
         <div v-else-if="config.iframeUrl && !iframeError" class="iframewidget-scroll-container">
             <iframe :src="config.iframeUrl"
                     class="iframewidget-frame"
+                    :style="{ height: normalizedHeight(config.iframeHeight) }"
                     referrerpolicy="no-referrer"
                     @error="handleIframeError"
                     @load="iframeError = false"
@@ -153,6 +154,16 @@ export default {
         deep: true
     }
     },    methods: {
+        /**
+         * Normalize height value
+         */
+        normalizedHeight(height) {
+            if (!height || height === '0' || height === 'auto') {
+                return '100%';
+            }
+            return parseInt(height) + 'px';
+        },
+
         handleCSPViolation(e) {
             if (e.blockedURI && this.config.iframeUrl && 
                 (e.blockedURI === this.config.iframeUrl || 
