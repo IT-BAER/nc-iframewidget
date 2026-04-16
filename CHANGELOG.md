@@ -7,13 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.9.5] - 2026-07-01
+## [0.9.6] - 2026-04-16
+
+### Security
+
+- **Dependency hardening**: Updated npm overrides to address known CVEs — bumped `axios` to `1.15.0` (latest safe version post supply-chain attack on `1.14.1`), corrected `dompurify` override to `>=3.3.4` (was off-by-one at `>=3.3.3`), updated `ajv` for `eslint`/`@eslint/eslintrc` to `6.14.0` (was `6.12.6`, vulnerable below `6.14.0`), and added missing overrides for `follow-redirects` (`>=1.15.12`), `lodash` (`>=4.18.0`), and `serialize-javascript` (`>=7.0.5`).
+
+## [0.9.5] - 2026-04-01
 
 ### Fixed
 
 - **Integrity check EXTRA_FILE errors**: Fixed the release workflow's signing script using substring matching for exclusions — webpack chunk filenames containing `node_modules` (e.g. `js/node_modules_nextcloud_dialogs_...`) were incorrectly skipped during signing but included in the tarball, causing Nextcloud's integrity checker to report them as `EXTRA_FILE`. Switched to path-component matching. Also hardened the `rsync` excludes to prevent `.gitattributes` and other dev artifacts from leaking into the distribution tarball. Continuation of [#18](https://github.com/IT-BAER/nc-iframewidget/issues/18).
 
-## [0.9.4] - 2026-06-24
+## [0.9.4] - 2026-04-01
 
 ### Fixed
 
@@ -24,7 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Dependency hardening**: Added npm `overrides` for `fast-xml-parser`, `flatted`, `immutable`, `minimatch`, `bn.js`, `dompurify`, `node-forge`, `path-to-regexp`, and `picomatch` to mitigate known CVEs in transitive dependencies (eliminates all critical and high-severity advisories).
 
-## [0.9.3] - 2026-02-17
+## [0.9.3] - 2026-02-18
 
 ### Fixed
 
@@ -119,15 +125,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [0.8.7] - 2025-XX-XX
-
-### Changed
-
-- Version synchronization between package.json and info.xml
-
----
-
-## [0.8.6] - 2025-10-21
+## [0.8.6] - 2025-12-13
 
 ### Security
 
@@ -139,7 +137,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  
 ---
 
-## [0.8.5] - 2025-10-20
+## [0.8.5] - 2025-10-09
 
 ### Added
 
