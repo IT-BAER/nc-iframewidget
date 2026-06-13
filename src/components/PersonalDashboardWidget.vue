@@ -124,7 +124,7 @@ export default {
         window.addEventListener('securitypolicyviolation', this.handleCSPViolation);
     },
     
-    beforeDestroy() {
+    beforeUnmount() {
         if (this.observer) {
             this.observer.disconnect();
         }
