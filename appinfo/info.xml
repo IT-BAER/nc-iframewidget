@@ -55,7 +55,7 @@ If you encounter Content Security Policy errors, this app now adjusts CSP via th
     </documentation>
 	<screenshot>https://raw.githubusercontent.com/IT-BAER/nc-iframewidget/refs/heads/main/nc-iframewidget-dashboard.png</screenshot>
     <dependencies>
-        <nextcloud min-version="30" max-version="33" />
+        <nextcloud min-version="33" max-version="33" />
     </dependencies>
     <settings>
         <admin>OCA\IframeWidget\Settings\Admin</admin>
