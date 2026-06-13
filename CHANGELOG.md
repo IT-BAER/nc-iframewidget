@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-06-13
+
+### Changed
+
+- **BREAKING — Vue 3 migration**: The entire frontend was rebuilt from Vue 2.7 to Vue 3.5. Dependencies moved to `@nextcloud/vue` 9, `@nextcloud/dialogs` 7, `vue-loader` 17 (via `@vue/compiler-sfc`, dropping `vue-template-compiler`), and `@nextcloud/webpack-vue-config` 7. The three entry points were rewritten from `new Vue`/`Vue.extend`/`$mount`/`Vue.prototype` to `createApp` + `app.config.globalProperties`, and the `beforeDestroy` lifecycle hook was renamed to `beforeUnmount` across all components. No template/behaviour changes — same widgets, settings, and SimpleIcons support.
+- **BREAKING — Nextcloud 33 required**: `min-version` raised from 30 to 33. The Vue 3 / `@nextcloud/vue` 9 toolchain is the Nextcloud-33-generation stack and this release is validated only on Nextcloud 33. Nextcloud 30–32 are no longer supported — remain on the 0.9.x line for those.
+
+### Security
+
+- **`proxyIcon` input validation**: The SimpleIcons proxy endpoint (`@NoAdminRequired`) now validates the icon slug (`^[a-z0-9-]{1,64}$`) and color (hex or CSS named color) before composing the upstream CDN URL, preventing path traversal, host repointing, and CRLF/query injection via the `icon`/`color` inputs.
+- **Dependency advisories cleared**: Bumped `axios` 1.15.0 → 1.17.0 (the only advisory shipped in the dashboard bundle) and added overrides for `shell-quote`, `@babel/plugin-transform-modules-systemjs`, `fast-uri`, and `fast-xml-builder`. The Vue 3 migration retired the entire Vue-2 ecosystem advisory cluster (`vue`, `vue-template-compiler`, `vue-loader`, `@vue/component-compiler-utils`, `floating-vue`, `vue-frag`, `vue2-datepicker`, the old `@nextcloud/vue` 8 / `webdav`). `npm audit` dropped from 38 advisories (1 critical, 5 high) to 0 critical / 0 high — the remainder are dev-only build tooling.
+
 ## [0.9.6] - 2026-04-16
 
 ### Security

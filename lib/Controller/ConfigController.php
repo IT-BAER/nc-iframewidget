@@ -62,6 +62,32 @@ class ConfigController extends Controller
 		}
 		return (stripos($url, 'http://') === 0 || stripos($url, 'https://') === 0);
 	}
+
+	/**
+	 * Validate a SimpleIcons slug.
+	 *
+	 * SimpleIcons slugs are lowercase alphanumerics (hyphens allowed). Restricting
+	 * to this charset prevents path traversal, host repointing, and CRLF/query
+	 * injection when the value is interpolated into the upstream CDN URL.
+	 *
+	 * @param string $icon Already lowercased/trimmed slug
+	 * @return bool True if the slug is safe to use
+	 */
+	private function isValidIconSlug(string $icon): bool {
+		return $icon !== '' && preg_match('/^[a-z0-9-]{1,64}$/', $icon) === 1;
+	}
+
+	/**
+	 * Validate an icon color: a hex code (3-8 hex digits, no leading #) or a
+	 * CSS named color (letters only). Anything else is rejected.
+	 *
+	 * @param string $color
+	 * @return bool True if the color is safe to append to the CDN URL
+	 */
+	private function isValidIconColor(string $color): bool {
+		return preg_match('/^[0-9a-fA-F]{3,8}$/', $color) === 1
+			|| preg_match('/^[a-zA-Z]{1,32}$/', $color) === 1;
+	}
     
     /**
      * Set admin configuration values
@@ -139,13 +165,20 @@ class ConfigController extends Controller
 	 */
 	public function proxyIcon(string $icon): DataResponse {
 		$icon = strtolower(trim($icon));
-		$color = $this->request->getParam('color', '');
-		
+
+		// Reject anything outside the SimpleIcons slug charset before it reaches
+		// the upstream URL (prevents path traversal / SSRF / CRLF injection).
+		if (!$this->isValidIconSlug($icon)) {
+			return new DataResponse(['exists' => false, 'error' => 'Invalid icon name'], 400);
+		}
+
+		$color = trim((string)$this->request->getParam('color', ''));
+
 		$url = "https://cdn.simpleicons.org/{$icon}";
-		if (!empty($color)) {
+		if ($color !== '' && $this->isValidIconColor($color)) {
 			$url .= "/{$color}";
 		}
-		
+
 		try {
 			$client = new \GuzzleHttp\Client();
 			$response = $client->get($url, [
