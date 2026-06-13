@@ -1,5 +1,5 @@
 // This script initializes the iFrame Widget Dashboard interface
-import Vue from 'vue'
+import { createApp } from 'vue'
 import DashboardWidget from './components/DashboardWidget.vue'
 import PersonalDashboardWidget from './components/PersonalDashboardWidget.vue'
 import GroupDashboardWidget from './components/GroupDashboardWidget.vue'
@@ -14,11 +14,16 @@ __webpack_nonce__ = btoa(OC?.requestToken || '')
 // eslint-disable-next-line
 __webpack_public_path__ = generateFilePath('iframewidget', '', 'js/')
 
-// Add global properties to Vue
-Vue.prototype.t = t
-Vue.prototype.n = n
-Vue.prototype.OC = OC
-Vue.prototype.OCA = OCA
+// Create a Vue 3 app for a widget component and expose the Nextcloud globals
+// (t, n, OC, OCA) that templates rely on. Each dashboard slot mounts its own app.
+const mountWidget = (Component, props, el) => {
+    const app = createApp(Component, props ?? {})
+    app.config.globalProperties.t = t
+    app.config.globalProperties.n = n
+    app.config.globalProperties.OC = OC
+    app.config.globalProperties.OCA = OCA
+    return app.mount(el)
+}
 
 const PERSONAL_WIDGET_ID = 'personal-iframewidget'
 
@@ -84,20 +89,12 @@ const registerWidgets = async () => {
             continue
         }
 
-        safeRegister(widgetId, (el) => {
-            const Widget = Vue.extend(DashboardWidget)
-            return new Widget({
-                propsData: { slotNumber: slot },
-            }).$mount(el)
-        })
+        safeRegister(widgetId, (el) => mountWidget(DashboardWidget, { slotNumber: slot }, el))
     }
 
     // Register personal widget
     if (advertised.has(PERSONAL_WIDGET_ID)) {
-        safeRegister(PERSONAL_WIDGET_ID, (el) => {
-            const Widget = Vue.extend(PersonalDashboardWidget)
-            return new Widget({}).$mount(el)
-        })
+        safeRegister(PERSONAL_WIDGET_ID, (el) => mountWidget(PersonalDashboardWidget, {}, el))
     }
 
     // Register group widget slots (1-5)
@@ -107,12 +104,7 @@ const registerWidgets = async () => {
             continue
         }
 
-        safeRegister(widgetId, (el) => {
-            const Widget = Vue.extend(GroupDashboardWidget)
-            return new Widget({
-                propsData: { slotNumber: slot },
-            }).$mount(el)
-        })
+        safeRegister(widgetId, (el) => mountWidget(GroupDashboardWidget, { slotNumber: slot }, el))
     }
 }
 

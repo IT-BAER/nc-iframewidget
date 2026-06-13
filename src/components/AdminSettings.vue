@@ -625,7 +625,7 @@ export default {
             this.componentMounted = true;
         });
     },
-    beforeDestroy() {
+    beforeUnmount() {
         if (this.urlUpdateTimer) {
             clearTimeout(this.urlUpdateTimer);
         }

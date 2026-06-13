@@ -278,7 +278,7 @@ export default {
 
         window.addEventListener('securitypolicyviolation', this.handleCSPViolation);
     },
-    beforeDestroy() {
+    beforeUnmount() {
         if (this.urlUpdateTimer) {
             clearTimeout(this.urlUpdateTimer);
         }
