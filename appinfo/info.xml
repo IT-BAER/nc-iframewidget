@@ -39,9 +39,9 @@ Create widgets that are only visible to specific user groups.
 If you encounter Content Security Policy errors, this app now adjusts CSP via the Nextcloud PHP CSP API based on the configured widget URLs. Avoid adding a second CSP header at the web server level, as browsers apply the strictest policy. See the full documentation on GitHub for details.
 
 ## 💻 Compatibility
-- Nextcloud 30+
+- Nextcloud 33
     ]]></description>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <licence>agpl</licence>
     <author mail="admin@it-baer.net" homepage="https://it-baer.net">Bruno Miglar</author>
     <namespace>IframeWidget</namespace>

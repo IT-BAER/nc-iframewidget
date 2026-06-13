@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-06-13
+
+### Fixed
+
+- **App Store listing compatibility**: Corrected the `info.xml` `<description>` compatibility line from "Nextcloud 30+" to "Nextcloud 33". The App Store renders that text separately from the actual `<dependencies>` gate (which was already `min-version=33`), so the listing page was still advertising NC 30.
+
 ## [1.0.0] - 2026-06-13
 
 ### Changed
