@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-07-19
+
+### Added
+
+- Nextcloud 34 support (`max-version` raised from 33 to 34; now supports Nextcloud 33 and 34)
+
+### Fixed
+
+- PHP 8.4/8.5 implicit-nullable parameter deprecation warnings in dashboard widget slot classes (`?\OCP\IUser` explicit-nullable typing)
+
+### Removed
+
+- Debug `error_log` statements from `GroupWidgetSlot::isEnabled()`
+
 ## [1.0.1] - 2026-06-13
 
 ### Fixed

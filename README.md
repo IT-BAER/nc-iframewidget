@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![Nextcloud App Store Version](https://img.shields.io/badge/Nextcloud-30%2B-blue?logo=nextcloud&logoColor=white)
+![Nextcloud App Store Version](https://img.shields.io/badge/Nextcloud-33%20%7C%2034-blue?logo=nextcloud&logoColor=white)
 ![License](https://img.shields.io/github/license/it-baer/nc-iframewidget?color=blue)
 ![GitHub stars](https://img.shields.io/github/stars/it-baer/nc-iframewidget?style=social)
 
@@ -119,7 +119,7 @@ Browse 3000+ available icons at [simpleicons.org](https://simpleicons.org/).
 
 ## 📋 Requirements
 
-- Nextcloud 30, 31, 32, or 33
+- Nextcloud 33 or 34
 - Website must allow iframe embedding (some sites block this)
 - CSP configuration may be required for external domains
 
