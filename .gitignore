@@ -40,3 +40,6 @@ _tmp_export_signing_secrets.ps1
 
 # AI assistant context - local only
 CLAUDE.md
+
+# Builds
+*.tar.gz
