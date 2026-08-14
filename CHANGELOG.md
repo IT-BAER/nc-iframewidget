@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.2] - 2026-08-14
+
+### Added
+
+- **Nextcloud 34 support**: `max-version` raised to 34 and the listing compatibility line updated to "Nextcloud 33–34". Verified against Nextcloud 34.0.3: no backend or frontend API removed in NC 34 is used by this app — the CSP code already uses `OCP\AppFramework\Http\ContentSecurityPolicy` (not the removed `EmptyContentSecurityPolicy`/`Strict*` classes), and the frontend carries no jQuery, Backbone, Handlebars, or removed `OC.*` globals.
+
+### Fixed
+
+- **Widget content overflowing the dashboard card**: The dashboard mount element Nextcloud provides is unstyled, so the widget's `height: 100%` chain had no definite height to resolve against. Containers collapsed to the browser's default 150px iframe height when no height was configured, and grew past the dashboard's fixed 424px panel — which uses `overflow: visible` — when a larger height was set, spilling content outside the card. The mount element is now given an explicit height, and `.iframewidget-scroll-container` (previously carrying no styles at all) now fills its container and scrolls its own overflow. Affects the public, group, and personal dashboard widgets. Present since before 1.0.0 and unrelated to the Nextcloud 34 upgrade.
+
 ## [1.0.1] - 2026-06-13
 
 ### Fixed

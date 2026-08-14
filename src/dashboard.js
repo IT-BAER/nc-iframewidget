@@ -17,6 +17,10 @@ __webpack_public_path__ = generateFilePath('iframewidget', '', 'js/')
 // Create a Vue 3 app for a widget component and expose the Nextcloud globals
 // (t, n, OC, OCA) that templates rely on. Each dashboard slot mounts its own app.
 const mountWidget = (Component, props, el) => {
+    // The dashboard mount element is unstyled; without a definite height the
+    // widget's height:100% chain collapses to the browser's default iframe size.
+    el.style.height = '100%'
+
     const app = createApp(Component, props ?? {})
     app.config.globalProperties.t = t
     app.config.globalProperties.n = n

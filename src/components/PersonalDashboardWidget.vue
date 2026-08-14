@@ -466,6 +466,12 @@ export default {
     overflow: hidden;
 }
 
+/* Heights above the dashboard's fixed panel scroll here instead of spilling out of the card. */
+.iframewidget-scroll-container {
+    height: 100%;
+    overflow: auto;
+}
+
 .iframewidget-frame {
     height: 100%;
     border: none;
