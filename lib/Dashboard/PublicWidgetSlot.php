@@ -104,7 +104,7 @@ abstract class PublicWidgetSlot implements IWidget, IConditionalWidget
     /**
      * @return bool
      */
-    public function isVisible(\OCP\IUser $user = null): bool
+    public function isVisible(?\OCP\IUser $user = null): bool
     {
         return $this->isEnabled();
     }
@@ -115,7 +115,7 @@ abstract class PublicWidgetSlot implements IWidget, IConditionalWidget
      * This hides unconfigured or disabled slots from the dashboard widget selector.
      * @return bool
      */
-    public function isEnabled(\OCP\IUser $user = null): bool
+    public function isEnabled(?\OCP\IUser $user = null): bool
     {
         $widgetConfig = $this->getWidgetConfig();
         if ($widgetConfig === null || empty($widgetConfig['url'])) {

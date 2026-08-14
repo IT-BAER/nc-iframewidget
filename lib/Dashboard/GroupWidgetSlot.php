@@ -110,7 +110,7 @@ abstract class GroupWidgetSlot implements IWidget, IConditionalWidget
     /**
      * @return bool
      */
-    public function isVisible(\OCP\IUser $user = null): bool
+    public function isVisible(?\OCP\IUser $user = null): bool
     {
         return $this->isEnabled($user);
     }
@@ -125,17 +125,13 @@ abstract class GroupWidgetSlot implements IWidget, IConditionalWidget
      * 
      * @return bool
      */
-    public function isEnabled(\OCP\IUser $user = null): bool
+    public function isEnabled(?\OCP\IUser $user = null): bool
     {
         if ($user === null) {
             $user = $this->userSession->getUser();
-            error_log("GroupWidgetSlot: user from session is " . ($user ? $user->getUID() : 'null'));
-        } else {
-            error_log("GroupWidgetSlot: user passed to isEnabled is " . $user->getUID());
         }
-        
+
         if ($user === null) {
-            error_log("GroupWidgetSlot: user is null, returning false");
             return false;
         }
         
@@ -189,7 +185,7 @@ abstract class GroupWidgetSlot implements IWidget, IConditionalWidget
      * 
      * @return array|null Widget config or null if not configured
      */
-    protected function getUserWidgetConfig(\OCP\IUser $user = null): ?array
+    protected function getUserWidgetConfig(?\OCP\IUser $user = null): ?array
     {
         if ($user === null) {
             $user = $this->userSession->getUser();

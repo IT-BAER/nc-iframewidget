@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.3] - 2026-08-14
+
+Thanks to [@bpainter64](https://github.com/bpainter64) (Bruce Painter), who reported both of these in [#20](https://github.com/IT-BAER/nc-iframewidget/pull/20).
+
+### Fixed
+
+- **PHP 8.4 implicit-nullable deprecations**: `isVisible()`, `isEnabled()`, and `getUserWidgetConfig()` in `PublicWidgetSlot` and `GroupWidgetSlot` declared `\OCP\IUser $user = null`, which PHP 8.4 deprecates. All five signatures now use explicit `?\OCP\IUser`. Nextcloud 34 ships on PHP 8.4/8.5, so these emitted deprecation warnings on every dashboard load there.
+- **Debug logging left in production**: `GroupWidgetSlot::isEnabled()` wrote three `error_log` lines to the server log on every dashboard render for any user with a group widget. Removed.
+
 ## [1.0.2] - 2026-08-14
 
 ### Added
