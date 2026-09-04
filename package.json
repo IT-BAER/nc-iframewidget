@@ -73,7 +73,7 @@
 	],
 	"overrides": {
 		"postcss": ">=8.4.31",
-		"axios": "1.17.0",
+		"axios": "1.18.0",
 		"ajv": "8.18.0",
 		"eslint": {
 			"ajv": "6.14.0"
