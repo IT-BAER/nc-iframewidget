@@ -4,6 +4,7 @@ import DashboardWidget from './components/DashboardWidget.vue'
 import PersonalDashboardWidget from './components/PersonalDashboardWidget.vue'
 import GroupDashboardWidget from './components/GroupDashboardWidget.vue'
 import axios from '@nextcloud/axios'
+import { loadState } from '@nextcloud/initial-state'
 import { generateFilePath, generateOcsUrl } from '@nextcloud/router'
 
 // CSP config for webpack dynamic chunk loading
@@ -68,6 +69,13 @@ const getAdvertisedDashboardWidgetIds = async () => {
     }
 }
 
+// NC 35's dashboard mounts only callbacks registered before its first render, so the
+// synchronous panel list must be used whenever the page provides it.
+const getInitialPanelIds = () => {
+    const panels = loadState('dashboard', 'panels', null)
+    return panels && typeof panels === 'object' ? new Set(Object.keys(panels)) : null
+}
+
 const safeRegister = (widgetId, callback) => {
     try {
         OCA?.Dashboard?.register?.(widgetId, callback)
@@ -81,7 +89,7 @@ const registerWidgets = async () => {
         return
     }
 
-    const advertised = await getAdvertisedDashboardWidgetIds()
+    const advertised = getInitialPanelIds() ?? await getAdvertisedDashboardWidgetIds()
     if (advertised === null) {
         return
     }

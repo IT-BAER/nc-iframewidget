@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.4] - 2026-09-30
+
+### Added
+
+- **Nextcloud 35 support**: `max-version` raised to 35 and the listing compatibility line updated to "Nextcloud 33–35". No backend or frontend API removed in NC 35 is used by this app: no Symfony commands, no database migrations or `doctrine/dbal` types, no `phpseclib`, no `OCP\Remote` or `IPreview::registerProvider`, and the frontend carries none of the removed `oc_*`/`OCDialogs` aliases or the `_`, `Clipboard`, `dav`, and `moment` globals. Nextcloud disables apps whose `max-version` is below the server's major version, so this gate bump is required for the app to stay enabled after upgrading to NC 35.
+
+### Fixed
+
+- **Widgets stuck loading on Nextcloud 35**: The NC 35 dashboard (now Vue 3) mounts only widget callbacks registered before its first render, because its `callbacks` watcher no longer fires for later registrations. The app registered its widgets only after an extra OCS request to `/apps/dashboard/api/v1/widgets` returned, so on NC 35 every iframewidget panel stayed on the loading spinner. The widget list is now read synchronously from the dashboard's `panels` initial state (present since NC 33), and the OCS request remains only as a fallback.
+
 ## [1.0.3] - 2026-08-14
 
 Thanks to [@bpainter64](https://github.com/bpainter64) (Bruce Painter), who reported both of these in [#20](https://github.com/IT-BAER/nc-iframewidget/pull/20).
