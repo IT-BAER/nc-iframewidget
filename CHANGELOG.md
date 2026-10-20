@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.5] - 2026-10-20
+
+### Security
+
+- **Bundled dependencies updated**: axios 1.17.0 → 1.20.0 (header injection, SSRF via redirects, proxy bypass, prototype-pollution advisories) and DOMPurify 3.4.10 → 3.4.17. Both ship inside the app's `js/` bundles, so this release is needed for the fixes to reach installations.
+- **Build tooling updated**: postcss, nanoid, source-map-js, brace-expansion, form-data, fast-uri, js-yaml, webpack-dev-server and related packages raised to patched versions. These run only at build time and are not part of the shipped app.
+
 ## [1.0.4] - 2026-09-30
 
 ### Added
